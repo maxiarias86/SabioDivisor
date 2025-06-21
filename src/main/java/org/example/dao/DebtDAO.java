@@ -23,7 +23,7 @@ public class DebtDAO extends BaseDAO<Debt> {
 
     @Override
     public Response<Debt> create(Debt entity) {
-        String sql = "INSERT INTO " + tableName + " (amount, due_date, debtor_id, creditor_id, expense_id) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO " + tableName + " (amount, due_date, debtor_id, creditor_id, expense_id, installment_number) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -32,6 +32,8 @@ public class DebtDAO extends BaseDAO<Debt> {
             ps.setInt(3, entity.getDebtor().getId());
             ps.setInt(4, entity.getCreditor().getId());
             ps.setInt(5, entity.getExpense().getId());
+            ps.setInt(6, entity.getInstallmentNumber());
+
 
             ps.executeUpdate();
             return new Response<>(true, "200", "Deuda registrada exitosamente");
@@ -70,7 +72,8 @@ public class DebtDAO extends BaseDAO<Debt> {
                         debtorResponse.getObj(),
                         creditorResponse.getObj(),
                         expenseResponse.getObj(),
-                        rs.getDate("due_date").toLocalDate()
+                        rs.getDate("due_date").toLocalDate(),
+                        rs.getInt("installment_number")
 
                 );
 
@@ -86,7 +89,7 @@ public class DebtDAO extends BaseDAO<Debt> {
 
     @Override
     public Response<Debt> update(Debt entity) {
-        String sql = "UPDATE " + tableName + " SET amount = ?, due_date = ?, debtor_id = ?, creditor_id = ?, expense_id = ? WHERE id = ?";
+        String sql = "UPDATE " + tableName + " SET amount = ?, due_date = ?, debtor_id = ?, creditor_id = ?, expense_id = ?, installment_number = ? WHERE id = ?";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -95,7 +98,9 @@ public class DebtDAO extends BaseDAO<Debt> {
             ps.setInt(3, entity.getDebtor().getId());
             ps.setInt(4, entity.getCreditor().getId());
             ps.setInt(5, entity.getExpense().getId());
-            ps.setInt(6, entity.getId());
+            ps.setInt(6, entity.getInstallmentNumber());
+            ps.setInt(7, entity.getId());
+
 
             int rows = ps.executeUpdate();
 
@@ -167,7 +172,8 @@ public class DebtDAO extends BaseDAO<Debt> {
                         debtorResponse.getObj(),
                         creditorResponse.getObj(),
                         partialExpense,
-                        rs.getDate("due_date").toLocalDate()
+                        rs.getDate("due_date").toLocalDate(),
+                        rs.getInt("installment_number")
                 );
 
                 lista.add(d);
@@ -179,5 +185,42 @@ public class DebtDAO extends BaseDAO<Debt> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
+
+    public List<Debt> getByExpenseId(int expenseId) {
+        List<Debt> debts = new ArrayList<>();
+        String sql = "SELECT * FROM debts WHERE expense_id = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, expenseId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Debt d = new Debt();
+                d.setId(rs.getInt("id"));
+                d.setAmount(rs.getDouble("amount"));
+                d.setDueDate(rs.getDate("due_date").toLocalDate());
+                d.setInstallmentNumber(rs.getInt("installment_number"));
+
+                // Cargar creditor, debtor y expense por ID
+                int debtorId = rs.getInt("debtor_id");
+                int creditorId = rs.getInt("creditor_id");
+                int expenseIdFromDb = rs.getInt("expense_id");
+
+                d.setDebtor(UserDAO.getInstance().read(debtorId).getObj());
+                d.setCreditor(UserDAO.getInstance().read(creditorId).getObj());
+
+                d.setExpense(new Expense()); // Podés cargarlo más completo si lo necesitás
+                d.getExpense().setId(expenseIdFromDb);
+
+                debts.add(d);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return debts;
+    }
+
 
 }

@@ -10,20 +10,23 @@ public class Debt {
     private User debtor;
     private Expense expense;
     private LocalDate dueDate;
+    private int installmentNumber;
+
 
     public Debt() {}
 
-    public Debt(int id, double amount, User creditor, User debtor, Expense expense, LocalDate dueDate) {
+    public Debt(int id, double amount, User creditor, User debtor, Expense expense, LocalDate dueDate,  int installmentNumber) {
         setId(id);
         setAmount(amount);
         setCreditor(creditor);
         setDebtor(debtor);
         setExpense(expense);
         setDueDate(dueDate);
+        setInstallmentNumber(installmentNumber);
     }
 
     public Debt(int id, double amount, User debtor, User creditor, LocalDate dueDate) {
-        this(id, amount, creditor, debtor, null, dueDate);
+        this(id, amount, creditor, debtor, null, dueDate,1);
     }
 
     // Getters
@@ -50,6 +53,11 @@ public class Debt {
     public LocalDate getDueDate() {
         return dueDate;
     }
+
+    public int getInstallmentNumber() {
+        return installmentNumber;
+    }
+
 
     // Setters con validación
     public void setId(int id) {
@@ -91,6 +99,13 @@ public class Debt {
         this.dueDate = dueDate;
     }
 
+    public void setInstallmentNumber(int installmentNumber) {
+        if (installmentNumber <= 0) {
+            throw new IllegalArgumentException("El número de cuotas debe ser mayor o igual a 1");
+        }
+        this.installmentNumber = installmentNumber;
+    }
+
     // equals y hashCode basados en id
     @Override
     public boolean equals(Object o) {
@@ -115,6 +130,7 @@ public class Debt {
                 ", debtor=" + (debtor != null ? debtor.getName() : "null") +
                 ", expenseId=" + (expense != null ? expense.getId() : "null") +
                 ", dueDate=" + dueDate +
+                ", installment=" + installmentNumber +
                 '}';
     }
 }

@@ -52,7 +52,7 @@ public class ExpenseService {
 
                 for (int i = 1; i <= installments; i++) {
                     LocalDate dueDate = dto.getDate().plusMonths(i);
-                    Debt deuda = new Debt(0, montoCuota, debtor, payer, null, dueDate);
+                    Debt deuda = new Debt(0, montoCuota, payer, debtor, null, dueDate, i);
                     debts.add(deuda);
                 }
             }

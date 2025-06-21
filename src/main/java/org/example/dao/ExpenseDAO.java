@@ -258,7 +258,7 @@ public class ExpenseDAO extends BaseDAO<Expense> {
 
     public Response<Integer> save(ExpenseDTO dto, List<Debt> debts) {
         String insertExpenseSQL = "INSERT INTO expenses (amount, date, installments, description) VALUES (?, ?, ?, ?)";
-        String insertDebtSQL = "INSERT INTO debts (amount, due_date, debtor_id, creditor_id, expense_id) VALUES (?, ?, ?, ?, ?)";
+        String insertDebtSQL = "INSERT INTO debts (amount, due_date, debtor_id, creditor_id, expense_id, installment_number) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             conn.setAutoCommit(false);
@@ -288,6 +288,7 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                     debtStmt.setInt(3, debt.getDebtor().getId());
                     debtStmt.setInt(4, debt.getCreditor().getId());
                     debtStmt.setInt(5, expenseId);
+                    debtStmt.setInt(6, debt.getInstallmentNumber());
                     debtStmt.addBatch();
                 }
                 debtStmt.executeBatch();
