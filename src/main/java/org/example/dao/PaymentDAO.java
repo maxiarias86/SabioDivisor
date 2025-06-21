@@ -26,19 +26,32 @@ public class PaymentDAO extends BaseDAO<Payment> {
         String sql = "INSERT INTO " + tableName + " (payer_id, payee_id, amount, date) VALUES (?, ?, ?, ?)";
 
         try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); // ⚠️ Clave para obtener el ID generado
             ps.setInt(1, entity.getPayer().getId());
             ps.setInt(2, entity.getRecipient().getId());
             ps.setDouble(3, entity.getAmount());
             ps.setDate(4, Date.valueOf(entity.getDate()));
 
-            ps.executeUpdate();
-            return new Response<>(true, "200", "Pago registrado exitosamente");
+            int rows = ps.executeUpdate();
+
+            if (rows == 1) {
+                ResultSet keys = ps.getGeneratedKeys();
+                if (keys.next()) {
+                    int generatedId = keys.getInt(1);
+                    entity.setId(generatedId);
+                    return new Response<>(true, "201", "Pago registrado exitosamente.", entity);
+                } else {
+                    return new Response<>(false, "500", "No se pudo obtener el ID del pago registrado.");
+                }
+            } else {
+                return new Response<>(false, "500", "No se pudo registrar el pago.");
+            }
 
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
     }
+
 
     @Override
     public Response<Payment> read(int id) {

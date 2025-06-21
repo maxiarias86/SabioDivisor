@@ -27,26 +27,30 @@ public class UserDAO extends BaseDAO<User> {
     BaseDAO<T> también los declara como abstractos, UserDAO y el resto de los DAOs
     finalmente implementan esos métodos
     */
-    public Response<User> create(User entity) {
-        String sql = "INSERT INTO " + tableName + " (name, email, password) VALUES (?, ?, ?)";
+    public Response<User> create(User user) {
+        String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
 
         try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, entity.getName());
-            ps.setString(2, entity.getEmail());
-            ps.setString(3, entity.getPassword());
-
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
             ps.executeUpdate();
-            return new Response<>(true, "200", "Usuario creado exitosamente");
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                int idGenerado = rs.getInt(1);
+                user.setId(idGenerado);
+                return new Response<>(true, "201", "Usuario creado exitosamente.", user);
+            } else {
+                return new Response<>(false, "500", "No se pudo obtener el ID del nuevo usuario.");
+            }
 
         } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) { // código de error para entradas duplicadas en MySQL
-                return new Response<>(false, "409", "El email ya está registrado");
-            }
             return new Response<>(false, "500", e.getMessage());
         }
-
     }
+
 
     @Override
     public Response<User> read(int id) {
@@ -167,6 +171,31 @@ public class UserDAO extends BaseDAO<User> {
                 return new Response<>(true, "200", "Usuario encontrado", user);
             } else {
                 return new Response<>(false, "404", "No se encontró el usuario con ese email");
+            }
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
+
+    public Response<User> readByName(String name) {
+        String sql = "SELECT * FROM users WHERE name = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
+                return new Response<>(true, "200", "Usuario encontrado", user);
+            } else {
+                return new Response<>(false, "404", "No se encontró el usuario con ese nombre");
             }
 
         } catch (SQLException e) {
