@@ -32,19 +32,17 @@ public class ExpenseService {
         List<Debt> debts = new ArrayList<>();
         int installments = Math.max(1, dto.getInstallments());
 
-        for (Map.Entry<Integer, Double> debtorEntry : debtorMap.entrySet()) {
-            int debtorId = debtorEntry.getKey();
-            double deudaTotal = debtorEntry.getValue();
-            User debtor = cache.getById(debtorId);
+        for (Map.Entry<Integer, Double> payerEntry : payerMap.entrySet()) {
+            int payerId = payerEntry.getKey();
+            double pagado = payerEntry.getValue();
+            User payer = cache.getById(payerId);
+            if (payer == null) continue;
 
-            if (debtor == null) continue;
-
-            for (Map.Entry<Integer, Double> payerEntry : payerMap.entrySet()) {
-                int payerId = payerEntry.getKey();
-                double pagado = payerEntry.getValue();
-                User payer = cache.getById(payerId);
-
-                if (payer == null || payerId == debtorId) continue;
+            for (Map.Entry<Integer, Double> debtorEntry : debtorMap.entrySet()) {
+                int debtorId = debtorEntry.getKey();
+                double deudaTotal = debtorEntry.getValue();
+                User debtor = cache.getById(debtorId);
+                if (debtor == null || debtorId == payerId) continue;
 
                 double proporcion = pagado / totalPagado;
                 double montoTotal = deudaTotal * proporcion;

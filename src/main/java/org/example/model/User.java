@@ -1,10 +1,10 @@
 package org.example.model;
 
 public class User {
-    int id;
-    String name;
-    String email;
-    String password;
+    private int id;
+    private String name;
+    private String email;
+    private String password;
 
     public User(int id, String name, String email, String password) {
         this.id = id;
@@ -19,12 +19,15 @@ public class User {
         this.password = password;
     }
 
+    public User() {
+
+    }
 
     public int getId() {
         return id;
     }
 
-    private void setId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -32,7 +35,7 @@ public class User {
         return name;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -40,7 +43,7 @@ public class User {
         return email;
     }
 
-    private void setEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -48,7 +51,7 @@ public class User {
         return password;
     }
 
-    private void setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
