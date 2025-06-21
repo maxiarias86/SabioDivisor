@@ -1,46 +1,66 @@
 package org.example;
 
-import org.example.controller.PaymentDTO;
-import org.example.model.Response;
-import org.example.service.PaymentService;
+import org.example.cache.BillCache;
+import org.example.dto.BillDTO;
+import org.example.model.Debt;
+import org.example.model.Expense;
+import org.example.model.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        PaymentService paymentService = new PaymentService();
+        // Crear usuarios con constructor compatible
+        User maxi = new User("Maxi", "maxi@email.com", "1234");
+        maxi.setId(1);
 
-        System.out.println("🔍 [TEST 1] Pago válido");
-        PaymentDTO pago1 = new PaymentDTO(LocalDate.now().minusDays(2), 1, 2, 150.0);
-        Response<Integer> r1 = paymentService.registerPayment(pago1);
-        mostrar(r1);
+        User juan = new User("Juan", "juan@email.com", "1234");
+        juan.setId(2);
 
-        System.out.println("🔍 [TEST 2] Mismo usuario");
-        PaymentDTO pago2 = new PaymentDTO(LocalDate.now(), 1, 1, 100.0);
-        Response<Integer> r2 = paymentService.registerPayment(pago2);
-        mostrar(r2);
+        // Crear expense
+        Expense almuerzo = new Expense();
+        almuerzo.setId(100);
+        almuerzo.setDescription("Almuerzo en el parque");
 
-        System.out.println("🔍 [TEST 3] Usuario inexistente");
-        PaymentDTO pago3 = new PaymentDTO(LocalDate.now(), 1, 999, 100.0);
-        Response<Integer> r3 = paymentService.registerPayment(pago3);
-        mostrar(r3);
+        // Crear deudas usando el constructor completo disponible
+        List<Debt> allDebts = new ArrayList<>();
 
-        System.out.println("🔍 [TEST 4] Monto inválido");
-        PaymentDTO pago4 = new PaymentDTO(LocalDate.now(), 1, 2, -50.0);
-        Response<Integer> r4 = paymentService.registerPayment(pago4);
-        mostrar(r4);
+        allDebts.add(new Debt(1, 1000, maxi, juan, almuerzo, LocalDate.of(2025, 6, 15), 1)); // Juan debe a Maxi
+        allDebts.add(new Debt(2, 1500, juan, maxi, almuerzo, LocalDate.of(2025, 6, 25), 1)); // Maxi debe a Juan
+        allDebts.add(new Debt(3, 500, maxi, juan, almuerzo, LocalDate.of(2025, 6, 20), 1));  // Juan debe a Maxi
 
-        System.out.println("🔍 [TEST 5] Fecha futura");
-        PaymentDTO pago5 = new PaymentDTO(LocalDate.now().plusDays(1), 1, 2, 100.0);
-        Response<Integer> r5 = paymentService.registerPayment(pago5);
-        mostrar(r5);
-    }
+        // Crear el BillCache para Maxi
+        BillCache.getInstance().createBillCache(maxi, allDebts);
 
-    private static void mostrar(Response<Integer> response) {
-        if (response.isSuccess()) {
-            System.out.println("✅ Pago registrado con ID: " + response.getObj());
-        } else {
-            System.out.println("❌ Error " + response.getCode() + ": " + response.getMessage());
+        // Mostrar todas las BillDTO
+        System.out.println("\uD83D\uDD0E Todas las Bills de Maxi:");
+        for (BillDTO bill : BillCache.getInstance().getAllBills()) {
+            System.out.printf("- [%d] %s | %s | $%.2f | Vence: %s%n",
+                    bill.getId(), bill.getOtherUser(), bill.getDescription(),
+                    bill.getAmount(), bill.getDueDate()
+            );
         }
+
+        // Ver estado de cuenta a hoy
+        LocalDate hoy = LocalDate.of(2025, 6, 21);
+        double saldo = BillCache.getInstance().verEstadoDeCuentaAFecha(hoy);
+        System.out.println("\n\uD83D\uDCB0 Estado de cuenta a " + hoy + ": $" + saldo);
+
+        // Ver deudas vencidas
+        System.out.println("\n\uD83D\uDCC5 Deudas vencidas hasta " + hoy + ":");
+        for (BillDTO bill : BillCache.getInstance().verDeudasAFecha(hoy)) {
+            System.out.println("- " + bill.getOtherUser() + ": $" + bill.getAmount());
+        }
+
+        // Ver deudas vencidas con Juan
+        System.out.println("\n\uD83D\uDCCC Deudas con Juan vencidas hasta " + hoy + ":");
+        for (BillDTO bill : BillCache.getInstance().verDeudasAFechaPorUsuario(hoy, "Juan")) {
+            System.out.println("- " + bill.getDescription() + ": $" + bill.getAmount());
+        }
+
+        // Limpiar la cache
+        BillCache.getInstance().clearCache();
     }
 }

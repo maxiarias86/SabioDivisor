@@ -2,7 +2,7 @@ package org.example.service;
 
 import org.example.cache.UserCache;
 import org.example.dao.ExpenseDAO;
-import org.example.controller.ExpenseDTO;
+import org.example.dto.ExpenseDTO;
 import org.example.model.Debt;
 import org.example.model.User;
 import org.example.model.Response;

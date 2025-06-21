@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.dto;
 
 public class UserDTO {
     private String username;

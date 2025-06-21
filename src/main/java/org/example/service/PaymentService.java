@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.controller.PaymentDTO;
+import org.example.dto.PaymentDTO;
 import org.example.dao.PaymentDAO;
 import org.example.dao.UserDAO;
 import org.example.model.Payment;

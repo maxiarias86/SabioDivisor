@@ -1,6 +1,6 @@
 package org.example.dao;
 
-import org.example.controller.ExpenseDTO;
+import org.example.dto.ExpenseDTO;
 import org.example.model.Debt;
 import org.example.model.Expense;
 import org.example.model.Response;
@@ -8,8 +8,6 @@ import org.example.model.User;
 import org.example.repository.ExpenseRepository;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

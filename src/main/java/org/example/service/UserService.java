@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.controller.UserDTO;
+import org.example.dto.UserDTO;
 import org.example.dao.UserDAO;
 import org.example.model.Response;
 import org.example.model.User;
