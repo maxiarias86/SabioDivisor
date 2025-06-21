@@ -10,6 +10,13 @@ public class Payment extends Transaction {
     public Payment() {
     }
 
+    public Payment(double amount, LocalDate date, User payer, User recipient) {
+        super(0, amount, date); // El ID se ignora porque lo pone la base de datos
+        setPayer(payer);
+        setRecipient(recipient);
+    }
+
+
     public Payment(int id, double amount, LocalDate date, User payer, User recipient) {
         super(id, amount, date);
         //Se agregan con los setters para utilizar las validaciones

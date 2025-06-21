@@ -1,17 +1,27 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        System.out.println("🚀 Iniciando prueba de conexión a MySQL...");
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        // Parámetros de conexión — modificá según tu configuración
+        String url = "jdbc:mysql://localhost:3306/sabio_divisor"; // nombre de tu base
+        String user = "root";
+        String password = "";
+
+        try {
+            // Opcional en JDBC 4.0+, pero útil si querés estar seguro
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.getConnection(url, user, password);
+            System.out.println("✅ Conexión exitosa a la base de datos.");
+            conn.close();
+        } catch (Exception e) {
+            System.out.println("❌ Error al conectar:");
+            e.printStackTrace();
         }
     }
 }

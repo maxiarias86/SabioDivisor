@@ -1,0 +1,138 @@
+package org.example.dao;
+
+import org.example.model.Response;
+import org.example.model.User;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class UserDAO extends BaseDAO<User> {
+
+    private final String tableName = "user";
+
+    public UserDAO() {
+        super();
+    }
+
+    @Override
+    /*
+    Si bien el IDE marca un error: En ICrud<T> están declarados los métodos abstractos,
+    BaseDAO<T> también los declara como abstractos, UserDAO y el resto de los DAOs
+    finalmente implementan esos métodos
+    */
+    public Response<User> create(User entity) {
+        String sql = "INSERT INTO " + tableName + " (name, email, password) VALUES (?, ?, ?)";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, entity.getName());
+            ps.setString(2, entity.getEmail());
+            ps.setString(3, entity.getPassword());
+
+            ps.executeUpdate();
+            return new Response<>(true, "200", "Usuario creado exitosamente");
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
+
+    @Override
+    public Response<User> read(int id) {
+        String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
+                return new Response<>(true, "200", "Usuario encontrado", user);
+            } else {
+                return new Response<>(false, "404", "No se encontró el usuario");
+            }
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
+
+    @Override
+    public Response<User> update(User entity) {
+        String sql = "UPDATE " + tableName + " SET name = ?, email = ?, password = ? WHERE id = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, entity.getName());
+            ps.setString(2, entity.getEmail());
+            ps.setString(3, entity.getPassword());
+            ps.setInt(4, entity.getId());
+
+            int rows = ps.executeUpdate();
+
+            if (rows == 1) {
+                return new Response<>(true, "200", "Usuario actualizado correctamente");
+            } else if (rows == 0) {
+                return new Response<>(false, "404", "No se encontró el usuario");
+            } else {
+                return new Response<>(false, "500", "Error: se afectaron múltiples registros");
+            }
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
+
+    @Override
+    public Response<User> delete(int id) {
+        String sql = "DELETE FROM " + tableName + " WHERE id = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            int rows = ps.executeUpdate();
+
+            if (rows == 1) {
+                return new Response<>(true, "200", "Usuario eliminado correctamente");
+            } else {
+                return new Response<>(false, "404", "No se encontró el usuario");
+            }
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
+
+    @Override
+    public Response<User> readAll() {
+        String sql = "SELECT * FROM " + tableName;
+        List<User> lista = new ArrayList<>();
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
+                lista.add(user);
+            }
+
+            return new Response<>(true, "200", "Listado de usuarios obtenido", lista);
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
+}
