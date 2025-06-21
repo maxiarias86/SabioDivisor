@@ -22,44 +22,40 @@ public class ExpenseService {
 
         double totalPagado = dto.getPayers().values().stream().mapToDouble(Double::doubleValue).sum();
         if (Math.abs(totalPagado - dto.getAmount()) > 0.01) {
-            return new Response<>(false, "422", "La suma de los pagos no coincide con el monto total.");
+            return new Response<>(false, "404", "La suma de los pagos no coincide con el monto total.");
         }
 
-        // Resolver UserCache
         UserCache cache = UserCache.getInstance();
         Map<Integer, Double> payerMap = dto.getPayers();
         Map<Integer, Double> debtorMap = dto.getDebtors();
 
         List<Debt> debts = new ArrayList<>();
+        int installments = Math.max(1, dto.getInstallments());
 
         for (Map.Entry<Integer, Double> debtorEntry : debtorMap.entrySet()) {
             int debtorId = debtorEntry.getKey();
             double deudaTotal = debtorEntry.getValue();
             User debtor = cache.getById(debtorId);
+
             if (debtor == null) continue;
 
             for (Map.Entry<Integer, Double> payerEntry : payerMap.entrySet()) {
                 int payerId = payerEntry.getKey();
                 double pagado = payerEntry.getValue();
                 User payer = cache.getById(payerId);
+
                 if (payer == null || payerId == debtorId) continue;
 
                 double proporcion = pagado / totalPagado;
-                double monto = deudaTotal * proporcion;
+                double montoTotal = deudaTotal * proporcion;
+                double montoCuota = montoTotal / installments;
 
-                try {
-                    Debt deuda = new Debt(0, monto, debtor, payer, dto.getDate());
+                for (int i = 1; i <= installments; i++) {
+                    LocalDate dueDate = dto.getDate().plusMonths(i);
+                    Debt deuda = new Debt(0, montoCuota, debtor, payer, null, dueDate);
                     debts.add(deuda);
-                } catch (IllegalArgumentException e) {
-                    System.out.println("⚠️ No se pudo crear una deuda: " + e.getMessage());
-                    // Opcional: podrías devolver un error general si no querés registrar parcialmente
-                    return new Response<>(false, "400", "Error al generar deudas: " + e.getMessage());
                 }
             }
-        }
-
-        if (debts.isEmpty()) {
-            return new Response<>(false, "400", "No se generaron deudas válidas.");
         }
 
         return ExpenseDAO.getInstance().save(dto, debts);

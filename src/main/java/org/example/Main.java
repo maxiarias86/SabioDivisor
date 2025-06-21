@@ -64,7 +64,6 @@ public class Main {
         if (result2.isSuccess()) {
             System.out.println("✅ [TEST 2] Gasto registrado con ID: " + result2.getObj());
 
-            // 🔍 Mostrar deudas asociadas a ese gasto
             int expenseId = result2.getObj();
             List<Debt> allDebts = DebtDAO.getInstance().readAll().getData();
             List<Debt> debtsForExpense = allDebts.stream()
@@ -76,6 +75,39 @@ public class Main {
 
         } else {
             System.out.println("❌ [TEST 2] Error " + result2.getCode() + ": " + result2.getMessage());
+        }
+
+        // ✅ TEST 3: Gasto en cuotas (IDs existentes: 1, 2)
+        Map<Integer, Double> payers3 = new HashMap<>();
+        payers3.put(1, 300.0);
+
+        Map<Integer, Double> debtors3 = new HashMap<>();
+        debtors3.put(2, 300.0);
+
+        ExpenseDTO dto3 = new ExpenseDTO(
+                300.0,
+                LocalDate.now(),
+                3,
+                "Compra en 3 cuotas",
+                payers3,
+                debtors3
+        );
+
+        Response<Integer> result3 = service.registerExpense(dto3);
+        if (result3.isSuccess()) {
+            System.out.println("✅ [TEST 3] Gasto en cuotas registrado con ID: " + result3.getObj());
+
+            int expenseId = result3.getObj();
+            List<Debt> allDebts = DebtDAO.getInstance().readAll().getData();
+            List<Debt> debtsForExpense = allDebts.stream()
+                    .filter(debt -> debt.getExpense() != null && debt.getExpense().getId() == expenseId)
+                    .collect(Collectors.toList());
+
+            System.out.println("📋 Deudas registradas para el gasto ID " + expenseId + " (" + debtsForExpense.size() + " en total):");
+            debtsForExpense.forEach(System.out::println);
+
+        } else {
+            System.out.println("❌ [TEST 3] Error " + result3.getCode() + ": " + result3.getMessage());
         }
     }
 }
