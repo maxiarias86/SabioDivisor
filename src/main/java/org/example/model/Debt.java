@@ -11,8 +11,7 @@ public class Debt {
     private Expense expense;
     private LocalDate dueDate;
 
-    public Debt() {
-    }
+    public Debt() {}
 
     public Debt(int id, double amount, User creditor, User debtor, Expense expense, LocalDate dueDate) {
         setId(id);
@@ -21,6 +20,10 @@ public class Debt {
         setDebtor(debtor);
         setExpense(expense);
         setDueDate(dueDate);
+    }
+
+    public Debt(int id, double amount, User debtor, User creditor, LocalDate dueDate) {
+        this(id, amount, creditor, debtor, null, dueDate);
     }
 
     // Getters
@@ -54,61 +57,38 @@ public class Debt {
     }
 
     public void setAmount(double amount) {
-        try {
-            if (amount <= 0) {
-                throw new IllegalArgumentException("El monto de la deuda debe ser mayor a cero");
-            }
-            this.amount = amount;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error en 'monto': " + e.getMessage());
+        if (amount <= 0) {
+            throw new IllegalArgumentException("El monto de la deuda debe ser mayor a cero");
         }
+        this.amount = amount;
     }
 
     public void setCreditor(User creditor) {
-        try {
-            if (creditor == null) {
-                throw new IllegalArgumentException("El acreedor no puede ser nulo");
-            }
-            this.creditor = creditor;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error en 'creditor': " + e.getMessage());
+        if (creditor == null) {
+            throw new IllegalArgumentException("El acreedor no puede ser nulo");
         }
+        this.creditor = creditor;
     }
 
     public void setDebtor(User debtor) {
-        try {
-            if (debtor == null) {
-                throw new IllegalArgumentException("El deudor no puede ser nulo");
-            }
-            if (this.creditor != null && creditor.equals(debtor)) {
-                throw new IllegalArgumentException("El deudor no puede ser el mismo que el acreedor");
-            }
-            this.debtor = debtor;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error en 'debtor': " + e.getMessage());
+        if (debtor == null) {
+            throw new IllegalArgumentException("El deudor no puede ser nulo");
         }
+        if (this.creditor != null && this.creditor.equals(debtor)) {
+            throw new IllegalArgumentException("El deudor no puede ser el mismo que el acreedor");
+        }
+        this.debtor = debtor;
     }
 
     public void setExpense(Expense expense) {
-        try {
-            if (expense == null) {
-                throw new IllegalArgumentException("La deuda debe estar asociada a un gasto");
-            }
-            this.expense = expense;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error en 'expense': " + e.getMessage());
-        }
+        this.expense = expense;
     }
 
     public void setDueDate(LocalDate dueDate) {
-        try {
-            if (dueDate == null) {
-                throw new IllegalArgumentException("La fecha de vencimiento no puede ser nula");
-            }
-            this.dueDate = dueDate;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error en 'dueDate': " + e.getMessage());
+        if (dueDate == null) {
+            throw new IllegalArgumentException("La fecha de vencimiento no puede ser nula");
         }
+        this.dueDate = dueDate;
     }
 
     // equals y hashCode basados en id

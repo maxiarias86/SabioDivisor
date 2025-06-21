@@ -2,18 +2,24 @@ package org.example.dao;
 
 import org.example.model.Payment;
 import org.example.model.Response;
+import org.example.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentDAO extends BaseDAO<Payment> {
+    private final String tableName = "payments";
+    private static final PaymentDAO instance = new PaymentDAO();
 
-    private final String tableName = "payment";
+    public static PaymentDAO getInstance() {
+        return instance;
+    }
 
-    public PaymentDAO() {
+    private PaymentDAO() {
         super();
     }
+
 
     @Override
     public Response<Payment> create(Payment entity) {
@@ -44,13 +50,32 @@ public class PaymentDAO extends BaseDAO<Payment> {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+                UserDAO userDAO = UserDAO.getInstance();
+
+                int payerId = rs.getInt("payer_id");
+                int recipientId = rs.getInt("payee_id");
+
+                Response<User> payerResponse = userDAO.read(payerId);
+                Response<User> recipientResponse = userDAO.read(recipientId);
+
+                if (!payerResponse.isSuccess() || !recipientResponse.isSuccess()) {
+                    System.out.println("⚠️ Error al obtener usuarios para el pago con ID: " + id);
+                    System.out.println("Error en 'payer': " + payerResponse.getMessage());
+                    System.out.println("Error en 'recipient': " + recipientResponse.getMessage());
+                    return new Response<>(false, "404", "No se pudieron obtener los usuarios asociados");
+                }
+
+                User payer = payerResponse.getObj();
+                User recipient = recipientResponse.getObj();
+
                 Payment payment = new Payment(
                         rs.getInt("id"),
                         rs.getDouble("amount"),
                         rs.getDate("date").toLocalDate(),
-                        null, // payer
-                        null  // recipient
+                        payer,
+                        recipient
                 );
+
                 return new Response<>(true, "200", "Pago encontrado", payment);
             } else {
                 return new Response<>(false, "404", "No se encontró el pago");
@@ -60,6 +85,8 @@ public class PaymentDAO extends BaseDAO<Payment> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
+
+
 
     @Override
     public Response<Payment> update(Payment entity) {
@@ -116,15 +143,33 @@ public class PaymentDAO extends BaseDAO<Payment> {
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
+            UserDAO userDAO = UserDAO.getInstance();
 
             while (rs.next()) {
+                int payerId = rs.getInt("payer_id");
+                int recipientId = rs.getInt("payee_id");
+
+                Response<User> payerResponse = userDAO.read(payerId);
+                Response<User> recipientResponse = userDAO.read(recipientId);
+
+                if (!payerResponse.isSuccess() || !recipientResponse.isSuccess()) {
+                    System.out.println("⚠️ Pago con datos incompletos (ID: " + rs.getInt("id") + ")");
+                    System.out.println("Error en 'payer': " + payerResponse.getMessage());
+                    System.out.println("Error en 'recipient': " + recipientResponse.getMessage());
+                    continue;
+                }
+
+                User payer = payerResponse.getObj();
+                User recipient = recipientResponse.getObj();
+
                 Payment payment = new Payment(
                         rs.getInt("id"),
                         rs.getDouble("amount"),
                         rs.getDate("date").toLocalDate(),
-                        null,
-                        null
+                        payer,
+                        recipient
                 );
+
                 lista.add(payment);
             }
 
@@ -134,4 +179,7 @@ public class PaymentDAO extends BaseDAO<Payment> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
+
+
+
 }

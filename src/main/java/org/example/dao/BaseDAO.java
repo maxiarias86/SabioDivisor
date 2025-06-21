@@ -3,19 +3,18 @@ package org.example.dao;
 import org.example.model.Response;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public abstract class BaseDAO<T> implements ICrud<T> {
 
     protected Connection conn;
 
-    public BaseDAO() {
+    public BaseDAO(){
         try {
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/sabio_divisor", "root", "");
+            this.conn = DBConn.getInstance().getConnection();
         } catch (SQLException e) {
-            throw new RuntimeException("No se pudo conectar a la base de datos", e);        }
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -23,6 +22,7 @@ public abstract class BaseDAO<T> implements ICrud<T> {
 
     @Override
     public abstract Response<T> read(int id);
+    //En todos los read() debo recuperarlos con un getObj() para un solo objeto
 
     @Override
     public abstract Response<T> update(T entity);
@@ -32,4 +32,5 @@ public abstract class BaseDAO<T> implements ICrud<T> {
 
     @Override
     public abstract Response<T> readAll();
+    //En todos los readAll() debo recuperarlos con un getData() para listas
 }

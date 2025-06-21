@@ -11,15 +11,20 @@ public class DBConn {
     private final String password = "";
 
     private Connection conn;
+
     private static DBConn instance;
 
-    //A diferencia del que vimos en clase, la excepción no la manejo desde acá sino cuando llamo a la instancia.
     private DBConn() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             this.conn = DriverManager.getConnection(url, user, password);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Error al cargar el driver de MYSQL", e);
+
+        }catch(ClassNotFoundException e){
+            System.out.println("Error al cargar el driver de MYSQL: " + e.getMessage());
+        }catch(SQLException e){
+            System.out.println("Error al intentar generar la conexion: " + e.getMessage());
+        }catch(Exception e){
+            System.out.println("Error : " + e.getMessage());
         }
     }
 

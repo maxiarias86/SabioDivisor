@@ -9,9 +9,15 @@ import java.util.List;
 
 public class UserDAO extends BaseDAO<User> {
 
-    private final String tableName = "user";
+    private final String tableName = "users";
+    private static final UserDAO instance = new UserDAO();
 
-    public UserDAO() {
+
+    public static UserDAO getInstance(){
+        return instance;
+    }
+
+    private UserDAO() {
         super();
     }
 
@@ -34,8 +40,12 @@ public class UserDAO extends BaseDAO<User> {
             return new Response<>(true, "200", "Usuario creado exitosamente");
 
         } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) { // código de error para entradas duplicadas en MySQL
+                return new Response<>(false, "409", "El email ya está registrado");
+            }
             return new Response<>(false, "500", e.getMessage());
         }
+
     }
 
     @Override
@@ -135,4 +145,33 @@ public class UserDAO extends BaseDAO<User> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
+
+    //Hice un metodo para buscarlos por email porque no siempre voy a conocer el ID.
+    //Mapea todos los campos del modelo User.
+
+    public Response<User> readByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
+                return new Response<>(true, "200", "Usuario encontrado", user);
+            } else {
+                return new Response<>(false, "404", "No se encontró el usuario con ese email");
+            }
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
+
 }
