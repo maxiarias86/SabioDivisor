@@ -7,35 +7,62 @@ import org.example.model.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-/*Tuve que crear una lista de los usuarios para que la usen las vistas y el usuario pueda seleccionar
-* el ID cuando ingresa un gasto nuevo */
+/*
+Para no tener que rearmar de la BBDD cada vez que utilice un usuario,
+ arme un cache o repository de usuarios
+*/
 
 public class UserCache {
-    private static final UserCache instance = new UserCache();
-    private final Map<Integer, User> userMap = new HashMap<>();
 
-    private UserCache() {
-        loadUsers();
-    }
+    private final static UserCache instance = new UserCache();
+
+    private final UserDAO userDAO;
+
+    private final Map<Integer, User> userCache = new HashMap<>();
 
     public static UserCache getInstance() {
         return instance;
     }
 
+    private UserCache() {
+        this.userDAO = UserDAO.getInstance();
+        loadUsers(); // Llamo al metodo directamente porque quiero que siempre se instancie ya cargado
+    }
+
     private void loadUsers() {
-        Response<User> response = UserDAO.getInstance().readAll();
+        Response<User> response = userDAO.readAll();
         if (response.isSuccess()) {
             for (User user : response.getData()) {
-                userMap.put(user.getId(), user);
+                userCache.put(user.getId(), user);
             }
         }
     }
 
-    public Map<Integer, User> getAllUsers() {
-        return userMap;
+    //Este metodo llena el cache de a uno. No le encuentro uso aún
+    public Response<User> findById(int id) {
+        try{
+            if(!userCache.containsKey(id)){
+                Response getUser = userDAO.read(id);
+                if(getUser.isSuccess()){
+                    User user = (User) getUser.getObj();
+                    userCache.put(id, user);
+                }else{
+                    return getUser;
+                }
+            }
+            return new Response<>(true, "200", "OK", userCache.get(id));
+        }catch(Exception e){
+            return new Response<>(false, "500", "Internal Server Error");
+        }
     }
 
+    //Devuelve todos los usuarios del cache
+    public Map<Integer, User> getAllUsers() {
+        return userCache;
+    }
+
+    //Devuelve un usuario
     public User getById(int id) {
-        return userMap.get(id);
+        return userCache.get(id);
     }
 }

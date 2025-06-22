@@ -156,20 +156,20 @@ public class PaymentDAO extends BaseDAO<Payment> {
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            UserDAO userDAO = UserDAO.getInstance();
+
 
             while (rs.next()) {
+                //En este caso
                 int payerId = rs.getInt("payer_id");
                 int recipientId = rs.getInt("payee_id");
 
-                Response<User> payerResponse = userDAO.read(payerId);
-                Response<User> recipientResponse = userDAO.read(recipientId);
+                Response<User> payerResponse = UserDAO.getInstance().read(payerId);
+                Response<User> recipientResponse = UserDAO.getInstance().read(recipientId);
 
                 if (!payerResponse.isSuccess() || !recipientResponse.isSuccess()) {
-                    System.out.println("⚠️ Pago con datos incompletos (ID: " + rs.getInt("id") + ")");
+                    System.out.println("Pago con datos incompletos (ID: " + rs.getInt("id") + ")");
                     System.out.println("Error en 'payer': " + payerResponse.getMessage());
                     System.out.println("Error en 'recipient': " + recipientResponse.getMessage());
-                    continue;
                 }
 
                 User payer = payerResponse.getObj();

@@ -159,7 +159,7 @@ public class DebtDAO extends BaseDAO<Debt> {
                     System.out.println("Deuda con datos incompletos (ID: " + rs.getInt("id") + ")");
                     System.out.println("Error en 'debtor': " + debtorResponse.getMessage());
                     System.out.println("Error en 'creditor': " + creditorResponse.getMessage());
-                    continue;
+                    continue; // Saleta la creación de la deuda que le falten datos
                 }
 
                 // Solo asignamos el ID del Expense (evitamos ciclo)

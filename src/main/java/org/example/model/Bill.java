@@ -3,7 +3,11 @@ package org.example.model;
 import org.example.dto.BillDTO;
 
 import java.time.LocalDate;
-
+/*
+Esta clase es para armar un cache de las operaciones en las que
+participa el usuario que se logueo.
+No va a tener correlación en la base de datos.
+*/
 public class Bill {
     private int id; // ID de la Debt
     private User otherUser; // El otro usuario (no el que la genera)
@@ -18,9 +22,9 @@ public class Bill {
         this.amount = amount;
         this.dueDate = dueDate;
     }
-
+    // No se si tiene sentido tener un DTO si son identicos.
     public BillDTO toDTO() {
-        return new BillDTO(id, otherUser.getName(), description, amount, dueDate);
+        return new BillDTO(id, otherUser.getId(), description, amount, dueDate);
     }
 
     // Getters
@@ -43,4 +47,6 @@ public class Bill {
     public LocalDate getDueDate() {
         return dueDate;
     }
+
+
 }
