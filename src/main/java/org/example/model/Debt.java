@@ -8,25 +8,25 @@ public class Debt {
     private double amount;
     private User creditor;
     private User debtor;
-    private Expense expense;
+    private int expenseId;
     private LocalDate dueDate;
     private int installmentNumber;
 
 
     public Debt() {}
 
-    public Debt(int id, double amount, User creditor, User debtor, Expense expense, LocalDate dueDate,  int installmentNumber) {
+    public Debt(int id, double amount, User creditor, User debtor, int expenseId, LocalDate dueDate, int installmentNumber) {
         setId(id);
         setAmount(amount);
         setCreditor(creditor);
         setDebtor(debtor);
-        setExpense(expense);
+        setExpenseId(expenseId);
         setDueDate(dueDate);
         setInstallmentNumber(installmentNumber);
     }
 
     public Debt(int id, double amount, User debtor, User creditor, LocalDate dueDate) {
-        this(id, amount, creditor, debtor, null, dueDate,1);
+        this(id, amount, creditor, debtor, 0, dueDate,1);
     }
 
     // Getters
@@ -46,8 +46,8 @@ public class Debt {
         return debtor;
     }
 
-    public Expense getExpense() {
-        return expense;
+    public int getExpenseId() {
+        return expenseId;
     }
 
     public LocalDate getDueDate() {
@@ -88,8 +88,8 @@ public class Debt {
         this.debtor = debtor;
     }
 
-    public void setExpense(Expense expense) {
-        this.expense = expense;
+    public void setExpenseId(int expenseId) {
+        this.expenseId = expenseId;
     }
 
     public void setDueDate(LocalDate dueDate) {
@@ -128,7 +128,7 @@ public class Debt {
                 ", amount=" + amount +
                 ", creditor=" + (creditor != null ? creditor.getName() : "null") +
                 ", debtor=" + (debtor != null ? debtor.getName() : "null") +
-                ", expenseId=" + (expense != null ? expense.getId() : "null") +
+                ", expenseId=" + expenseId +
                 ", dueDate=" + dueDate +
                 ", installment=" + installmentNumber +
                 '}';

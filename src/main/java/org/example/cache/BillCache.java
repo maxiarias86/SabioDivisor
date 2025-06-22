@@ -61,7 +61,9 @@ public class BillCache {
             if (isCreditor || isDebtor) {
                 //Si el user isCreditor asigno el Debtor a other, si no lo es asigno el Creditor.
                 User other = isCreditor ? debt.getDebtor() : debt.getCreditor();
-                Expense expense = debt.getExpense();
+                ExpenseDAO expenseDAO = ExpenseDAO.getInstance();
+                Expense expense = expenseDAO.read(debt.getExpenseId()).getObj();
+
                 //Si el user isCreditor el amount va a ser positivo, sino negativo.
                 double signedAmount = isCreditor ? debt.getAmount() : -debt.getAmount();
 

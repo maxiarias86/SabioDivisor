@@ -139,7 +139,7 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                 Response<Debt> allDebts = debtDAO.readAll();
                 if (allDebts.isSuccess()) {
                     List<Debt> relatedDebts = allDebts.getData().stream()
-                            .filter(d -> d.getExpense().getId() == expense.getId())
+                            .filter(d -> d.getExpenseId() == expense.getId())
                             .toList();
                     expense.setDebts(relatedDebts);
                 }

@@ -31,7 +31,7 @@ public class DebtDAO extends BaseDAO<Debt> {
             ps.setDate(2, Date.valueOf(entity.getDueDate()));
             ps.setInt(3, entity.getDebtor().getId());
             ps.setInt(4, entity.getCreditor().getId());
-            ps.setInt(5, entity.getExpense().getId());
+            ps.setInt(5, entity.getExpenseId());
             ps.setInt(6, entity.getInstallmentNumber());
 
 
@@ -57,7 +57,6 @@ public class DebtDAO extends BaseDAO<Debt> {
                 UserDAO userDAO = UserDAO.getInstance();
                 ExpenseDAO expenseDAO = ExpenseDAO.getInstance();
 
-
                 Response<User> debtorResponse = userDAO.read(rs.getInt("debtor_id"));
                 Response<User> creditorResponse = userDAO.read(rs.getInt("creditor_id"));
                 Response<Expense> expenseResponse = expenseDAO.read(rs.getInt("expense_id"));
@@ -71,7 +70,7 @@ public class DebtDAO extends BaseDAO<Debt> {
                         rs.getDouble("amount"),
                         debtorResponse.getObj(),
                         creditorResponse.getObj(),
-                        expenseResponse.getObj(),
+                        rs.getInt("expense_id"),
                         rs.getDate("due_date").toLocalDate(),
                         rs.getInt("installment_number")
 
@@ -97,7 +96,7 @@ public class DebtDAO extends BaseDAO<Debt> {
             ps.setDate(2, Date.valueOf(entity.getDueDate()));
             ps.setInt(3, entity.getDebtor().getId());
             ps.setInt(4, entity.getCreditor().getId());
-            ps.setInt(5, entity.getExpense().getId());
+            ps.setInt(5, entity.getExpenseId());
             ps.setInt(6, entity.getInstallmentNumber());
             ps.setInt(7, entity.getId());
 
@@ -162,16 +161,12 @@ public class DebtDAO extends BaseDAO<Debt> {
                     continue; // Saleta la creación de la deuda que le falten datos
                 }
 
-                // Solo asignamos el ID del Expense (evitamos ciclo)
-                Expense partialExpense = new Expense();
-                partialExpense.setId(rs.getInt("expense_id"));
-
                 Debt d = new Debt(
                         rs.getInt("id"),
                         rs.getDouble("amount"),
                         debtorResponse.getObj(),
                         creditorResponse.getObj(),
-                        partialExpense,
+                        rs.getInt("expense_id"),
                         rs.getDate("due_date").toLocalDate(),
                         rs.getInt("installment_number")
                 );
@@ -201,7 +196,7 @@ public class DebtDAO extends BaseDAO<Debt> {
                 d.setDueDate(rs.getDate("due_date").toLocalDate());
                 d.setInstallmentNumber(rs.getInt("installment_number"));
 
-                // Cargar creditor, debtor y expense por ID
+                // Cargar creditor, debtor y expense ID
                 int debtorId = rs.getInt("debtor_id");
                 int creditorId = rs.getInt("creditor_id");
                 int expenseIdFromDb = rs.getInt("expense_id");
@@ -209,8 +204,7 @@ public class DebtDAO extends BaseDAO<Debt> {
                 d.setDebtor(UserDAO.getInstance().read(debtorId).getObj());
                 d.setCreditor(UserDAO.getInstance().read(creditorId).getObj());
 
-                d.setExpense(new Expense()); // Podés cargarlo más completo si lo necesitás
-                d.getExpense().setId(expenseIdFromDb);
+                d.setExpenseId(rs.getInt("expense_id")); // Podés cargarlo más completo si lo necesitás
 
                 debts.add(d);
             }
@@ -221,6 +215,8 @@ public class DebtDAO extends BaseDAO<Debt> {
 
         return debts;
     }
+
+
 
 
 }

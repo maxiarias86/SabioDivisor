@@ -22,11 +22,6 @@ public class UserDAO extends BaseDAO<User> {
     }
 
     @Override
-    /*
-    Si bien el IDE marca un error: En ICrud<T> están declarados los métodos abstractos,
-    BaseDAO<T> también los declara como abstractos, UserDAO y el resto de los DAOs
-    finalmente implementan esos métodos
-    */
     public Response<User> create(User user) {
         String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
 

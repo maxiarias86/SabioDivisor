@@ -100,7 +100,7 @@ public class ExpenseRepository {
         Response<Debt> debtResponse = debtDAO.readAll();
         if (debtResponse.isSuccess()) {
             for (Debt d : debtResponse.getData()) {
-                Expense e = expenseCache.get(d.getExpense().getId());
+                Expense e = expenseCache.get(d.getExpenseId());
                 if (e != null) {
                     List<Debt> debts = e.getDebts();
                     if (debts == null) {
