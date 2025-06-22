@@ -33,4 +33,14 @@ public class LoginService {
         System.out.println("\nBienvenido, " + usuarioLogueado.getName() + "\n");
         return usuarioLogueado;
     }
+
+    public User validarCredenciales(List<User> usuarios, String email, String password) {
+        for (User u : usuarios) {
+            if (u.getEmail().equalsIgnoreCase(email) && u.getPassword().equals(password)) {
+                return u;
+            }
+        }
+        return null;
+    }
+
 }
