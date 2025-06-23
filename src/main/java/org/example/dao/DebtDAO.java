@@ -216,6 +216,51 @@ public class DebtDAO extends BaseDAO<Debt> {
         return debts;
     }
 
+    public Response<Debt> readAllByUser(User user) {
+        String sql = "SELECT * FROM debts WHERE creditor_id = ? OR debtor_id = ?";
+        List<Debt> lista = new ArrayList<>();
+        UserDAO userDAO = UserDAO.getInstance();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, user.getId());
+            ps.setInt(2, user.getId());
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int debtorId = rs.getInt("debtor_id");
+                int creditorId = rs.getInt("creditor_id");
+
+                Response<User> debtorResponse = userDAO.read(debtorId);
+                Response<User> creditorResponse = userDAO.read(creditorId);
+
+                if (!debtorResponse.isSuccess() || !creditorResponse.isSuccess()) {
+                    System.out.println("Deuda con datos incompletos (ID: " + rs.getInt("id") + ")");
+                    System.out.println("Error en 'debtor': " + debtorResponse.getMessage());
+                    System.out.println("Error en 'creditor': " + creditorResponse.getMessage());
+                    continue; // Saleta la creación de la deuda que le falten datos
+                }
+
+                Debt d = new Debt(
+                        rs.getInt("id"),
+                        rs.getDouble("amount"),
+                        debtorResponse.getObj(),
+                        creditorResponse.getObj(),
+                        rs.getInt("expense_id"),
+                        rs.getDate("due_date").toLocalDate(),
+                        rs.getInt("installment_number")
+                );
+
+                lista.add(d);
+            }
+
+            return new Response<>(true, "200", "Listado de deudas obtenido", lista);
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
+
 
 
 

@@ -5,10 +5,7 @@ import org.example.dao.ExpenseDAO;
 import org.example.dao.PaymentDAO;
 import org.example.dao.UserDAO;
 import org.example.dto.BillDTO;
-import org.example.model.Bill;
-import org.example.model.Debt;
-import org.example.model.Expense;
-import org.example.model.User;
+import org.example.model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,12 +20,6 @@ public class BillCache {
 
     private static BillCache instance;
 
-    private final DebtDAO debtDAO;
-    private final ExpenseDAO expenseDAO;
-    private final UserDAO userDAO;
-    private final PaymentDAO paymentDAO;
-
-
     private ArrayList<BillDTO> bills;
 
     public static BillCache getInstance() {
@@ -40,10 +31,6 @@ public class BillCache {
 
     private BillCache() {
         bills = new ArrayList<>();
-        this.debtDAO = DebtDAO.getInstance();
-        this.expenseDAO = ExpenseDAO.getInstance();
-        this.userDAO = UserDAO.getInstance();
-        this.paymentDAO = PaymentDAO.getInstance();
     }
 
     public void clearCache() {
@@ -51,7 +38,7 @@ public class BillCache {
         instance = null; // elimina la instancia para forzar creacion de nuevo cache con nuevo login
     }
 
-    public void createBillCache(User user, List<Debt> allDebts) {
+    public void createBillCache(User user, List<Debt> allDebts, List<Payment> allPayments) {
         bills.clear();
 
         for (Debt debt : allDebts) {
@@ -78,7 +65,26 @@ public class BillCache {
                 bills.add(bill.toDTO());
             }
         }
-        //for (Payment payment: )
+        for (Payment payment : allPayments) {
+            boolean isSender = payment.getPayer().equals(user);
+            boolean isReceiver = payment.getRecipient().equals(user);
+
+            if (isSender || isReceiver) {
+                User other = isSender ? payment.getRecipient() : payment.getPayer();
+                double signedAmount = isSender ? -payment.getAmount() : payment.getAmount();
+
+                Bill bill = new Bill(
+                        -payment.getId(), // ID negativo para diferenciar de las Debt
+                        other,
+                        "Pago directo",
+                        signedAmount,
+                        payment.getDate()
+                );
+
+                bills.add(bill.toDTO());
+            }
+        }
+
     }
 
     public double accountUpToDate(LocalDate date) {

@@ -72,7 +72,7 @@ public class PaymentDAO extends BaseDAO<Payment> {
                 Response<User> recipientResponse = userDAO.read(recipientId);
 
                 if (!payerResponse.isSuccess() || !recipientResponse.isSuccess()) {
-                    System.out.println("⚠️ Error al obtener usuarios para el pago con ID: " + id);
+                    System.out.println("Error al obtener usuarios para el pago con ID: " + id);
                     System.out.println("Error en 'payer': " + payerResponse.getMessage());
                     System.out.println("Error en 'recipient': " + recipientResponse.getMessage());
                     return new Response<>(false, "404", "No se pudieron obtener los usuarios asociados");
@@ -170,6 +170,8 @@ public class PaymentDAO extends BaseDAO<Payment> {
                     System.out.println("Pago con datos incompletos (ID: " + rs.getInt("id") + ")");
                     System.out.println("Error en 'payer': " + payerResponse.getMessage());
                     System.out.println("Error en 'recipient': " + recipientResponse.getMessage());
+                    continue; //Saltea el registro si hay un error. Evita guardarlo
+
                 }
 
                 User payer = payerResponse.getObj();
@@ -192,6 +194,53 @@ public class PaymentDAO extends BaseDAO<Payment> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
+
+    //Lo uso para crear el PaymentCache del usuario logueado
+    public Response<Payment> readAllByUser(User user) {
+        String sql = "SELECT * FROM " + tableName + " WHERE payer_id = ? OR payee_id = ?";
+        List<Payment> lista = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, user.getId());
+            ps.setInt(2, user.getId());
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int payerId = rs.getInt("payer_id");
+                int recipientId = rs.getInt("payee_id");
+
+                Response<User> payerResponse = UserDAO.getInstance().read(payerId);
+                Response<User> recipientResponse = UserDAO.getInstance().read(recipientId);
+
+                if (!payerResponse.isSuccess() || !recipientResponse.isSuccess()) {
+                    System.out.println("Pago con datos incompletos (ID: " + rs.getInt("id") + ")");
+                    System.out.println("Error en 'payer': " + payerResponse.getMessage());
+                    System.out.println("Error en 'recipient': " + recipientResponse.getMessage());
+                    continue; //Saltea el registro si hay un error. Evita guardarlo
+                }
+
+                User payer = payerResponse.getObj();
+                User recipient = recipientResponse.getObj();
+
+                Payment payment = new Payment(
+                        rs.getInt("id"),
+                        rs.getDouble("amount"),
+                        rs.getDate("date").toLocalDate(),
+                        payer,
+                        recipient
+                );
+
+                lista.add(payment);
+            }
+
+            return new Response<>(true, "200", "Listado de pagos obtenido", lista);
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
+
 
 
 
