@@ -8,22 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO extends BaseDAO<User> {
-
-    private final String tableName = "users";
-    private static final UserDAO instance = new UserDAO();
-
-
+    private final String tableName = "users";// La tabla de usuarios
+    private static final UserDAO instance = new UserDAO();//Todos los DAO son Singleton.
     public static UserDAO getInstance(){
         return instance;
     }
-
     private UserDAO() {
         super();
     }
 
     @Override
     public Response<User> create(User user) {
-        String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";//No paso el ID porque es autoincremental
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -45,7 +41,6 @@ public class UserDAO extends BaseDAO<User> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
-
 
     @Override
     public Response<User> read(int id) {
@@ -197,5 +192,4 @@ public class UserDAO extends BaseDAO<User> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
-
 }

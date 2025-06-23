@@ -1,6 +1,7 @@
 package org.example.dto;
 
 public class UserDTO {
+    private int id; // 0 significa "no asignado"
     private String username;
     private String email;
     private String password;
@@ -8,13 +9,22 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(String username, String email, String password) {
+    public UserDTO(int id, String username, String email, String password) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
     // Getters y setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
