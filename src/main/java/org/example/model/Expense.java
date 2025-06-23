@@ -7,8 +7,6 @@ import java.util.Objects;
 
 public class Expense extends Transaction {
     private int installments;
-    private Map<User, Double> payers;
-    private Map<User, Double> debtors;
     private List<Debt> debts;
     private String description;
 
@@ -16,12 +14,9 @@ public class Expense extends Transaction {
     }
 
     public Expense(int id, double amount, LocalDate date, int installments,
-                   Map<User, Double> payers, Map<User, Double> debtors,
                    List<Debt> debts, String description) {
         super(id, amount, date);
         setInstallments(installments);
-        setPayers(payers);
-        setDebtors(debtors);
         setDebts(debts);
         setDescription(description);
     }
@@ -29,14 +24,6 @@ public class Expense extends Transaction {
     // Getters públicos
     public int getInstallments() {
         return installments;
-    }
-
-    public Map<User, Double> getPayers() {
-        return payers;
-    }
-
-    public Map<User, Double> getDebtors() {
-        return debtors;
     }
 
     public List<Debt> getDebts() {
@@ -59,27 +46,6 @@ public class Expense extends Transaction {
         }
     }
 
-    public void setPayers(Map<User, Double> payers) {
-        try {
-            if (payers == null || payers.isEmpty()) {
-                throw new IllegalArgumentException("Debe haber al menos un pagador");
-            }
-            this.payers = payers;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error en 'payers': " + e.getMessage());
-        }
-    }
-
-    public void setDebtors(Map<User, Double> debtors) {
-        try {
-            if (debtors == null || debtors.isEmpty()) {
-                throw new IllegalArgumentException("Debe haber al menos un deudor");
-            }
-            this.debtors = debtors;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error en 'debtors': " + e.getMessage());
-        }
-    }
 
     public void setDebts(List<Debt> debts) {
         this.debts = debts;

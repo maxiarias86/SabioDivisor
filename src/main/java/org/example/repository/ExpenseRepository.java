@@ -44,55 +44,11 @@ public class ExpenseRepository {
                     rs.getDouble("amount"),
                     rs.getDate("date").toLocalDate(),
                     rs.getInt("installments"),
-                    null, null, null,
+                    null,
                     rs.getString("description")
             );
             expenseCache.put(e.getId(), e);
             expenses.add(e);
-        }
-
-        // 2. Cargar payers
-        PreparedStatement psPayers = conn.prepareStatement("SELECT * FROM expense_payers");
-        ResultSet rsPayers = psPayers.executeQuery();
-        while (rsPayers.next()) {
-            int expenseId = rsPayers.getInt("expense_id");
-            int userId = rsPayers.getInt("user_id");
-            double amount = rsPayers.getDouble("amount");
-
-            Expense e = expenseCache.get(expenseId);
-            if (e != null) {
-                Map<User, Double> payers = e.getPayers();
-                if (payers == null) {
-                    payers = new HashMap<>();
-                    e.setPayers(payers);
-                }
-                User user = getUserFromCache(userId);
-                if (user != null) {
-                    payers.put(user, amount);
-                }
-            }
-        }
-
-        // 3. Cargar debtors
-        PreparedStatement psDebtors = conn.prepareStatement("SELECT * FROM expense_debtors");
-        ResultSet rsDebtors = psDebtors.executeQuery();
-        while (rsDebtors.next()) {
-            int expenseId = rsDebtors.getInt("expense_id");
-            int userId = rsDebtors.getInt("user_id");
-            double amount = rsDebtors.getDouble("amount");
-
-            Expense e = expenseCache.get(expenseId);
-            if (e != null) {
-                Map<User, Double> debtors = e.getDebtors();
-                if (debtors == null) {
-                    debtors = new HashMap<>();
-                    e.setDebtors(debtors);
-                }
-                User user = getUserFromCache(userId);
-                if (user != null) {
-                    debtors.put(user, amount);
-                }
-            }
         }
 
         // 4. Cargar deudas

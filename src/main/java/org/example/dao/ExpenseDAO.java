@@ -48,32 +48,6 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                 return new Response<>(false, "500", "No se obtuvo el ID del gasto insertado");
             }
 
-            // Insertar payers
-            if (entity.getPayers() != null && !entity.getPayers().isEmpty()) {
-                String payerSQL = "INSERT INTO expense_payers (expense_id, user_id, amount) VALUES (?, ?, ?)";
-                PreparedStatement payerPS = conn.prepareStatement(payerSQL);
-                for (Map.Entry<User, Double> entry : entity.getPayers().entrySet()) {
-                    payerPS.setInt(1, entity.getId());
-                    payerPS.setInt(2, entry.getKey().getId());
-                    payerPS.setDouble(3, entry.getValue());
-                    payerPS.addBatch();
-                }
-                payerPS.executeBatch();
-            }
-
-            // Insertar debtors
-            if (entity.getDebtors() != null && !entity.getDebtors().isEmpty()) {
-                String debtorSQL = "INSERT INTO expense_debtors (expense_id, user_id, amount) VALUES (?, ?, ?)";
-                PreparedStatement debtorPS = conn.prepareStatement(debtorSQL);
-                for (Map.Entry<User, Double> entry : entity.getDebtors().entrySet()) {
-                    debtorPS.setInt(1, entity.getId());
-                    debtorPS.setInt(2, entry.getKey().getId());
-                    debtorPS.setDouble(3, entry.getValue());
-                    debtorPS.addBatch();
-                }
-                debtorPS.executeBatch();
-            }
-
             return new Response<>(true, "200", "Gasto creado con éxito", entity);
 
         } catch (SQLException e) {
@@ -101,39 +75,9 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                         rs.getDouble("amount"),
                         rs.getDate("date").toLocalDate(),
                         rs.getInt("installments"),
-                        null, null, null,
+                        null,
                         rs.getString("description")
                 );
-
-                // Cargar payers
-                PreparedStatement payersPS = conn.prepareStatement("SELECT * FROM expense_payers WHERE expense_id = ?");
-                payersPS.setInt(1, expense.getId());
-                ResultSet payersRS = payersPS.executeQuery();
-                Map<User, Double> payersMap = new java.util.HashMap<>();
-                while (payersRS.next()) {
-                    int userId = payersRS.getInt("user_id");
-                    double amount = payersRS.getDouble("amount");
-                    Response<User> userResp = userDAO.read(userId);
-                    if (userResp.isSuccess()) {
-                        payersMap.put(userResp.getObj(), amount);
-                    }
-                }
-                expense.setPayers(payersMap);
-
-                // Cargar debtors
-                PreparedStatement debtorsPS = conn.prepareStatement("SELECT * FROM expense_debtors WHERE expense_id = ?");
-                debtorsPS.setInt(1, expense.getId());
-                ResultSet debtorsRS = debtorsPS.executeQuery();
-                Map<User, Double> debtorsMap = new java.util.HashMap<>();
-                while (debtorsRS.next()) {
-                    int userId = debtorsRS.getInt("user_id");
-                    double amount = debtorsRS.getDouble("amount");
-                    Response<User> userResp = userDAO.read(userId);
-                    if (userResp.isSuccess()) {
-                        debtorsMap.put(userResp.getObj(), amount);
-                    }
-                }
-                expense.setDebtors(debtorsMap);
 
                 // Cargar deudas asociadas
                 Response<Debt> allDebts = debtDAO.readAll();
@@ -173,48 +117,12 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                 return new Response<>(false, "404", "No se encontró el gasto para actualizar");
             }
 
-            // Eliminar registros anteriores en expense_payers y expense_debtors
-            PreparedStatement delPayers = conn.prepareStatement("DELETE FROM expense_payers WHERE expense_id = ?");
-            delPayers.setInt(1, entity.getId());
-            delPayers.executeUpdate();
-
-            PreparedStatement delDebtors = conn.prepareStatement("DELETE FROM expense_debtors WHERE expense_id = ?");
-            delDebtors.setInt(1, entity.getId());
-            delDebtors.executeUpdate();
-
-            // Insertar nuevos payers
-            if (entity.getPayers() != null && !entity.getPayers().isEmpty()) {
-                String payerSQL = "INSERT INTO expense_payers (expense_id, user_id, amount) VALUES (?, ?, ?)";
-                PreparedStatement payerPS = conn.prepareStatement(payerSQL);
-                for (Map.Entry<User, Double> entry : entity.getPayers().entrySet()) {
-                    payerPS.setInt(1, entity.getId());
-                    payerPS.setInt(2, entry.getKey().getId());
-                    payerPS.setDouble(3, entry.getValue());
-                    payerPS.addBatch();
-                }
-                payerPS.executeBatch();
-            }
-
-            // Insertar nuevos debtors
-            if (entity.getDebtors() != null && !entity.getDebtors().isEmpty()) {
-                String debtorSQL = "INSERT INTO expense_debtors (expense_id, user_id, amount) VALUES (?, ?, ?)";
-                PreparedStatement debtorPS = conn.prepareStatement(debtorSQL);
-                for (Map.Entry<User, Double> entry : entity.getDebtors().entrySet()) {
-                    debtorPS.setInt(1, entity.getId());
-                    debtorPS.setInt(2, entry.getKey().getId());
-                    debtorPS.setDouble(3, entry.getValue());
-                    debtorPS.addBatch();
-                }
-                debtorPS.executeBatch();
-            }
-
             return new Response<>(true, "200", "Gasto actualizado con éxito", entity);
 
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
     }
-
 
     @Override
     public Response<Expense> delete(int id) {
@@ -311,17 +219,6 @@ public class ExpenseDAO extends BaseDAO<Expense> {
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
