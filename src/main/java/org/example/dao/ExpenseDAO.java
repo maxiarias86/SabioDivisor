@@ -95,7 +95,7 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                 UserDAO userDAO = UserDAO.getInstance();
                 DebtDAO debtDAO = DebtDAO.getInstance();
 
-                // Crear base del objeto
+                // Crear el gasto sin usuarios ni deudas
                 Expense expense = new Expense(
                         rs.getInt("id"),
                         rs.getDouble("amount"),
@@ -255,11 +255,12 @@ public class ExpenseDAO extends BaseDAO<Expense> {
     }
 
     public Response<Integer> save(ExpenseDTO dto, List<Debt> debts) {
+        //En este metodo cuando inserte el Expense tengo que copiarme el id, y luego insertar las deudas con ese expenseId
         String insertExpenseSQL = "INSERT INTO expenses (amount, date, installments, description) VALUES (?, ?, ?, ?)";
         String insertDebtSQL = "INSERT INTO debts (amount, due_date, debtor_id, creditor_id, expense_id, installment_number) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(false);//Hace que no se haga un commir en la base de datos hasta que el codigo lo indique.
 
             // Insertar Expense
             PreparedStatement expenseStmt = conn.prepareStatement(insertExpenseSQL, Statement.RETURN_GENERATED_KEYS);
@@ -271,11 +272,11 @@ public class ExpenseDAO extends BaseDAO<Expense> {
 
             ResultSet generatedKeys = expenseStmt.getGeneratedKeys();
             if (!generatedKeys.next()) {
-                conn.rollback();
+                conn.rollback();//Hace un rollback y no queda nada guardado.
                 return new Response<>(false, "500", "No se pudo obtener el ID del gasto insertado.");
             }
 
-            int expenseId = generatedKeys.getInt(1);
+            int expenseId = generatedKeys.getInt(1);//Recupera el expenseId
 
             // Insertar Debts
             if (debts != null && !debts.isEmpty()) {
@@ -285,15 +286,14 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                     debtStmt.setDate(2, Date.valueOf(debt.getDueDate()));
                     debtStmt.setInt(3, debt.getDebtor().getId());
                     debtStmt.setInt(4, debt.getCreditor().getId());
-                    debtStmt.setInt(5, expenseId);
+                    debtStmt.setInt(5, expenseId);//Le cambia a todas las Debts el expenseId que antes era 0
                     debtStmt.setInt(6, debt.getInstallmentNumber());
-                    debtStmt.addBatch();
+                    debtStmt.addBatch();//Agrega una linea a la query insert
                 }
-                debtStmt.executeBatch();
-                debtStmt.close();
+                debtStmt.executeBatch();//Ejecuta la query
+                debtStmt.close();// Es una buena practica cerrar cada PreparedStatement
             }
-
-            conn.commit();
+            conn.commit();//Finalmente hace el commit cuando no fallo nada.
             return new Response<>(true, "201", "Gasto y deudas insertados correctamente.", expenseId);
 
         } catch (SQLException e) {
@@ -305,9 +305,9 @@ public class ExpenseDAO extends BaseDAO<Expense> {
             return new Response<>(false, "500", "Error al guardar el gasto y las deudas: " + e.getMessage());
         } finally {
             try {
-                conn.setAutoCommit(true);
+                conn.setAutoCommit(true);//Vuelve a setear AutoCommit a true
             } catch (SQLException e) {
-                // Ignorado
+                return new Response<>(false, "500", e.getMessage());
             }
         }
     }
