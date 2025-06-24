@@ -10,20 +10,26 @@ import org.example.model.Response;
 import org.example.service.UserService;
 
 import javax.swing.*;
+import org.example.model.User;
 
 /**
  *
  * @author maxi
  */
-public class UserJFrame extends javax.swing.JFrame {
+public class EditUserJFrame extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(UserJFrame.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EditUserJFrame.class.getName());
+    private User user;
 
     /**
      * Creates new form RegisterJFrame
      */
-    public UserJFrame() {
+    public EditUserJFrame(User user) {
         initComponents();
+        usernameJTextField.setText(user.getName());
+        emailJTextField.setText(user.getEmail());
+        this.user = user;
+
     }
 
     /**
@@ -48,7 +54,7 @@ public class UserJFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Registro de Nuevo Usuario");
+        jLabel1.setText("Editar Usuario");
 
         usernameJLabel.setText("Nombre de Usuario");
 
@@ -132,25 +138,19 @@ public class UserJFrame extends javax.swing.JFrame {
 
     private void confirmarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmarJButtonActionPerformed
 
-        
+        int userId = user.getId();
         String username = usernameJTextField.getText().trim();
         String email = emailJTextField.getText().trim();
         String password = new String(passwordJPasswordField.getPassword()).trim();
-        String repeatPassword = new String(repeatPasswordJPasswordField.getPassword()).trim();    
- 
+        String repeatPassword = new String(repeatPasswordJPasswordField.getPassword()).trim();
+
         if(!password.equalsIgnoreCase(repeatPassword)) {
             JOptionPane.showMessageDialog(this, "Contraseñas diferentes", "Login Fallido", JOptionPane.ERROR_MESSAGE);
-            LoginJFrame login = new LoginJFrame(); // vuelvo al Login
-            login.setVisible(true);
-            this.dispose();
-            return;
-          
-            
         }
 
-        UserDTO newUserDTO = new UserDTO(username, email, password);
+        UserDTO editUserDTO = new UserDTO(userId, username, email, password);
         UserService userService = new UserService();
-        Response response = userService.registerUser(newUserDTO);
+        Response response = userService.editUser(editUserDTO);
 
         if (response.isSuccess()) {
             LoginJFrame login = new LoginJFrame(); // vuelvo al Login
@@ -166,27 +166,6 @@ public class UserJFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new UserJFrame().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton confirmarJButton;
