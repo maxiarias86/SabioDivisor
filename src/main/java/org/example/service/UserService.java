@@ -10,6 +10,7 @@ import java.util.List;
 
 public class UserService {
 
+
     public Response<Integer> registerUser(UserDTO dto) {// Devuelve una response con el int userId
         if (dto.getUsername() == null || dto.getUsername().isBlank()) {
             return new Response<>(false, "400", "El nombre de usuario no puede estar vacío.");
