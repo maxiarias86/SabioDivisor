@@ -5,6 +5,9 @@ import org.example.dao.UserDAO;
 import org.example.model.Response;
 import org.example.model.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserService {
 
     public Response<Integer> registerUser(UserDTO dto) {// Devuelve una response con el int userId
@@ -95,10 +98,11 @@ public class UserService {
         }
     }
 
-    private UserDTO convertToDTO(User user) {
+    public UserDTO convertToDTO(User user) {
         return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword());
     }
-//Creo que no voy a permitir borrar usuarios salvo que no tengan ningun debt o payment a su nombre.
+
+    //Creo que no voy a permitir borrar usuarios salvo que no tengan ningun debt o payment a su nombre.
     public Response deleteUser(int id) {
         try{
             Response delection = UserDAO.getInstance().delete(id);
@@ -111,5 +115,35 @@ public class UserService {
             return new Response<>(false,"500", "Error inesperado al eliminar el usuario: " + e.getMessage());
         }
     }
+
+    public Response<List<UserDTO>> getAllUsers() {
+        try {
+            // Llama al DAO y obtiene los usuarios como entidades
+            Response<User> daoResponse = UserDAO.getInstance().readAll();
+
+            if (!daoResponse.isSuccess()) {
+                return new Response<>(false, daoResponse.getCode(), daoResponse.getMessage());
+            }
+            List <User> dataDaoResponse = daoResponse.getData();
+
+            // Convierte la lista de entidades a DTOs
+            List<UserDTO> dtoList = new ArrayList<>();
+            for (User user : dataDaoResponse) {
+                dtoList.add(new UserDTO(user.getId(), user.getName(), user.getEmail()));
+            }
+
+            return new Response<List<UserDTO>>(true, "200", "Usuarios obtenidos exitosamente.", dtoList);
+
+        } catch (Exception e) {
+            return new Response<>(false, "500", "Error inesperado al obtener usuarios: " + e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
 
 }

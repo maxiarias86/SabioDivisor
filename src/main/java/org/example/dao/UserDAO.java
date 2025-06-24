@@ -67,6 +67,31 @@ public class UserDAO extends BaseDAO<User> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
+    @Override
+    public Response<User> readAll() {
+        String sql = "SELECT * FROM " + tableName;
+        List<User> lista = new ArrayList<>();
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
+                lista.add(user);
+            }
+
+            return new Response<>(true, "200", "Listado de usuarios obtenido", lista);
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
 
     @Override
     public Response<User> update(User entity) {
@@ -114,31 +139,7 @@ public class UserDAO extends BaseDAO<User> {
         }
     }
 
-    @Override
-    public Response<User> readAll() {
-        String sql = "SELECT * FROM " + tableName;
-        List<User> lista = new ArrayList<>();
 
-        try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            while (rs.next()) {
-                User user = new User(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("email"),
-                        rs.getString("password")
-                );
-                lista.add(user);
-            }
-
-            return new Response<>(true, "200", "Listado de usuarios obtenido", lista);
-
-        } catch (SQLException e) {
-            return new Response<>(false, "500", e.getMessage());
-        }
-    }
 
     //Hice un metodo para buscarlos por email porque no siempre voy a conocer el ID.
     //Mapea todos los campos del modelo User.

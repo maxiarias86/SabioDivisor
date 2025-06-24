@@ -9,6 +9,13 @@ public class UserDTO {
     public UserDTO() {
     }
 
+    public UserDTO(int id, String username, String email) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = null;
+    }
+
     public UserDTO(int id, String username, String email, String password) {
         this.id = id;
         this.username = username;
