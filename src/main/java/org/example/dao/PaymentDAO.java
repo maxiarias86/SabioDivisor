@@ -23,7 +23,7 @@ public class PaymentDAO extends BaseDAO<Payment> {
 
     @Override
     public Response<Payment> create(Payment entity) {
-        String sql = "INSERT INTO " + tableName + " (payer_id, payee_id, amount, date) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO " + tableName + " (payer_id, recipient_id, amount, date) VALUES (?, ?, ?, ?)";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); // ⚠️ Clave para obtener el ID generado
@@ -66,7 +66,7 @@ public class PaymentDAO extends BaseDAO<Payment> {
                 UserDAO userDAO = UserDAO.getInstance();
 
                 int payerId = rs.getInt("payer_id");
-                int recipientId = rs.getInt("payee_id");
+                int recipientId = rs.getInt("recipient_id");
 
                 Response<User> payerResponse = userDAO.read(payerId);
                 Response<User> recipientResponse = userDAO.read(recipientId);
@@ -103,7 +103,7 @@ public class PaymentDAO extends BaseDAO<Payment> {
 
     @Override
     public Response<Payment> update(Payment entity) {
-        String sql = "UPDATE " + tableName + " SET payer_id = ?, payee_id = ?, amount = ?, date = ? WHERE id = ?";
+        String sql = "UPDATE " + tableName + " SET payer_id = ?, recipient_id = ?, amount = ?, date = ? WHERE id = ?";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -161,7 +161,7 @@ public class PaymentDAO extends BaseDAO<Payment> {
             while (rs.next()) {
                 //En este caso
                 int payerId = rs.getInt("payer_id");
-                int recipientId = rs.getInt("payee_id");
+                int recipientId = rs.getInt("recipient_id");
 
                 Response<User> payerResponse = UserDAO.getInstance().read(payerId);
                 Response<User> recipientResponse = UserDAO.getInstance().read(recipientId);
@@ -197,7 +197,7 @@ public class PaymentDAO extends BaseDAO<Payment> {
 
     //Lo uso para crear el PaymentCache del usuario logueado
     public Response<Payment> readAllByUser(User user) {
-        String sql = "SELECT * FROM " + tableName + " WHERE payer_id = ? OR payee_id = ?";
+        String sql = "SELECT * FROM " + tableName + " WHERE payer_id = ? OR recipient_id = ?";
         List<Payment> lista = new ArrayList<>();
 
         try {
@@ -208,7 +208,7 @@ public class PaymentDAO extends BaseDAO<Payment> {
 
             while (rs.next()) {
                 int payerId = rs.getInt("payer_id");
-                int recipientId = rs.getInt("payee_id");
+                int recipientId = rs.getInt("recipient_id");
 
                 Response<User> payerResponse = UserDAO.getInstance().read(payerId);
                 Response<User> recipientResponse = UserDAO.getInstance().read(recipientId);

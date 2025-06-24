@@ -91,14 +91,14 @@ public class UserService {
                 return new Response<>(false, "500", updateResponse.getMessage());
             }
         } catch (Exception e) {
-            return new Response<>(false, "500", "Error inesperado al registrar el usuario: " + e.getMessage());
+            return new Response<>(false, "500", "Error inesperado al editar el usuario: " + e.getMessage());
         }
     }
 
     private UserDTO convertToDTO(User user) {
         return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword());
     }
-
+//Creo que no voy a permitir borrar usuarios salvo que no tengan ningun debt o payment a su nombre.
     public Response deleteUser(int id) {
         try{
             Response delection = UserDAO.getInstance().delete(id);

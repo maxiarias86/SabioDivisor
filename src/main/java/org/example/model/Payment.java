@@ -11,7 +11,7 @@ public class Payment extends Transaction {
     }
 
     public Payment(double amount, LocalDate date, User payer, User recipient) {
-        super(0, amount, date); // El ID se ignora porque lo pone la base de datos
+        super(0, amount, date); // El ID lo pone la base de datos
         setPayer(payer);
         setRecipient(recipient);
     }

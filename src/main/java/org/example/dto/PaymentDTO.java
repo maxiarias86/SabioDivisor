@@ -3,16 +3,34 @@ package org.example.dto;
 import java.time.LocalDate;
 
 public class PaymentDTO {
+    private int id;//Puede ser 0 cuando venga del front
     private LocalDate date;
     private int payerId;
-    private int payeeId;
+    private int recipientId;
     private double amount;
 
-    public PaymentDTO(LocalDate date, int payerId, int payeeId, double amount) {
-        this.date = date;
+    public PaymentDTO(LocalDate date, int payerId, int recipientId, double amount) {
+        id = 0;
+        this.setDate(date);
         this.payerId = payerId;
-        this.payeeId = payeeId;
-        this.amount = amount;
+        this.recipientId = recipientId;
+        this.setAmount(amount);
+    }
+
+    public PaymentDTO(int id, LocalDate date, int payerId, int recipientId, double amount) {
+        this.id = id;
+        this.setDate(date);
+        this.payerId = payerId;
+        this.recipientId = recipientId;
+        this.setAmount(amount);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LocalDate getDate() {
@@ -20,6 +38,9 @@ public class PaymentDTO {
     }
 
     public void setDate(LocalDate date) {
+        if (date == null || date.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha es inválida");
+        }
         this.date = date;
     }
 
@@ -31,12 +52,12 @@ public class PaymentDTO {
         this.payerId = payerId;
     }
 
-    public int getPayeeId() {
-        return payeeId;
+    public int getRecipientId() {
+        return recipientId;
     }
 
-    public void setPayeeId(int payeeId) {
-        this.payeeId = payeeId;
+    public void setRecipientId(int recipientId) {
+        this.recipientId = recipientId;
     }
 
     public double getAmount() {
@@ -44,6 +65,9 @@ public class PaymentDTO {
     }
 
     public void setAmount(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("El monto debe ser mayor a cero");
+        }
         this.amount = amount;
     }
 }
