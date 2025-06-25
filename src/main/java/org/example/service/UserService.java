@@ -32,7 +32,7 @@ public class UserService {
                 return new Response<>(false, "409", "El correo electrónico ya está registrado.");
             }
 
-            // Crear una instancia usuario
+            // Crea una instancia usuario
             User newUser = new User();
             newUser.setName(dto.getUsername());
             newUser.setEmail(dto.getEmail());
@@ -117,34 +117,29 @@ public class UserService {
         }
     }
 
-    public Response<List<UserDTO>> getAllUsers() {
+    public Response<List<User>> getAllUsersButOne(int id) {
         try {
-            // Llama al DAO y obtiene los usuarios como entidades
             Response<User> daoResponse = UserDAO.getInstance().readAll();
 
             if (!daoResponse.isSuccess()) {
                 return new Response<>(false, daoResponse.getCode(), daoResponse.getMessage());
             }
-            List <User> dataDaoResponse = daoResponse.getData();
 
-            // Convierte la lista de entidades a DTOs
-            List<UserDTO> dtoList = new ArrayList<>();
+            ArrayList<User> dataDaoResponse = (ArrayList<User>) daoResponse.getData();
+            if (dataDaoResponse == null) dataDaoResponse = new ArrayList<>();
+
+            // Filtrá el usuario por ID
+            List<User> filteredList = new ArrayList<>();
             for (User user : dataDaoResponse) {
-                dtoList.add(new UserDTO(user.getId(), user.getName(), user.getEmail()));
+                if (user.getId() != id) {
+                    filteredList.add(user);
+                }
             }
 
-            return new Response<List<UserDTO>>(true, "200", "Usuarios obtenidos exitosamente.", dtoList);
+            return new Response(true, "200", "Usuarios obtenidos exitosamente.", filteredList);
 
         } catch (Exception e) {
             return new Response<>(false, "500", "Error inesperado al obtener usuarios: " + e.getMessage());
         }
     }
-
-
-
-
-
-
-
-
 }

@@ -1,8 +1,7 @@
 # Pendientes
-* Armar tabla de Debt y Expense
-* Agregar Java Swing
 * Reeditar los toStrings
-* Revisar patrón Singleton de la BBDD
+* Armar README para que tenga todo lo necesario para instalarlo en una computadora desde cero.
+* Instalar xampp en otra computadora (ponerlo tambien en readme).
 
 ## Notas de mi corrección de la presentación
 * Lautaro me pidió: "Definir si vas a separar las entidades del dominio de las vistas mediante DTOs o mappers."

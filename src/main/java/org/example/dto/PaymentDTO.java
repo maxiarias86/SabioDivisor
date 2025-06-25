@@ -8,6 +8,9 @@ public class PaymentDTO {
     private int payerId;
     private int recipientId;
     private double amount;
+    public PaymentDTO(){
+
+    }
 
     public PaymentDTO(LocalDate date, int payerId, int recipientId, double amount) {
         id = 0;

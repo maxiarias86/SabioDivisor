@@ -21,23 +21,17 @@ public class IndexJFrame extends javax.swing.JFrame {
     /**
      * Creates new form IndexJFrame
      */
-    public IndexJFrame() {
-        initComponents();
-        this.user = null;
-        
-    }
+    
     public IndexJFrame(User user) {
         initComponents();
         this.user = user;
         FriendJPanel friend = new FriendJPanel();
         ExpenseJPanel expense = new ExpenseJPanel();
-        PaymentJPanel payment = new PaymentJPanel();
         jLabelBienvenidoUsuario.setText("Bienvenido "+user.getName());
         
         jPanel1.setLayout(new java.awt.CardLayout());
         jPanel1.add(friend, "friend");
         jPanel1.add(expense, "expense");
-        jPanel1.add(payment, "payment");
     }
 
     /**
@@ -52,39 +46,24 @@ public class IndexJFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
         jLabelBienvenidoUsuario = new javax.swing.JLabel();
-        expenseJButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jScrollBar1 = new javax.swing.JScrollBar();
-        friendJButton = new javax.swing.JButton();
+        JButtonNewExpense = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jButtonEditarUsuario = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jButtonEditUser = new javax.swing.JButton();
+        jButtonNewPayment = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
         jScrollPane1.setViewportView(jTextPane1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabelBienvenidoUsuario.setText("Bienvenido Usuario");
+        jLabelBienvenidoUsuario.setText("Mensaje de bienvenida");
 
-        expenseJButton.setText("Nuevo Gasto");
-        expenseJButton.addActionListener(new java.awt.event.ActionListener() {
+        JButtonNewExpense.setText("Nuevo\\nGasto");
+        JButtonNewExpense.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                expenseJButtonActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("Amigo 1");
-
-        jLabel5.setText("montoAmigo1");
-
-        friendJButton.setText("Amigo - Balance");
-        friendJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                friendJButtonActionPerformed(evt);
+                JButtonNewExpenseActionPerformed(evt);
             }
         });
 
@@ -92,47 +71,33 @@ public class IndexJFrame extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5))
-                    .addComponent(friendJButton))
-                .addGap(19, 19, 19)
-                .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(JButtonNewExpense)
+                .addGap(41, 41, 41))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(friendJButton)
-                        .addContainerGap(60, Short.MAX_VALUE))))
+                .addComponent(JButtonNewExpense, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 52, Short.MAX_VALUE))
         );
 
         jLabel2.setText("Estado a la fecha:");
 
         jLabel3.setText("monto");
 
-        jButtonEditarUsuario.setText("Editar Mi Usuario");
-        jButtonEditarUsuario.addActionListener(new java.awt.event.ActionListener() {
+        jButtonEditUser.setText("Editar Mi Usuario");
+        jButtonEditUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonEditarUsuarioActionPerformed(evt);
+                jButtonEditUserActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Nuevo Pago");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonNewPayment.setText("Nuevo Pago");
+        jButtonNewPayment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButtonNewPaymentActionPerformed(evt);
             }
         });
 
@@ -143,51 +108,51 @@ public class IndexJFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(51, 51, 51)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(expenseJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton3)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addGap(7, 7, 7))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelBienvenidoUsuario)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3))
-                            .addComponent(jLabelBienvenidoUsuario))
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonEditarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(jLabel3)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonEditUser, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonNewPayment)))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelBienvenidoUsuario)
-                    .addComponent(jButtonEditarUsuario))
-                .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonEditUser))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addGap(42, 42, 42)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)))
+                    .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(expenseJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jButtonNewPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(26, 26, 26)
+                .addComponent(jButton3)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonEditarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarUsuarioActionPerformed
+    private void jButtonEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditUserActionPerformed
 
         if (user != null) {
             EditUserJFrame editUser = new EditUserJFrame(user); // Paso el usuario porque lo voy a usar
@@ -198,23 +163,22 @@ public class IndexJFrame extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonEditarUsuarioActionPerformed
+    }//GEN-LAST:event_jButtonEditUserActionPerformed
 
-    private void friendJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_friendJButtonActionPerformed
-        CardLayout layout = (CardLayout)jPanel1.getLayout();
-        layout.show(jPanel1, "friend");
-
-
-    }//GEN-LAST:event_friendJButtonActionPerformed
-
-    private void expenseJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expenseJButtonActionPerformed
+    private void JButtonNewExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonNewExpenseActionPerformed
         CardLayout layout = (CardLayout)jPanel1.getLayout();
         layout.show(jPanel1, "expense");
-    }//GEN-LAST:event_expenseJButtonActionPerformed
+    }//GEN-LAST:event_JButtonNewExpenseActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void jButtonNewPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewPaymentActionPerformed
+        if (user != null) {
+            NewPaymentJFrame newPayment = new NewPaymentJFrame(user); // Paso el usuario porque lo voy a usar. No tiene constructor vacío
+            newPayment.setVisible(true);
+            this.setVisible(false);
+        } else {
+            JOptionPane.showMessageDialog(this, "No estas logueado, cierra el programa y vuelve a loguearte", "Edición fallida", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButtonNewPaymentActionPerformed
 
     /**
      * @param args the command line arguments
@@ -238,22 +202,17 @@ public class IndexJFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new IndexJFrame().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton expenseJButton;
-    private javax.swing.JButton friendJButton;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton JButtonNewExpense;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButtonEditarUsuario;
+    private javax.swing.JButton jButtonEditUser;
+    private javax.swing.JButton jButtonNewPayment;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabelBienvenidoUsuario;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextPane jTextPane1;
     // End of variables declaration//GEN-END:variables

@@ -12,7 +12,7 @@ public class Main {
         //Poner un metodo que muestre por consola usuarios y credenciales
 
         for (User user : userCache.getAllUsers().values()) {
-            System.out.println("Usuario: "+ user.getEmail()+"\nContraseña: "+ user.getPassword());
+            System.out.println("\nUsuario: "+ user.getEmail()+"\nContraseña: "+ user.getPassword());
         }
 
     }
