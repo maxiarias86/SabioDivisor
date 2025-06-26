@@ -25,13 +25,9 @@ public class IndexJFrame extends javax.swing.JFrame {
     public IndexJFrame(User user) {
         initComponents();
         this.user = user;
-        FriendJPanel friend = new FriendJPanel();
         ExpenseJPanel expense = new ExpenseJPanel();
         jLabelBienvenidoUsuario.setText("Bienvenido "+user.getName());
         
-        jPanel1.setLayout(new java.awt.CardLayout());
-        jPanel1.add(friend, "friend");
-        jPanel1.add(expense, "expense");
     }
 
     /**
@@ -46,42 +42,18 @@ public class IndexJFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
         jLabelBienvenidoUsuario = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        JButtonNewExpense = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jButtonEditUser = new javax.swing.JButton();
         jButtonNewPayment = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        JButtonNewExpense = new javax.swing.JButton();
 
         jScrollPane1.setViewportView(jTextPane1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabelBienvenidoUsuario.setText("Mensaje de bienvenida");
-
-        JButtonNewExpense.setText("Nuevo\\nGasto");
-        JButtonNewExpense.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JButtonNewExpenseActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(JButtonNewExpense)
-                .addGap(41, 41, 41))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(JButtonNewExpense, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 52, Short.MAX_VALUE))
-        );
 
         jLabel2.setText("Estado a la fecha:");
 
@@ -103,15 +75,20 @@ public class IndexJFrame extends javax.swing.JFrame {
 
         jButton3.setText("Mi Estado");
 
+        JButtonNewExpense.setText("Nuevo Gasto");
+        JButtonNewExpense.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JButtonNewExpenseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton3)
-                        .addGap(7, 7, 7))
+                .addGap(118, 118, 118)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelBienvenidoUsuario)
@@ -119,14 +96,15 @@ public class IndexJFrame extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonEditUser, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonNewPayment)))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonEditUser, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonNewPayment)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JButtonNewExpense)
+                        .addGap(58, 58, 58))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,10 +121,14 @@ public class IndexJFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonNewPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(26, 26, 26)
-                .addComponent(jButton3)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jButton3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JButtonNewExpense, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(113, Short.MAX_VALUE))
         );
 
         pack();
@@ -166,15 +148,20 @@ public class IndexJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonEditUserActionPerformed
 
     private void JButtonNewExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JButtonNewExpenseActionPerformed
-        CardLayout layout = (CardLayout)jPanel1.getLayout();
-        layout.show(jPanel1, "expense");
+        if (user != null) {
+            NewExpenseJFrame newExpense = new NewExpenseJFrame(user); // Paso el usuario porque lo voy a usar. No tiene constructor vacío
+            newExpense.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "No estas logueado, cierra el programa y vuelve a loguearte", "Edición fallida", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_JButtonNewExpenseActionPerformed
 
     private void jButtonNewPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewPaymentActionPerformed
         if (user != null) {
             NewPaymentJFrame newPayment = new NewPaymentJFrame(user); // Paso el usuario porque lo voy a usar. No tiene constructor vacío
             newPayment.setVisible(true);
-            this.setVisible(false);
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "No estas logueado, cierra el programa y vuelve a loguearte", "Edición fallida", JOptionPane.ERROR_MESSAGE);
         }
@@ -212,7 +199,6 @@ public class IndexJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelBienvenidoUsuario;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextPane jTextPane1;
     // End of variables declaration//GEN-END:variables

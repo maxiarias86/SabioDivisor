@@ -11,3 +11,6 @@
 * Evaluar la creación de una clase Cuota si se va a modelar el gasto en pagos periódicos. 
 * Considerar una clase abstracta Transaccion, si Pago y Gasto comparten atributos o métodos comunes. 
 * La clase Resumen podría concebirse como un DTO si su uso es solo para visualización.
+
+### Cambios para a hacer en mi proyecto:
+* Cambiar en JPanelAllUsers el método getAllUsersButOne() por el getAllUsers().
