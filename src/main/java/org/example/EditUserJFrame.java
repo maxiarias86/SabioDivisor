@@ -4,7 +4,6 @@
  */
 package org.example;
 
-import org.example.dao.UserDAO;
 import org.example.dto.UserDTO;
 import org.example.model.Response;
 import org.example.service.UserService;
@@ -19,12 +18,12 @@ import org.example.model.User;
 public class EditUserJFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EditUserJFrame.class.getName());
-    private User user;
+    private UserDTO user;
 
     /**
      * Creates new form RegisterJFrame
      */
-    public EditUserJFrame(User user) {
+    public EditUserJFrame(UserDTO user) {
         initComponents();
         usernameJTextField.setText(user.getName());
         emailJTextField.setText(user.getEmail());
@@ -148,9 +147,9 @@ public class EditUserJFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Contraseñas diferentes", "Login Fallido", JOptionPane.ERROR_MESSAGE);
         }
 
-        UserDTO editUserDTO = new UserDTO(userId, username, email, password);
+        User editUser = new User(userId, username, email, password);
         UserService userService = new UserService();
-        Response response = userService.editUser(editUserDTO);
+        Response response = userService.editUser(editUser);
 
         if (response.isSuccess()) {
             LoginJFrame login = new LoginJFrame(); // vuelvo al Login

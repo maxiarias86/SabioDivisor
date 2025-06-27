@@ -42,7 +42,7 @@ public class PaymentDTO {
 
     public void setDate(LocalDate date) {
         if (date == null || date.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha es inválida");
+            throw new IllegalArgumentException("La fecha es inválida, no puede ser nula o futura.");
         }
         this.date = date;
     }

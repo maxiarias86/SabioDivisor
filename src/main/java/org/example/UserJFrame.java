@@ -4,9 +4,8 @@
  */
 package org.example;
 
-import org.example.dao.UserDAO;
-import org.example.dto.UserDTO;
 import org.example.model.Response;
+import org.example.model.User;
 import org.example.service.UserService;
 
 import javax.swing.*;
@@ -148,9 +147,9 @@ public class UserJFrame extends javax.swing.JFrame {
             
         }
 
-        UserDTO newUserDTO = new UserDTO(username, email, password);
+        User newUser = new User(username, email, password);
         UserService userService = new UserService();
-        Response response = userService.registerUser(newUserDTO);
+        Response response = userService.registerUser(newUser);
 
         if (response.isSuccess()) {
             LoginJFrame login = new LoginJFrame(); // vuelvo al Login

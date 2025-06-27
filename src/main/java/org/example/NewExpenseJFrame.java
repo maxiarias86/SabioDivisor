@@ -4,11 +4,11 @@
  */
 package org.example;
 
-import java.awt.CardLayout;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import org.example.dto.ExpenseDTO;
+import org.example.dto.UserDTO;
 import org.example.model.User;
 
 /**
@@ -18,12 +18,12 @@ import org.example.model.User;
 public class NewExpenseJFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NewExpenseJFrame.class.getName());
-    private User user;
+    private UserDTO user;
 
     /**
      * Creates new form NewExpenseJFrame
      */
-    public NewExpenseJFrame(User user) {
+    public NewExpenseJFrame(UserDTO user) {
         initComponents();
         this.user = user;
 
@@ -141,26 +141,26 @@ public class NewExpenseJFrame extends javax.swing.JFrame {
 
     private void jButtonAddExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddExpenseActionPerformed
         // TODO add your handling code here:
-        ExpenseDTO dto = new ExpenseDTO();
-        String description = jTextFieldDescription.getText().trim();
-        dto.setDescription(description);
+        ExpenseDTO expenseDTO = new ExpenseDTO(); //Creo un nuevo DTO para el gasto
+        String description = jTextFieldDescription.getText().trim();//Obtengo la descripción del gasto
+        expenseDTO.setDescription(description);//Se la asigno
         try {
-            String dateInput = jFormattedTextFieldDate.getText().trim();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy");
-            LocalDate date = LocalDate.parse(dateInput, formatter);
+            String dateInput = jFormattedTextFieldDate.getText().trim();//Obtengo la fecha del campo de texto
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy");//Defino el formato de fecha esperado
+            LocalDate date = LocalDate.parse(dateInput, formatter);//Parseo la fecha
             System.out.println("Fecha válida: " + date);
-            dto.setDate(date);
+            expenseDTO.setDate(date);//Asigno la fecha al DTO
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Fecha inválida. Usá el formato dd/mm/aa", "Error de fecha", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         try {
-            Object amountValue = jFormattedTextFieldAmount.getValue();
-            if (amountValue == null) throw new NullPointerException();
+            Object amountValue = jFormattedTextFieldAmount.getValue();//Obtengo el valor del campo de texto del monto
+            if (amountValue == null) throw new NullPointerException();//Verifico que no sea nulo
 
-            double amount = ((Number) amountValue).doubleValue();
-            dto.setAmount(amount);
+            double amount = ((Number) amountValue).doubleValue();//Convierto el valor a double
+            expenseDTO.setAmount(amount);//Asigno el monto al DTO
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Ingrese un monto válido.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -168,21 +168,21 @@ public class NewExpenseJFrame extends javax.swing.JFrame {
         }
 
         try{
-            Object value = jFormattedTextFieldInstallments.getValue();
-            if (value == null) throw new NullPointerException();
-            int installments = ((Number) value).intValue();
-            dto.setInstallments(installments);
+            Object value = jFormattedTextFieldInstallments.getValue();//Obtengo el valor del campo de texto de cuotas
+            if (value == null) throw new NullPointerException();//Verifico que no sea nulo
+            int installments = ((Number) value).intValue();//Convierto el valor a int
+            expenseDTO.setInstallments(installments);//Asigno las cuotas al DTO
         }catch(Exception e){
             JOptionPane.showMessageDialog(this, "Ingrese un ID válido.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        dto.setPayers(null);
-        dto.setDebtors(null);
+        expenseDTO.setPayers(null);//Inicializo la lista de pagadores como nula
+        expenseDTO.setDebtors(null);//Inicializo la lista de deudores como nula
         
-        if (user != null && dto != null) {
-            PayersDebtorsJFrame newPayers = new PayersDebtorsJFrame(dto,this,user); 
-            newPayers.setVisible(true);
-            this.dispose();
+        if (user != null && expenseDTO != null) {//Verifico que el usuario esté logueado y que el DTO no sea nulo
+            PayersDebtorsJFrame newPayers = new PayersDebtorsJFrame(expenseDTO,this,user);//Creo un nuevo JFrame para agregar pagadores y deudores
+            newPayers.setVisible(true);//Lo hago visible
+            this.dispose();//Destruyo el JFrame actual
         } else {
             JOptionPane.showMessageDialog(this, "No estas logueado, cierra el programa y vuelve a loguearte", "Edición fallida", JOptionPane.ERROR_MESSAGE);
         }

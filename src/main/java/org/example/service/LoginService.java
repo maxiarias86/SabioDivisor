@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.dto.UserDTO;
 import org.example.model.User;
 
 import java.util.List;
@@ -34,10 +35,13 @@ public class LoginService {
         return usuarioLogueado;
     }
 
-    public User validarCredenciales(List<User> usuarios, String email, String password) {
+    public UserDTO validarCredenciales(List<User> usuarios, String email, String password) {
         for (User u : usuarios) {
             if (u.getEmail().equalsIgnoreCase(email) && u.getPassword().equals(password)) {
-                return u;
+                // Si las credenciales son correctas, retornamos el dto del usuario. Para evitar pasar el objeto User completo.
+                UserService userService = new UserService();
+                UserDTO userDTO = userService.convertToDTO(u);
+                return userDTO;
             }
         }
         return null;

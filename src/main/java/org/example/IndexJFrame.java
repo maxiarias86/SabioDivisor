@@ -4,8 +4,10 @@
  */
 package org.example;
 
-import java.awt.CardLayout;
+import java.awt.*;
 import javax.swing.JOptionPane;
+
+import org.example.dto.UserDTO;
 import org.example.model.User;
 
 /**
@@ -15,18 +17,25 @@ import org.example.model.User;
 public class IndexJFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(IndexJFrame.class.getName());
-    private User user;
+    private UserDTO user;
    
 
     /**
      * Creates new form IndexJFrame
      */
     
-    public IndexJFrame(User user) {
+    public IndexJFrame(UserDTO user) {
         initComponents();
         this.user = user;
         ExpenseJPanel expense = new ExpenseJPanel();
         jLabelBienvenidoUsuario.setText("Bienvenido "+user.getName());
+
+        jPanelMain.setLayout(new CardLayout());
+        CardLayout layout = (CardLayout) jPanelMain.getLayout();
+        jPanelMain.removeAll();
+        BalancesJPanel balances = new BalancesJPanel(user);
+        jPanelMain.setLayout(new CardLayout());
+        jPanelMain.add(balances, BorderLayout.CENTER);
         
     }
 
@@ -39,17 +48,18 @@ public class IndexJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        jScrollPane = new javax.swing.JScrollPane();
+        jTextPane = new javax.swing.JTextPane();
         jLabelBienvenidoUsuario = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jButtonEditUser = new javax.swing.JButton();
         jButtonNewPayment = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jButtonBalances = new javax.swing.JButton();
         JButtonNewExpense = new javax.swing.JButton();
+        jPanelMain = new javax.swing.JPanel();
 
-        jScrollPane1.setViewportView(jTextPane1);
+        jScrollPane.setViewportView(jTextPane);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,7 +83,12 @@ public class IndexJFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Mi Estado");
+        jButtonBalances.setText("Mi Estado");
+        jButtonBalances.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBalancesActionPerformed(evt);
+            }
+        });
 
         JButtonNewExpense.setText("Nuevo Gasto");
         JButtonNewExpense.addActionListener(new java.awt.event.ActionListener() {
@@ -81,6 +96,17 @@ public class IndexJFrame extends javax.swing.JFrame {
                 JButtonNewExpenseActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
+        jPanelMain.setLayout(jPanelMainLayout);
+        jPanelMainLayout.setHorizontalGroup(
+            jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanelMainLayout.setVerticalGroup(
+            jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -96,39 +122,42 @@ public class IndexJFrame extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonEditUser, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonNewPayment)))
+                        .addContainerGap(306, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonBalances)
+                        .addGap(170, 170, 170))))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(JButtonNewExpense)
-                        .addGap(58, 58, 58))))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonNewPayment)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonEditUser, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(107, 107, 107)
+                        .addComponent(jPanelMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabelBienvenidoUsuario)
+                .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelBienvenidoUsuario)
-                    .addComponent(jButtonEditUser))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addGap(31, 31, 31)
+                .addComponent(jButtonBalances)
+                .addGap(4, 4, 4)
+                .addComponent(jPanelMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonNewPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(jButton3))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(JButtonNewExpense, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(113, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(JButtonNewExpense, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonNewPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonEditUser, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
         );
 
         pack();
@@ -167,6 +196,14 @@ public class IndexJFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonNewPaymentActionPerformed
 
+    private void jButtonBalancesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBalancesActionPerformed
+        // TODO add your handling code here:
+
+        CardLayout layout = (CardLayout) jPanelMain.getLayout();
+        layout.show(jPanelMain, "Balances");
+
+    }//GEN-LAST:event_jButtonBalancesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -193,13 +230,14 @@ public class IndexJFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JButtonNewExpense;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButtonBalances;
     private javax.swing.JButton jButtonEditUser;
     private javax.swing.JButton jButtonNewPayment;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelBienvenidoUsuario;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JPanel jPanelMain;
+    private javax.swing.JScrollPane jScrollPane;
+    private javax.swing.JTextPane jTextPane;
     // End of variables declaration//GEN-END:variables
 }

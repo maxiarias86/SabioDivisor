@@ -8,8 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
 import org.example.cache.UserCache;
 import org.example.dto.ExpenseDTO;
+import org.example.dto.UserDTO;
 import org.example.model.Response;
 import org.example.model.User;
 import org.example.service.ExpenseService;
@@ -25,12 +27,12 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
 
     private ExpenseDTO dto;
     private NewExpenseJFrame newExpenseJFrame;
-    private User user;
+    private UserDTO user;
         
     /**
      * Creates new form PayersDebtorsJFrame
      */
-    public PayersDebtorsJFrame(ExpenseDTO dto, NewExpenseJFrame newExpenseJFrame, User user) {
+    public PayersDebtorsJFrame(ExpenseDTO dto, NewExpenseJFrame newExpenseJFrame, UserDTO user) {
         initComponents();
         this.dto = dto;
         this.newExpenseJFrame = newExpenseJFrame;
@@ -423,7 +425,7 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
                             .addComponent(jFormattedTextFieldAmount15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jFormattedTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextFieldError, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2)))
         );
@@ -597,6 +599,7 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
             ExpenseService expenseService = new ExpenseService();
             Response response = expenseService.registerExpense(dto);
             if(response.isSuccess()){
+                JOptionPane.showMessageDialog(this, "Gasto registrado correctamente.");
                 IndexJFrame index = new IndexJFrame(user);
                 index.setVisible(true);
                 this.dispose();

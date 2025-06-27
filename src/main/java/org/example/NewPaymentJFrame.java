@@ -25,11 +25,11 @@ public class NewPaymentJFrame extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NewPaymentJFrame.class.getName());
 
-    private User user;
+    private UserDTO user;
     /**
      * Creates new form NewPaymentJFrame
      */
-    public NewPaymentJFrame(User user) {
+    public NewPaymentJFrame(UserDTO user) {
         initComponents();
         this.user = user;
 
@@ -171,7 +171,7 @@ public class NewPaymentJFrame extends javax.swing.JFrame {
             System.out.println("Fecha válida: " + date);
             dto.setDate(date);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Fecha inválida. Usá el formato dd/mm/aa", "Error de fecha", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error de fecha", JOptionPane.ERROR_MESSAGE);
             return;
         }
         

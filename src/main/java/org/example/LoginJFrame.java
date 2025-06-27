@@ -7,6 +7,7 @@ package org.example;
 import java.util.List;
 import javax.swing.JOptionPane;
 import org.example.dao.UserDAO;
+import org.example.dto.UserDTO;
 import org.example.model.Response;
 import org.example.model.User;
 import org.example.service.LoginService;
@@ -141,7 +142,7 @@ public class LoginJFrame extends javax.swing.JFrame {
 
         LoginService loginService = new LoginService();
 
-        User usuarioLogueado = loginService.validarCredenciales(listaUsuarios, email, password);
+        UserDTO usuarioLogueado = loginService.validarCredenciales(listaUsuarios, email, password);
 
         
         if (usuarioLogueado != null) {
@@ -151,10 +152,6 @@ public class LoginJFrame extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Email o contraseña incorrectos", "Login Fallido", JOptionPane.ERROR_MESSAGE);
         }
-
-
-
-
 
 
         // TODO add your handling code here:
