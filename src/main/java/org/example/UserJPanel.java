@@ -4,17 +4,29 @@
  */
 package org.example;
 
+import org.example.cache.UserCache;
+import org.example.dto.UserDTO;
+
+import java.awt.*;
+
 /**
  *
  * @author maxi
  */
 public class UserJPanel extends javax.swing.JPanel {
+    private UserDTO user;
+    private UserBalanceJPanel userBalanceJPanel;
 
     /**
      * Creates new form UserJPanel
      */
-    public UserJPanel() {
+    public UserJPanel(UserDTO user) {
         initComponents();
+        this.user = user;
+
+        UserBalanceJPanel userBalanceJPanel = new UserBalanceJPanel(user,user);
+        jPanel1.setLayout(new CardLayout());
+        jPanel1.add(userBalanceJPanel, "Balance");
     }
 
     /**
@@ -26,19 +38,90 @@ public class UserJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabelViewUser = new javax.swing.JLabel();
+        jTextFieldUserId = new javax.swing.JTextField();
+        jButtonFilterUser = new javax.swing.JButton();
+        jButtonViewAll = new javax.swing.JButton();
+
+        jPanel1.setMinimumSize(new java.awt.Dimension(500, 500));
+        jPanel1.setPreferredSize(new java.awt.Dimension(500, 500));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 500, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 500, Short.MAX_VALUE)
+        );
+
+        jLabelViewUser.setText("Cer usuario con ID:");
+
+        jTextFieldUserId.setColumns(3);
+
+        jButtonFilterUser.setText("Filtrar por ID");
+        jButtonFilterUser.setToolTipText("");
+        jButtonFilterUser.setMaximumSize(new java.awt.Dimension(100, 23));
+        jButtonFilterUser.setMinimumSize(new java.awt.Dimension(100, 23));
+        jButtonFilterUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFilterUserActionPerformed(evt);
+            }
+        });
+
+        jButtonViewAll.setText("Ver todos");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabelViewUser)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonFilterUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonViewAll)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelViewUser)
+                    .addComponent(jTextFieldUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonFilterUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonViewAll))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonFilterUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFilterUserActionPerformed
+/*
+        try{
+            int id = Integer.parseInt(jTextFieldUserId.getText().trim());//Obtengo el id del usuario amigo
+            UserDTO friend = UserCache.getInstance().getById(id);//Busco el usuario en el cache
+        }
+
+ */
+        //ACA DEBO AGREGAR QUE VA A HACER EL BOTON DE FILTRAR
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonFilterUserActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonFilterUser;
+    private javax.swing.JButton jButtonViewAll;
+    private javax.swing.JLabel jLabelViewUser;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField jTextFieldUserId;
     // End of variables declaration//GEN-END:variables
 }

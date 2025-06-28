@@ -1,32 +1,28 @@
 package org.example;
 
-import org.example.dao.UserDAO;
-import org.example.model.Response;
-import org.example.model.User;
-import org.example.service.UserService;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.example.cache.DebtCache;
+import org.example.dto.UserDTO;
+import org.example.model.Debt;
 
 public class Test {
     public static void main(String[] args) {
-        System.out.println("=== PRUEBA: UserService.getAllUsersButOne(1) ===");
+        // Supongamos que el usuario con ID 1 está logueado
+        UserDTO user = new UserDTO(1, "Juan", "juan@email.com");
 
-        int idAExcluir = 1;
-        UserService userService = new UserService();
-        Response response = userService.getAllUsersButOne(idAExcluir);
+        // Inicializamos el DebtCache para ese usuario
+        DebtCache.reset(); // Limpia por si quedó otra sesión
+        DebtCache cache = DebtCache.getInstance(user);
 
-        if (response.isSuccess()) {
-            List<User> lista = response.getData();
-            if (lista == null || lista.isEmpty()) {
-                System.out.println("No hay otros usuarios.");
-            } else {
-                for (User user : lista) {
-                    System.out.println("ID: " + user.getId() + " | Nombre: " + user.getName() + " | Email: " + user.getEmail());
-                }
-            }
-        } else {
-            System.out.println("Error: " + response.getCode() + " - " + response.getMessage());
+        // Recorremos e imprimimos las deudas
+        System.out.println("📄 DEUDAS DEL USUARIO " + user.getName() + ":");
+        for (Debt d : cache.getDebts()) {
+            System.out.println("- ID: " + d.getId() +
+                    ", Monto: " + d.getAmount() +
+                    ", Cuota: " + d.getInstallmentNumber() +
+                    ", Fecha: " + d.getDueDate() +
+                    ", Acreedor: " + d.getCreditor().getName() +
+                    ", Deudor: " + d.getDebtor().getName() +
+                    ", ExpenseID: " + d.getExpenseId());
         }
     }
 }
