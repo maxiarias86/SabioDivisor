@@ -6,7 +6,9 @@ package org.example;
 
 import org.example.cache.UserCache;
 import org.example.dto.UserDTO;
+import org.example.model.Response;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -16,6 +18,7 @@ import java.awt.*;
 public class UserJPanel extends javax.swing.JPanel {
     private UserDTO user;
     private UserBalanceJPanel userBalanceJPanel;
+    private AllUsersJPanel allUsersJPanel;
 
     /**
      * Creates new form UserJPanel
@@ -25,8 +28,12 @@ public class UserJPanel extends javax.swing.JPanel {
         this.user = user;
 
         UserBalanceJPanel userBalanceJPanel = new UserBalanceJPanel(user,user);
+        AllUsersJPanel allUsersJPanel = new AllUsersJPanel(user);
         jPanel1.setLayout(new CardLayout());
         jPanel1.add(userBalanceJPanel, "Balance");
+        jPanel1.add(allUsersJPanel, "AllUsers");
+        CardLayout cardLayout = (CardLayout) jPanel1.getLayout();
+        cardLayout.show(jPanel1, "AllUsers"); // Muestra el panel de todos por defecto
     }
 
     /**
@@ -44,6 +51,9 @@ public class UserJPanel extends javax.swing.JPanel {
         jButtonFilterUser = new javax.swing.JButton();
         jButtonViewAll = new javax.swing.JButton();
 
+        setMinimumSize(new java.awt.Dimension(900, 600));
+        setPreferredSize(new java.awt.Dimension(900, 600));
+
         jPanel1.setMinimumSize(new java.awt.Dimension(500, 500));
         jPanel1.setPreferredSize(new java.awt.Dimension(500, 500));
 
@@ -51,7 +61,7 @@ public class UserJPanel extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -73,23 +83,26 @@ public class UserJPanel extends javax.swing.JPanel {
         });
 
         jButtonViewAll.setText("Ver todos");
+        jButtonViewAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonViewAllActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabelViewUser)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonFilterUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonViewAll)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jLabelViewUser)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonFilterUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(143, 143, 143)
+                .addComponent(jButtonViewAll)
+                .addGap(0, 400, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,16 +118,37 @@ public class UserJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonFilterUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFilterUserActionPerformed
-/*
+
         try{
             int id = Integer.parseInt(jTextFieldUserId.getText().trim());//Obtengo el id del usuario amigo
-            UserDTO friend = UserCache.getInstance().getById(id);//Busco el usuario en el cache
+            Response<UserDTO> responseFriend = UserCache.getInstance().getById(id);//Busco el usuario en el cache
+            if (responseFriend.isSuccess()) {
+                UserDTO friend = responseFriend.getObj();//Obtengo el usuario amigo
+                //Si el usuario existe, lo muestro en el panel de balance
+                CardLayout cardLayout = (CardLayout) jPanel1.getLayout();
+                userBalanceJPanel = new UserBalanceJPanel(user, friend); // nuevo panel
+                jPanel1.add(userBalanceJPanel, "BalanceTemp_" + friend.getId()); // agregás con clave única por si cambian
+                cardLayout.show(jPanel1, "BalanceTemp_" + friend.getId()); // mostrás ese
+
+            } else {
+                //Si no existe, muestro un mensaje de error
+                System.out.println("El usuario no existe.");
+            }
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, "Error al filtrar por ID:\n", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
- */
+
         //ACA DEBO AGREGAR QUE VA A HACER EL BOTON DE FILTRAR
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonFilterUserActionPerformed
+
+    private void jButtonViewAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonViewAllActionPerformed
+        // TODO add your handling code here:
+        CardLayout cardLayout = (CardLayout) jPanel1.getLayout();
+        cardLayout.show(jPanel1, "AllUsers"); // Cambia al panel de todos los usuarios
+        
+    }//GEN-LAST:event_jButtonViewAllActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

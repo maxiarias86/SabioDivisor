@@ -43,7 +43,7 @@ public class UserDAO extends BaseDAO<User> {
     }
 
     @Override
-    public Response<User> read(int id) {
+    public Response<User> read(int id) {// Busca un usuario por ID
         String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
 
         try {
@@ -69,7 +69,7 @@ public class UserDAO extends BaseDAO<User> {
     }
     @Override
     public Response<User> readAll() {
-        String sql = "SELECT * FROM " + tableName;
+        String sql = "SELECT * FROM " + tableName + " ORDER BY id ASC";//Ordena por ID ascendente
         List<User> lista = new ArrayList<>();
 
         try {
@@ -138,8 +138,6 @@ public class UserDAO extends BaseDAO<User> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
-
-
 
     //Hice un metodo para buscarlos por email porque no siempre voy a conocer el ID.
     //Mapea todos los campos del modelo User.

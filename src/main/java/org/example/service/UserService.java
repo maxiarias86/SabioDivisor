@@ -10,7 +10,6 @@ import java.util.List;
 
 public class UserService {
 
-
     public Response<Integer> registerUser(User user) {// Devuelve una response con el int userId
         if (user.getName() == null || user.getName().isBlank()) {
             return new Response<>(false, "400", "El nombre de usuario no puede estar vacío.");
@@ -96,20 +95,6 @@ public class UserService {
 
     public UserDTO convertToDTO(User user) {
         return new UserDTO(user.getId(), user.getName(), user.getEmail());
-    }
-
-    //Creo que no voy a permitir borrar usuarios salvo que no tengan ningun debt o payment a su nombre.
-    public Response deleteUser(int id) {
-        try{
-            Response delection = UserDAO.getInstance().delete(id);
-            if (delection.isSuccess()) {
-                return new Response<>(true, "200", "Usuario eliminado correctamente.", id);
-            } else {
-                return new Response<>(false, "500", "No se pudo eliminar el usuario");
-            }
-        } catch (Exception e) {
-            return new Response<>(false,"500", "Error inesperado al eliminar el usuario: " + e.getMessage());
-        }
     }
 
     public Response<List<User>> getAllUsersButOne(int id) {

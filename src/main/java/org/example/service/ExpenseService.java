@@ -4,6 +4,7 @@ import org.example.cache.DebtCache;
 import org.example.cache.UserCache;
 import org.example.dao.DebtDAO;
 import org.example.dao.ExpenseDAO;
+import org.example.dao.UserDAO;
 import org.example.dto.ExpenseDTO;
 import org.example.dto.UserDTO;
 import org.example.model.Debt;
@@ -16,6 +17,7 @@ import java.util.*;
 public class ExpenseService {
 
     public Response<Integer> registerExpense(ExpenseDTO dto) {
+        UserDAO userDAO = UserDAO.getInstance();
         try {
             if (dto.getAmount() <= 0 || dto.getPayers().isEmpty() || dto.getDebtors().isEmpty()) {//Si el monto es menor o igual a 0 o si no hay pagadores o deudores, tira error.
                 return new Response<>(false, "400", "Datos insuficientes para registrar el gasto.");
@@ -55,7 +57,8 @@ public class ExpenseService {
             for (Map.Entry<Integer, Double> entry : balanceMap.entrySet()) {// Recorre el balanceMap para separar los usuarios en acreedores y deudores.
                 int userId = entry.getKey();// Obtiene el ID del usuario
                 double balance = entry.getValue();// Obtiene el balance del usuario
-                User user = cache.getById(userId).getObj();// Obtiene el usuario del cache por su ID
+
+                User user = userDAO.read(userId).getObj();// Obtiene el usuario del cache por su ID
                 if (user == null) {//
                     return new Response<>(false, "404", "El usuario con ID " + userId + " no existe.");
                 }

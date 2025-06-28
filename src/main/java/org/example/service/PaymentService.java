@@ -130,6 +130,4 @@ public class PaymentService {
             return new Response(false,"500", "Error inesperado al eliminar el pago: " + e.getMessage());
         }
     }
-
-
 }

@@ -32,7 +32,10 @@ public class IndexJFrame extends javax.swing.JFrame {
 
         jPanelMain.setLayout(new CardLayout());
         BalancesJPanel balances = new BalancesJPanel(user);
+        UserJPanel userPanel = new UserJPanel(user);
+        
         jPanelMain.add(balances, "Balances");
+        jPanelMain.add(userPanel, "UserPanel");
         
     }
 
@@ -53,12 +56,13 @@ public class IndexJFrame extends javax.swing.JFrame {
         jButtonBalances = new javax.swing.JButton();
         JButtonNewExpense = new javax.swing.JButton();
         jPanelMain = new javax.swing.JPanel();
+        jButtonOtherUsers = new javax.swing.JButton();
 
         jScrollPane.setViewportView(jTextPane);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 204, 204));
-        setMinimumSize(new java.awt.Dimension(900, 600));
+        setMinimumSize(new java.awt.Dimension(1100, 600));
         setPreferredSize(new java.awt.Dimension(900, 600));
 
         jLabelBienvenidoUsuario.setText("Mensaje de bienvenida");
@@ -91,18 +95,26 @@ public class IndexJFrame extends javax.swing.JFrame {
             }
         });
 
-        jPanelMain.setMinimumSize(new java.awt.Dimension(900, 600));
+        jPanelMain.setMinimumSize(new java.awt.Dimension(1100, 600));
 
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 900, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 600, Short.MAX_VALUE)
         );
+
+        jButtonOtherUsers.setText("Amigos");
+        jButtonOtherUsers.setToolTipText("");
+        jButtonOtherUsers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOtherUsersActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -110,21 +122,22 @@ public class IndexJFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(jPanelMain, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addContainerGap()
+                        .addComponent(JButtonNewExpense)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonNewPayment)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonBalances, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonOtherUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 252, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelBienvenidoUsuario)
-                        .addGap(40, 40, 40)
-                        .addComponent(jButtonEditUser, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(JButtonNewExpense)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jButtonNewPayment)
-                            .addGap(18, 18, 18)
-                            .addComponent(jButtonBalances, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 147, Short.MAX_VALUE))
+                        .addGap(401, 401, 401)
+                        .addComponent(jButtonEditUser, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 19, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,10 +150,12 @@ public class IndexJFrame extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(JButtonNewExpense, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButtonNewPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButtonBalances, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonBalances, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonOtherUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 0, 0)
                 .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 193, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -187,6 +202,13 @@ public class IndexJFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButtonBalancesActionPerformed
 
+    private void jButtonOtherUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOtherUsersActionPerformed
+
+        // TODO add your handling code here:
+        CardLayout layout = (CardLayout) jPanelMain.getLayout();
+        layout.show(jPanelMain,"UserPanel");
+    }//GEN-LAST:event_jButtonOtherUsersActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -216,6 +238,7 @@ public class IndexJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButtonBalances;
     private javax.swing.JButton jButtonEditUser;
     private javax.swing.JButton jButtonNewPayment;
+    private javax.swing.JButton jButtonOtherUsers;
     private javax.swing.JLabel jLabelBienvenidoUsuario;
     private javax.swing.JPanel jPanelMain;
     private javax.swing.JScrollPane jScrollPane;

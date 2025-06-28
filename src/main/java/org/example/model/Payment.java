@@ -1,6 +1,7 @@
 package org.example.model;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 public class Payment extends Transaction {
@@ -58,6 +59,8 @@ public class Payment extends Transaction {
             System.out.println("Error en 'recipient': " + e.getMessage());
         }
     }
+
+
 
     // equals y hashCode por id
     @Override

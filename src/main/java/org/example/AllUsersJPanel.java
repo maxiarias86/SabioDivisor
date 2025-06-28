@@ -4,17 +4,32 @@
  */
 package org.example;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import org.example.dto.UserDTO;
+import org.example.service.BalanceService;
+
 /**
  *
  * @author maxi
  */
 public class AllUsersJPanel extends javax.swing.JPanel {
+    private UserDTO user;
+    private LocalDate date = LocalDate.now();
 
     /**
      * Creates new form AllUsersJPanel
      */
-    public AllUsersJPanel() {
+    public AllUsersJPanel(UserDTO user) {
         initComponents();
+        
+        BalanceService balanceService = new BalanceService(user,date);
+        ArrayList<String> balances = (ArrayList) balanceService.getUserBalances(user, date);
+        StringBuilder sb = new StringBuilder();
+        for (String balance : balances) {
+            sb.append(balance).append("\n");
+        }
+        jTextArea1.setText(sb.toString());
     }
 
     /**
@@ -26,19 +41,37 @@ public class AllUsersJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+
+        setMinimumSize(new java.awt.Dimension(900, 600));
+
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(900, 600));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(900, 600));
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 }

@@ -281,8 +281,8 @@ public class DebtDAO extends BaseDAO<Debt> {
                 int debtorId = rs.getInt("debtor_id");// Obtiene el ID del deudor
                 int creditorId = rs.getInt("creditor_id");// Obtiene el ID del acreedor
                 //Busco el usuario deudor y acreedor en el cache
-                Response<User> debtorResponse = userCache.getById(debtorId);
-                Response<User> creditorResponse = userCache.getById(creditorId);
+                Response<User> debtorResponse = userCache.getFalseUserById(debtorId);
+                Response<User> creditorResponse = userCache.getFalseUserById(creditorId);
 
                 if (!debtorResponse.isSuccess() || !creditorResponse.isSuccess()) {
                     System.out.println("Deuda con datos incompletos (ID: " + rs.getInt("id") + ")");

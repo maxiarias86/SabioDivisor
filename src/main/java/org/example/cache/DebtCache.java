@@ -5,15 +5,12 @@ import org.example.dto.UserDTO;
 import org.example.model.Debt;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DebtCache {
 
     private static DebtCache instance;
     private ArrayList<Debt> debts;
-
 
     private DebtCache(UserDTO userDTO) {
         // Constructor privado para evitar instanciación externa
@@ -27,10 +24,8 @@ public class DebtCache {
         return instance;
     }
 
-    // Aquí podrías agregar métodos para manejar las deudas, como agregar, eliminar o buscar deudas
-
-    public List<Debt> getOtherUserDebts(UserDTO friend) {
-        List<Debt> otherUserDebts = new ArrayList<>();
+    public List<Debt> getOtherUserDebts(UserDTO friend) {// Obtiene las deudas entre el usuario actual y un amigo
+        List<Debt> otherUserDebts = new ArrayList<>();// Inicializa una lista para almacenar las deudas entre el usuario actual y el amigo
         for (Debt debt : debts) {
             if (debt.getCreditor().getId() == friend.getId() || debt.getDebtor().getId() == friend.getId()) { // Verifica si la deuda es entre el usuario actual y el amigo
                 otherUserDebts.add(debt);

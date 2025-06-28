@@ -88,7 +88,6 @@ public class UserBalanceJPanel extends javax.swing.JPanel {
 
         jLabelBalanceToDate.setText("Balance al " + date.format(formatter) + " con "+ friend.getName() + ": $" + String.format("%.2f", balance));// Mostrar el balance total a la fecha
 
-        //PARA PROBAR
         System.out.println("Deudas encontradas: " + debtCache.getDebts().size());
         for (Debt d : debtCache.getDebts()) {
             System.out.println("→ Deuda: " + d.getAmount() + ", Cuota: " + d.getInstallmentNumber() + ", Fecha: " + d.getDueDate() + ", Acreedor: " + d.getCreditor().getEmail() + ", Deudor: " + d.getDebtor().getEmail());

@@ -1,8 +1,10 @@
 package org.example.cache;
 
 import org.example.dao.UserDAO;
+import org.example.dto.UserDTO;
 import org.example.model.User;
 import org.example.model.Response;
+import org.example.service.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +19,9 @@ public class UserCache {
     private final static UserCache instance = new UserCache();
 
     private final UserDAO userDAO;
+    private final UserService userService = new UserService();
 
-    private final Map<Integer, User> userCache = new HashMap<>();
+    private final Map<Integer, UserDTO> userCache = new HashMap<>();
 
     public static UserCache getInstance() {
         return instance;
@@ -33,38 +36,31 @@ public class UserCache {
         Response<User> response = userDAO.readAll();
         if (response.isSuccess()) {
             for (User user : response.getData()) {
-                userCache.put(user.getId(), user);
+                // Convertir User a UserDTO si es necesario
+                UserDTO userDTO = userService.convertToDTO(user);
+
+                userCache.put(user.getId(), userDTO);
             }
         }
     }
 
-    //Este metodo llena el cache de a uno. No le encuentro uso aún
-    public Response<User> findById(int id) {
-        try{
-            if(!userCache.containsKey(id)){
-                Response getUser = userDAO.read(id);
-                if(getUser.isSuccess()){
-                    User user = (User) getUser.getObj();
-                    userCache.put(id, user);
-                }else{
-                    return getUser;
-                }
-            }
-            return new Response<>(true, "200", "OK", userCache.get(id));
-        }catch(Exception e){
-            return new Response<>(false, "500", "Internal Server Error");
-        }
-    }
-
-    //Devuelve todos los usuarios del cache
-    public Map<Integer, User> getAllUsers() {
+    public Map<Integer, UserDTO> getAllUsers() {//Devuelve todos los usuarios del cache
         return userCache;
     }
 
-    //Devuelve un usuario
-    public Response<User> getById(int id) {
-        if (userCache.containsKey(id)) {
+    public Response<UserDTO> getById(int id) {//Devuelve un usuario
+        if (userCache.containsKey(id)) {// Verifica si el usuario está en el cache. Dado que es un Map, la búsqueda es más fácil.
             return new Response<>(true, "200", "OK", userCache.get(id));
+        } else {
+            return new Response<>(false, "404", "El usuario no está en el cache");
+        }
+    }
+
+    public Response<User> getFalseUserById(int id) {//Devuelve un usuario con contraseña nula, para que no pasar esa información entre capas. Pero se utiliza User, y no UserDTO, para poder respetar otros modelos que tienen composición con User.
+        if (userCache.containsKey(id)) {
+            UserDTO userDTO = userCache.get(id);
+            User user = new User(userDTO.getId(), userDTO.getName(), userDTO.getEmail(), null);
+            return new Response<>(true, "200", "OK", user);
         } else {
             return new Response<>(false, "404", "El usuario no está en el cache");
         }

@@ -19,6 +19,7 @@ public class ExpenseCache {// Cache para almacenar los gastos de un usuario
     public static ExpenseCache getInstance(UserDTO userDTO) {
         if (instance == null) {
             instance = new ExpenseCache();
+            instance.updateExpenseCache(userDTO);
         }
         return instance;
     }
@@ -59,14 +60,6 @@ public class ExpenseCache {// Cache para almacenar los gastos de un usuario
         }catch(Exception e){
             return new Response (false,"500","Error al buscar el gasto asociado a esa deuda",e.getMessage());
         }
-    }
-
-    public List<Expense> getExpenses() {
-        return expenses;
-    }
-
-    public void setExpenses(List<Expense> expenses) {
-        this.expenses = expenses;
     }
 
     public void clear() {

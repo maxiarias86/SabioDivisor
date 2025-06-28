@@ -17,3 +17,4 @@
 * Que no se puedan generar gastos sin deudas. Por ejemplo: Maxi pago 1000 y tenía que pagar 1000, entonces como nadie debe a nadie se genera el gasto pero no la deuda.
 * Ver si vale la pena tener un PaymentDTO o lo cambio directamente por Payment en las views dado que no pasa información sensible.
 * Armar un metodo que busque la descripcion del expense que da origen a la deuda. Convendia tenerlas en un cache para no ir a la base de datos.
+* Poner que no se va a permitir borrar usuarios en el readme.
