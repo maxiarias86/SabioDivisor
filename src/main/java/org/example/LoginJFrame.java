@@ -8,7 +8,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import org.example.dao.UserDAO;
 import org.example.dto.UserDTO;
-import org.example.model.Response;
 import org.example.model.User;
 import org.example.service.LoginService;
 
@@ -158,7 +157,7 @@ public class LoginJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonLoginActionPerformed
 
     private void registerJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerJButtonActionPerformed
-        UserJFrame register = new UserJFrame(); // Paso el usuario porque lo voy a usar
+        NewUserJFrame register = new NewUserJFrame(); // Paso el usuario porque lo voy a usar
             register.setVisible(true);
             this.dispose();
     }//GEN-LAST:event_registerJButtonActionPerformed

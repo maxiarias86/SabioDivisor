@@ -8,8 +8,10 @@ o en con saldo negativo, tambien para no tener que volver a la BBDD cada vez que
 import org.example.dao.PaymentDAO;
 import org.example.dto.UserDTO;
 import org.example.model.Payment;
+import org.example.model.Response;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PaymentCache {
 
@@ -30,6 +32,17 @@ public class PaymentCache {
         }
         return instance;
     }
+
+    public List<Payment> getOtherUserPayments(UserDTO friend) {
+        List<Payment> otherUserPayments = new ArrayList<>();
+        for (Payment payment : payments) {
+            if (payment.getPayer().getId() == friend.getId() || payment.getRecipient().getId() == friend.getId()) {// Verifica si el pago es entre el usuario actual y el amigo
+                    otherUserPayments.add(payment);
+            }
+        }
+        return otherUserPayments;
+    }
+
     public ArrayList<Payment> getPayments() {
         return payments;
     }

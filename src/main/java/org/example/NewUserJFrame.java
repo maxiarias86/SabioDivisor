@@ -14,14 +14,14 @@ import javax.swing.*;
  *
  * @author maxi
  */
-public class UserJFrame extends javax.swing.JFrame {
+public class NewUserJFrame extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(UserJFrame.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NewUserJFrame.class.getName());
 
     /**
      * Creates new form RegisterJFrame
      */
-    public UserJFrame() {
+    public NewUserJFrame() {
         initComponents();
     }
 
@@ -184,7 +184,7 @@ public class UserJFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new UserJFrame().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new NewUserJFrame().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

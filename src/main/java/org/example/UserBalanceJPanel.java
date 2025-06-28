@@ -6,6 +6,8 @@ package org.example;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.example.cache.DebtCache;
 import org.example.cache.ExpenseCache;
@@ -22,16 +24,18 @@ import javax.swing.*;
  *
  * @author maxi
  */
-public class BalancesJPanel extends javax.swing.JPanel {
-    UserDTO user;
+public class UserBalanceJPanel extends javax.swing.JPanel {
+    UserDTO user;// Usuario actual
+    UserDTO friend;// Usuario amigo con el que se quiere ver el balance
     LocalDate date;
 
     /**
      * Creates new form BalancesJPanel
      */
-    public BalancesJPanel(UserDTO user) {
+    public UserBalanceJPanel(UserDTO user, UserDTO friend) {
         initComponents();
         this.user = user;
+        this.friend = friend;
         this.date = LocalDate.now();
         this.updateView();
     }
@@ -42,25 +46,27 @@ public class BalancesJPanel extends javax.swing.JPanel {
         PaymentCache paymentCache = PaymentCache.getInstance(user);
         DebtCache debtCache = DebtCache.getInstance(user);
         expenseCache.updateExpenseCache(user);
-        // Calcular el balance total a la fecha
-        double balance = 0.0;
+        List<Payment> paymentsBetween = paymentCache.getOtherUserPayments(friend);
+        List<Debt> debtsBetween = debtCache.getOtherUserDebts(friend);
+        double balance = 0.0;// Calcular el balance total a la fecha
 
 
-        jTextAreaPayments.setText("Tus pagos: \n\n");
-        for (Payment payment : paymentCache.getPayments()) {
+        jTextAreaPayments.setText("Pagos: \n\n");
+        for (Payment payment : paymentsBetween) {
             if(payment.getDate().isAfter(date)) {
                 continue; // Ignorar pagos futuros. Serviría en caso de querer ver un balance pasado.
             }
-            if (payment.getPayer().getId() == user.getId()) {
+            if (payment.getPayer().getId() == user.getId()) {//Comprueba que el usuario actual es el pagador
                 jTextAreaPayments.append("Pagaste $" + String.format("%.2f",payment.getAmount()) + " a " + payment.getRecipient().getName() + " (ID "+payment.getRecipient().getId() +") el " + payment.getDate().format(formatter) + "\n");
                 balance += payment.getAmount(); // Sumar el pago del balance
-            } else if (payment.getRecipient().getId() == user.getId()) {
+            } else if (payment.getRecipient().getId() == user.getId()) {// Comprueba que el usuario actual es el receptor
                 jTextAreaPayments.append("Recibiste $" + String.format("%.2f",payment.getAmount()) + " de " + payment.getPayer().getName() + " (ID "+payment.getPayer().getId() + ") el " + payment.getDate().format(formatter) + "\n");
                 balance -= payment.getAmount();// Restar el pago al balance
-            }
+            }// Si el pago es entre otro usuario y el amigo, no se muestra. Igualmente no debería pasar.
         }
-        jTextAreaDebts.setText("Tus deudas generadas: \n\n");
-        for (Debt debt : debtCache.getDebts()) {
+
+        jTextAreaDebts.setText("Deudas generadas: \n\n");
+        for (Debt debt : debtsBetween) {
             if(debt.getDueDate().isAfter(date)) {
                 continue; // Ignorar deudas futuras a la fecha.
             }
