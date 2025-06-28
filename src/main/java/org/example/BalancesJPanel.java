@@ -6,10 +6,11 @@ package org.example;
 
 import java.time.LocalDate;
 
+import org.example.cache.DebtCache;
 import org.example.cache.PaymentCache;
 import org.example.dto.UserDTO;
+import org.example.model.Debt;
 import org.example.model.Payment;
-import org.example.model.User;
 
 /**
  *
@@ -27,16 +28,38 @@ public class BalancesJPanel extends javax.swing.JPanel {
         this.user = user;
         this.date = LocalDate.now();
         PaymentCache paymentCache = PaymentCache.getInstance(user);
-        jTextAreaUsersBalance.setText("Pagos de " + user.getEmail() + ":\n\n");
+        jTextAreaPayments.setText("Pagos de " + user.getEmail() + ":\n\n");
         for (Payment payment : paymentCache.getPayments()) {
+            if(payment.getDate().isAfter(date)) {
+                continue; // Ignorar pagos futuros. Serviriía en caso de querer ver un balance pasado.
+            }
             if (payment.getPayer().getId() == user.getId()) {
-                jTextAreaUsersBalance.append("Pagó: " + payment.getAmount() + " a " + payment.getRecipient().getEmail() + " el " + payment.getDate() + "\n");
+                jTextAreaPayments.append("Pagó: " + payment.getAmount() + " a " + payment.getRecipient().getEmail() + " el " + payment.getDate() + "\n");
             } else if (payment.getRecipient().getId() == user.getId()) {
-                jTextAreaUsersBalance.append("Recibió: " + payment.getAmount() + " de " + payment.getPayer().getEmail() + " el " + payment.getDate() + "\n");
+                jTextAreaPayments.append("Recibió: " + payment.getAmount() + " de " + payment.getPayer().getEmail() + " el " + payment.getDate() + "\n");
+            }
+        }
+        DebtCache debtCache = DebtCache.getInstance(user);
+        jTextAreaDebts.setText("Deudas de " + user.getEmail() + ":\n\n");
+        for (Debt debt : debtCache.getDebts()) {
+            if(debt.getDueDate().isAfter(date)) {
+                continue; // Ignorar deudas futuras a la fecha.
+            }
+            if (debt.getCreditor().getId() == user.getId()) {
+                jTextAreaDebts.append("Deuda: " + debt.getAmount() + " de " + debt.getDebtor().getEmail() + " vence el " + debt.getDueDate() + ", cuota "+ debt.getInstallmentNumber() +"\n");
+            } else if (debt.getDebtor().getId() == user.getId()) {
+                jTextAreaDebts.append("Debe: " + debt.getAmount() + " a " + debt.getCreditor().getEmail() + " vence el " + debt.getDueDate() + ", cuota "+ debt.getInstallmentNumber() +"\n");
             }
         }
 
         jLabelBalanceToDate.setText("Balance al " + date.toString());
+
+        //PARA PROBAR
+        System.out.println("Deudas encontradas: " + debtCache.getDebts().size());
+        for (Debt d : debtCache.getDebts()) {
+            System.out.println("→ Deuda: " + d.getAmount() + ", Cuota: " + d.getInstallmentNumber() + ", Fecha: " + d.getDueDate() + ", Acreedor: " + d.getCreditor().getEmail() + ", Deudor: " + d.getDebtor().getEmail());
+        }
+
     }
 
     /**
@@ -50,7 +73,8 @@ public class BalancesJPanel extends javax.swing.JPanel {
 
         jLabelBalanceToDate = new javax.swing.JLabel();
         jButtonDate = new javax.swing.JButton();
-        jTextAreaUsersBalance = new javax.swing.JTextArea();
+        jTextAreaPayments = new javax.swing.JTextArea();
+        jTextAreaDebts = new javax.swing.JTextArea();
 
         jLabelBalanceToDate.setText("jLabelBalanceToDate");
 
@@ -58,23 +82,30 @@ public class BalancesJPanel extends javax.swing.JPanel {
         jButtonDate.setMaximumSize(new java.awt.Dimension(72, 30));
         jButtonDate.setMinimumSize(new java.awt.Dimension(72, 30));
 
-        jTextAreaUsersBalance.setColumns(20);
-        jTextAreaUsersBalance.setRows(5);
+        jTextAreaPayments.setColumns(20);
+        jTextAreaPayments.setRows(5);
+
+        jTextAreaDebts.setColumns(20);
+        jTextAreaDebts.setRows(5);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabelBalanceToDate)
-                .addGap(144, 144, 144)
-                .addComponent(jButtonDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextAreaUsersBalance, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 5, Short.MAX_VALUE)
+                        .addComponent(jLabelBalanceToDate)
+                        .addGap(144, 144, 144)
+                        .addComponent(jButtonDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jTextAreaDebts, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jTextAreaPayments, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -83,9 +114,11 @@ public class BalancesJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelBalanceToDate)
                     .addComponent(jButtonDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(11, 11, 11)
-                .addComponent(jTextAreaUsersBalance, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                .addGap(105, 105, 105))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextAreaPayments, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextAreaDebts, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -93,6 +126,7 @@ public class BalancesJPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonDate;
     private javax.swing.JLabel jLabelBalanceToDate;
-    private javax.swing.JTextArea jTextAreaUsersBalance;
+    private javax.swing.JTextArea jTextAreaDebts;
+    private javax.swing.JTextArea jTextAreaPayments;
     // End of variables declaration//GEN-END:variables
 }

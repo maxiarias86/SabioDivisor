@@ -62,7 +62,11 @@ public class UserCache {
     }
 
     //Devuelve un usuario
-    public User getById(int id) {
-        return userCache.get(id);
+    public Response<User> getById(int id) {
+        if (userCache.containsKey(id)) {
+            return new Response<>(true, "200", "OK", userCache.get(id));
+        } else {
+            return new Response<>(false, "404", "El usuario no está en el cache");
+        }
     }
 }

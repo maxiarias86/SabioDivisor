@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+
+import org.example.cache.DebtCache;
 import org.example.cache.UserCache;
 import org.example.dto.ExpenseDTO;
 import org.example.dto.UserDTO;
@@ -634,6 +636,9 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
             Response response = expenseService.registerExpense(dto);
             if(response.isSuccess()){
                 JOptionPane.showMessageDialog(this, "Gasto registrado correctamente.");
+                //Agrego las deudas al cache
+                expenseService.loadDebt((Integer) response.getObj(), user);//Le paso el ID del gasto y el usuario que esta logueado para que agregue sus deudas al cache.
+
                 IndexJFrame index = new IndexJFrame(user);
                 index.setVisible(true);
                 this.dispose();

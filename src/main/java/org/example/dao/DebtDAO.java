@@ -1,5 +1,7 @@
 package org.example.dao;
 
+import org.example.cache.UserCache;
+import org.example.dto.UserDTO;
 import org.example.model.Debt;
 import org.example.model.Expense;
 import org.example.model.Response;
@@ -139,7 +141,7 @@ public class DebtDAO extends BaseDAO<Debt> {
 
     @Override
     public Response<Debt> readAll() {
-        String sql = "SELECT * FROM debts";
+        String sql = "SELECT * FROM debts ORDER BY due_date DESC";
         List<Debt> lista = new ArrayList<>();
         UserDAO userDAO = UserDAO.getInstance();
 
@@ -216,8 +218,8 @@ public class DebtDAO extends BaseDAO<Debt> {
         return debts;
     }
 
-    public Response<Debt> readAllByUser(User user) {
-        String sql = "SELECT * FROM debts WHERE creditor_id = ? OR debtor_id = ?";
+    public Response<Debt> readAllByUser(UserDTO user) {
+        String sql = "SELECT * FROM debts WHERE creditor_id = ? OR debtor_id = ? ORDER BY due_date DESC";
         List<Debt> lista = new ArrayList<>();
         UserDAO userDAO = UserDAO.getInstance();
 
@@ -233,6 +235,54 @@ public class DebtDAO extends BaseDAO<Debt> {
 
                 Response<User> debtorResponse = userDAO.read(debtorId);
                 Response<User> creditorResponse = userDAO.read(creditorId);
+
+                if (!debtorResponse.isSuccess() || !creditorResponse.isSuccess()) {
+                    System.out.println("Deuda con datos incompletos (ID: " + rs.getInt("id") + ")");
+                    System.out.println("Error en 'debtor': " + debtorResponse.getMessage());
+                    System.out.println("Error en 'creditor': " + creditorResponse.getMessage());
+                    continue; // Saleta la creación de la deuda que le falten datos
+                }
+
+                Debt d = new Debt(
+                        rs.getInt("id"),
+                        rs.getDouble("amount"),
+                        debtorResponse.getObj(),
+                        creditorResponse.getObj(),
+                        rs.getInt("expense_id"),
+                        rs.getDate("due_date").toLocalDate(),
+                        rs.getInt("installment_number")
+                );
+
+                lista.add(d);
+            }
+
+            return new Response<>(true, "200", "Listado de deudas obtenido", lista);
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
+
+    public Response<Debt> readAllByExpenseAndUser(int expenseId, UserDTO user) {
+        String sql = "SELECT * FROM debts WHERE expense_id = ? AND (creditor_id = ? OR debtor_id = ?) ORDER BY due_date DESC";// Consulta para obtener deudas de un gasto específico y del usuario logueado(como deudor o acreedor)
+        List<Debt> lista = new ArrayList<>();// Armo un arrayList para guardar las deudas del gasto y del usuario logueado.
+        UserDAO userDAO = UserDAO.getInstance();// Obtengo el DAO de usuarios para poder obtener los datos de los usuarios deudores y acreedores.
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);// Preparo la consulta
+            ps.setInt(1, expenseId);
+            ps.setInt(2, user.getId());
+            ps.setInt(3, user.getId());
+            ResultSet rs = ps.executeQuery();// Ejecuta la consulta
+
+            UserCache userCache = UserCache.getInstance();//Armo un Cache de usuarios para no tener que hacer una consulta todas las deudas
+
+            while (rs.next()) {
+                int debtorId = rs.getInt("debtor_id");// Obtiene el ID del deudor
+                int creditorId = rs.getInt("creditor_id");// Obtiene el ID del acreedor
+                //Busco el usuario deudor y acreedor en el cache
+                Response<User> debtorResponse = userCache.getById(debtorId);
+                Response<User> creditorResponse = userCache.getById(creditorId);
 
                 if (!debtorResponse.isSuccess() || !creditorResponse.isSuccess()) {
                     System.out.println("Deuda con datos incompletos (ID: " + rs.getInt("id") + ")");

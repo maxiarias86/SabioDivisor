@@ -193,4 +193,5 @@ public class UserDAO extends BaseDAO<User> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
+
 }
