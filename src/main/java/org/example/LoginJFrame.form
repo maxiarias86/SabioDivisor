@@ -50,7 +50,7 @@
                       <Component id="registerJButton" alignment="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="15" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -101,7 +101,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="jTextEmail">
       <Properties>
-        <Property name="columns" type="int" value="10"/>
+        <Property name="columns" type="int" value="15"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextEmailActionPerformed"/>
@@ -117,7 +117,7 @@
     </Component>
     <Component class="javax.swing.JPasswordField" name="jPasswordField1">
       <Properties>
-        <Property name="columns" type="int" value="10"/>
+        <Property name="columns" type="int" value="15"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="registerJButton">

@@ -5,12 +5,18 @@
 package org.example;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.example.cache.DebtCache;
+import org.example.cache.ExpenseCache;
 import org.example.cache.PaymentCache;
 import org.example.dto.UserDTO;
 import org.example.model.Debt;
+import org.example.model.Expense;
 import org.example.model.Payment;
+import org.example.model.Response;
+
+import javax.swing.*;
 
 /**
  *
@@ -27,40 +33,56 @@ public class BalancesJPanel extends javax.swing.JPanel {
         initComponents();
         this.user = user;
         this.date = LocalDate.now();
+        this.updateView();
+    }
+
+    private void updateView() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+        ExpenseCache expenseCache = ExpenseCache.getInstance(user);
         PaymentCache paymentCache = PaymentCache.getInstance(user);
-        jTextAreaPayments.setText("Pagos de " + user.getEmail() + ":\n\n");
+        DebtCache debtCache = DebtCache.getInstance(user);
+        expenseCache.updateExpenseCache(user);
+
+        jTextAreaPayments.setText("Tus pagos: \n\n");
         for (Payment payment : paymentCache.getPayments()) {
             if(payment.getDate().isAfter(date)) {
-                continue; // Ignorar pagos futuros. Serviriía en caso de querer ver un balance pasado.
+                continue; // Ignorar pagos futuros. Serviría en caso de querer ver un balance pasado.
             }
             if (payment.getPayer().getId() == user.getId()) {
-                jTextAreaPayments.append("Pagó: " + payment.getAmount() + " a " + payment.getRecipient().getEmail() + " el " + payment.getDate() + "\n");
+
+                jTextAreaPayments.append("Pagaste $" + String.format("%.2f",payment.getAmount()) + " a " + payment.getRecipient().getName() + " (ID "+payment.getRecipient().getId() +") el " + payment.getDate().format(formatter) + "\n");
             } else if (payment.getRecipient().getId() == user.getId()) {
-                jTextAreaPayments.append("Recibió: " + payment.getAmount() + " de " + payment.getPayer().getEmail() + " el " + payment.getDate() + "\n");
+                jTextAreaPayments.append("Recibiste $" + String.format("%.2f",payment.getAmount()) + " de " + payment.getPayer().getName() + " (ID "+payment.getPayer().getId() + ") el " + payment.getDate().format(formatter) + "\n");
             }
         }
-        DebtCache debtCache = DebtCache.getInstance(user);
-        jTextAreaDebts.setText("Deudas de " + user.getEmail() + ":\n\n");
+        jTextAreaDebts.setText("Tus deudas generadas: \n\n");
         for (Debt debt : debtCache.getDebts()) {
             if(debt.getDueDate().isAfter(date)) {
                 continue; // Ignorar deudas futuras a la fecha.
             }
+            //Obtiene la descripcion del gasto asociado a la deuda
+            Response<Expense> expenseResponse = expenseCache.getExpenseById(debt.getExpenseId());
+            if(!expenseResponse.isSuccess() || expenseResponse.getObj() == null) {
+                System.err.println("Error al obtener gasto #" + debt.getExpenseId() + ": " + expenseResponse.getMessage());
+                continue; // Si no se pudo obtener el gasto, saltar a la siguiente deuda
+            }
+            Expense expense = expenseResponse.getObj();
             if (debt.getCreditor().getId() == user.getId()) {
-                jTextAreaDebts.append("Deuda: " + debt.getAmount() + " de " + debt.getDebtor().getEmail() + " vence el " + debt.getDueDate() + ", cuota "+ debt.getInstallmentNumber() +"\n");
+                jTextAreaDebts.append(debt.getDebtor().getName() + " (ID "+ debt.getDebtor().getId() + ")"  + " te debe: $" + String.format("%.2f",debt.getAmount()) + " de "  + expense.getDescription() + " (cuota "+ debt.getInstallmentNumber()+  "). Vencimiento: " + debt.getDueDate().format(formatter) +"\n");
             } else if (debt.getDebtor().getId() == user.getId()) {
-                jTextAreaDebts.append("Debe: " + debt.getAmount() + " a " + debt.getCreditor().getEmail() + " vence el " + debt.getDueDate() + ", cuota "+ debt.getInstallmentNumber() +"\n");
+                jTextAreaDebts.append("Debes $" + String.format("%.2f",debt.getAmount()) + " a " + debt.getCreditor().getName() + " (ID "+ debt.getCreditor().getId() + ")"  + " de "  + expense.getDescription() + " (cuota "+ debt.getInstallmentNumber() + "). Vencimiento: " + debt.getDueDate().format(formatter) +"\n");
             }
         }
 
-        jLabelBalanceToDate.setText("Balance al " + date.toString());
+        jLabelBalanceToDate.setText("Balance al " + date.format(formatter));
 
         //PARA PROBAR
         System.out.println("Deudas encontradas: " + debtCache.getDebts().size());
         for (Debt d : debtCache.getDebts()) {
             System.out.println("→ Deuda: " + d.getAmount() + ", Cuota: " + d.getInstallmentNumber() + ", Fecha: " + d.getDueDate() + ", Acreedor: " + d.getCreditor().getEmail() + ", Deudor: " + d.getDebtor().getEmail());
         }
+}
 
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -73,59 +95,91 @@ public class BalancesJPanel extends javax.swing.JPanel {
 
         jLabelBalanceToDate = new javax.swing.JLabel();
         jButtonDate = new javax.swing.JButton();
-        jTextAreaPayments = new javax.swing.JTextArea();
+        jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaDebts = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextAreaPayments = new javax.swing.JTextArea();
+
+        setMinimumSize(new java.awt.Dimension(900, 600));
 
         jLabelBalanceToDate.setText("jLabelBalanceToDate");
 
-        jButtonDate.setText("jButtonDate");
+        jButtonDate.setText("Cambiar fecha");
         jButtonDate.setMaximumSize(new java.awt.Dimension(72, 30));
         jButtonDate.setMinimumSize(new java.awt.Dimension(72, 30));
+        jButtonDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDateActionPerformed(evt);
+            }
+        });
 
-        jTextAreaPayments.setColumns(20);
-        jTextAreaPayments.setRows(5);
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(430, 430));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(430, 430));
 
         jTextAreaDebts.setColumns(20);
         jTextAreaDebts.setRows(5);
+        jTextAreaDebts.setMinimumSize(new java.awt.Dimension(430, 430));
+        jScrollPane1.setViewportView(jTextAreaDebts);
+
+        jScrollPane2.setMinimumSize(new java.awt.Dimension(430, 430));
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(430, 430));
+
+        jTextAreaPayments.setColumns(20);
+        jTextAreaPayments.setRows(5);
+        jTextAreaPayments.setMinimumSize(new java.awt.Dimension(430, 430));
+        jScrollPane2.setViewportView(jTextAreaPayments);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 5, Short.MAX_VALUE)
-                        .addComponent(jLabelBalanceToDate)
-                        .addGap(144, 144, 144)
-                        .addComponent(jButtonDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jTextAreaDebts, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextAreaPayments, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                .addComponent(jLabelBalanceToDate)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButtonDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 418, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelBalanceToDate)
                     .addComponent(jButtonDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextAreaPayments, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextAreaDebts, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDateActionPerformed
+        // TODO add your handling code here:
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+        String input = JOptionPane.showInputDialog(this, "Ingrese una fecha (DD/MM/AA):", date.format(formatter));
+        if (input != null && !input.isEmpty()) {
+            try {
+                LocalDate nuevaFecha = LocalDate.parse(input, formatter);
+                this.date = nuevaFecha;
+
+                updateView();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Formato inválido. Use dd/mm/aa (por ejemplo: 28/06/25).");
+            }
+
+        }
+
+    }//GEN-LAST:event_jButtonDateActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonDate;
     private javax.swing.JLabel jLabelBalanceToDate;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextAreaDebts;
     private javax.swing.JTextArea jTextAreaPayments;
     // End of variables declaration//GEN-END:variables

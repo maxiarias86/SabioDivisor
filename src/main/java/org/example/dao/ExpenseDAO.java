@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import org.example.dto.ExpenseDTO;
+import org.example.dto.UserDTO;
 import org.example.model.Debt;
 import org.example.model.Expense;
 import org.example.model.Response;
@@ -163,6 +164,7 @@ public class ExpenseDAO extends BaseDAO<Expense> {
         }
     }
 
+
     public Response<Integer> save(ExpenseDTO dto, List<Debt> debts) {
         //En este metodo cuando inserte el Expense tengo que copiarme el id, y luego insertar las deudas con ese expenseId
         String insertExpenseSQL = "INSERT INTO expenses (amount, date, installments, description) VALUES (?, ?, ?, ?)";
@@ -220,6 +222,4 @@ public class ExpenseDAO extends BaseDAO<Expense> {
             }
         }
     }
-
-
 }

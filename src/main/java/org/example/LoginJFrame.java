@@ -54,7 +54,7 @@ public class LoginJFrame extends javax.swing.JFrame {
 
         jLabelPassword.setText("contraseña");
 
-        jTextEmail.setColumns(10);
+        jTextEmail.setColumns(15);
         jTextEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextEmailActionPerformed(evt);
@@ -68,7 +68,7 @@ public class LoginJFrame extends javax.swing.JFrame {
             }
         });
 
-        jPasswordField1.setColumns(10);
+        jPasswordField1.setColumns(15);
 
         registerJButton.setText("Nuevo Usuario");
         registerJButton.addActionListener(new java.awt.event.ActionListener() {
@@ -101,7 +101,7 @@ public class LoginJFrame extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jButtonLogin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(registerJButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
