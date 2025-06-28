@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 import org.example.dto.PaymentDTO;
 import org.example.dto.UserDTO;
+import org.example.model.Payment;
 import org.example.model.Response;
 import org.example.model.User;
 import org.example.service.PaymentService;
@@ -174,7 +175,6 @@ public class NewPaymentJFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error de fecha", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
         try{
             Object value = jFormattedTextFieldUserId.getValue();
             if (value == null) throw new NullPointerException();
@@ -184,7 +184,6 @@ public class NewPaymentJFrame extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Ingrese un ID válido.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
         }
-        
         try {
         Object amountValue = jFormattedTextFieldAmount.getValue();
         if (amountValue == null) throw new NullPointerException();
@@ -200,9 +199,16 @@ public class NewPaymentJFrame extends javax.swing.JFrame {
         PaymentService paymentService = new PaymentService();
         Response response = paymentService.registerPayment(dto);
         if (response.isSuccess()){
-            JOptionPane.showMessageDialog(this, "Pago registrado correctamente.");
-            IndexJFrame in = new IndexJFrame(user);
-            in.setVisible(true);
+            JOptionPane.showMessageDialog(this, "Pago registrado correctamente en base de datos.");
+            // Cargar el pago en el cache del usuario
+            Response<PaymentDTO> paymentResponse = paymentService.loadToCache((Payment) response.getObj(), user);
+            if(paymentResponse.isSuccess()) {
+                JOptionPane.showMessageDialog(this, "Pago cargado en el cache del usuario correctamente.");
+                IndexJFrame in = new IndexJFrame(user);
+                in.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al cargar el pago en el cache: " + paymentResponse.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Error al registrar el pago: " + response.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

@@ -1,5 +1,6 @@
 package org.example.dao;
 
+import org.example.dto.UserDTO;
 import org.example.model.Payment;
 import org.example.model.Response;
 import org.example.model.User;
@@ -196,22 +197,22 @@ public class PaymentDAO extends BaseDAO<Payment> {
     }
 
     //Lo uso para crear el PaymentCache del usuario logueado
-    public Response<Payment> readAllByUser(User user) {
-        String sql = "SELECT * FROM " + tableName + " WHERE payer_id = ? OR recipient_id = ?";
-        List<Payment> lista = new ArrayList<>();
+    public Response<Payment> readAllByUser(UserDTO user) {
+        String sql = "SELECT * FROM " + tableName + " WHERE payer_id = ? OR recipient_id = ? ORDER BY date DESC";
+        List<Payment> lista = new ArrayList<>();//Armo un arrayList para guardar los pagos en los que participa el usuario logueado.
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, user.getId());
             ps.setInt(2, user.getId());
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();//Ejecuta la consulta
 
-            while (rs.next()) {
-                int payerId = rs.getInt("payer_id");
-                int recipientId = rs.getInt("recipient_id");
+            while (rs.next()) {//Recorre los resultados de a uno.
+                int payerId = rs.getInt("payer_id");//Obtiene el ID del pagador
+                int recipientId = rs.getInt("recipient_id");//Obtiene el ID del receptor
 
-                Response<User> payerResponse = UserDAO.getInstance().read(payerId);
-                Response<User> recipientResponse = UserDAO.getInstance().read(recipientId);
+                Response<User> payerResponse = UserDAO.getInstance().read(payerId);//Obtiene el usuario pagador
+                Response<User> recipientResponse = UserDAO.getInstance().read(recipientId);//Obtiene el usuario receptor
 
                 if (!payerResponse.isSuccess() || !recipientResponse.isSuccess()) {
                     System.out.println("Pago con datos incompletos (ID: " + rs.getInt("id") + ")");
@@ -220,28 +221,25 @@ public class PaymentDAO extends BaseDAO<Payment> {
                     continue; //Saltea el registro si hay un error. Evita guardarlo
                 }
 
-                User payer = payerResponse.getObj();
-                User recipient = recipientResponse.getObj();
+                User payer = payerResponse.getObj();//Obtiene el objeto User del pagador
+                User recipient = recipientResponse.getObj();//Obtiene el objeto User del receptor
 
-                Payment payment = new Payment(
-                        rs.getInt("id"),
-                        rs.getDouble("amount"),
-                        rs.getDate("date").toLocalDate(),
-                        payer,
-                        recipient
+                Payment payment = new Payment(//Crea un nuevo objeto Payment con los datos obtenidos
+                        rs.getInt("id"),// Obtiene el ID del pago
+                        rs.getDouble("amount"),// Obtiene el monto del pago
+                        rs.getDate("date").toLocalDate(),//
+                        payer,// Asigna el pagador
+                        recipient// Asigna el receptor
                 );
 
-                lista.add(payment);
+                lista.add(payment);// Agrega el pago a la lista
             }
 
-            return new Response<>(true, "200", "Listado de pagos obtenido", lista);
+            return new Response<>(true, "200", "Listado de pagos obtenido", lista);//
 
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
     }
-
-
-
 
 }

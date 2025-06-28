@@ -1,8 +1,10 @@
 package org.example.service;
 
+import org.example.cache.PaymentCache;
 import org.example.dto.PaymentDTO;
 import org.example.dao.PaymentDAO;
 import org.example.dao.UserDAO;
+import org.example.dto.UserDTO;
 import org.example.model.Payment;
 import org.example.model.Response;
 import org.example.model.User;
@@ -11,7 +13,7 @@ import java.time.LocalDate;
 
 public class PaymentService {
 
-    public Response<Integer> registerPayment(PaymentDTO dto) {//El response devuelve un Integer para pasar el ID del Payment creado o null.
+    public Response<Payment> registerPayment(PaymentDTO dto) {//El response devuelve un Integer para pasar el ID del Payment creado o null.
         if (dto.getAmount() <= 0) {
             return new Response<>(false, "400", "El monto debe ser mayor a cero.");
         }
@@ -44,12 +46,23 @@ public class PaymentService {
 
             Response<Payment> response = PaymentDAO.getInstance().create(payment);
             if (response.isSuccess()) {
-                return new Response<>(true, "201", "Pago registrado exitosamente.", response.getObj().getId());
+                return new Response<>(true, "201", "Pago registrado exitosamente.", response.getObj());//Devuelve el objeto Payment creado con su ID asignado.
             } else {
                 return new Response<>(false, response.getCode(), response.getMessage());
             }
         } catch (Exception e) {
             return new Response<>(false, "500", "Error en el servidor: " + e.getMessage());
+        }
+
+    }
+
+    public Response loadToCache(Payment newPayment, UserDTO userDTO) {
+        try {
+            PaymentCache cache = PaymentCache.getInstance(userDTO);
+            cache.addPayment(newPayment);
+            return new Response<>(true, "200", "Pago cargado en el cache exitosamente.");
+        }catch(Exception e) {
+            return new Response<>(false, "500", "Error al cargar el pago en el cache: " + e.getMessage());
         }
 
     }

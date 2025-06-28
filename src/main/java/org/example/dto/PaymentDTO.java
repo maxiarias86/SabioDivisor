@@ -8,6 +8,7 @@ public class PaymentDTO {
     private int payerId;
     private int recipientId;
     private double amount;
+
     public PaymentDTO(){
 
     }

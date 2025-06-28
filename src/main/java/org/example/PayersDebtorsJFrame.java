@@ -47,6 +47,9 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
             }
             jTextAreaUsuarios.setText(responseString);
             jTextAreaUsuarios.setEditable(false); // El jText que carga los usuarios se vuelve solo lectura.
+            jTextFieldError.setText("");
+            jTextFieldDescription.setText(dto.getDescription());
+            jTextFieldAmount.setText("$"+dto.getAmount()+".-");
         }
     }
     
@@ -100,6 +103,8 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
         jFormattedTextFieldAmount14 = new javax.swing.JFormattedTextField();
         jFormattedTextField15 = new javax.swing.JFormattedTextField();
         jFormattedTextFieldAmount15 = new javax.swing.JFormattedTextField();
+        jTextFieldDescription = new javax.swing.JTextField();
+        jTextFieldAmount = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -204,7 +209,12 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jTextFieldError.setText("jTextField1");
+        jTextFieldError.setText("jTextFieldError");
+        jTextFieldError.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldErrorActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Nro Usuario");
 
@@ -297,6 +307,10 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
+        jTextFieldDescription.setText("jTextFieldDescription");
+
+        jTextFieldAmount.setText("jTextFieldAmount");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -304,8 +318,13 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jTextFieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -349,16 +368,19 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
                                         .addComponent(jFormattedTextFieldAmount13, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jFormattedTextFieldAmount14, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jFormattedTextFieldAmount15, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                    .addComponent(jLabel1))
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextAreaUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))
+                .addComponent(jTextAreaUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTextAreaUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(jTextAreaUsuarios)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -508,12 +530,12 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         try{
-            UserCache userCache = UserCache.getInstance();
+            UserCache userCache = UserCache.getInstance();//Obtengo el cache de usuarios
 
-            Map<Integer, Double> payerMap = new HashMap<>();
-            Map<Integer, Double> debtorMap = new HashMap<>();
+            Map<Integer, Double> payerMap = new HashMap<>();// Mapa para los pagadores
+            Map<Integer, Double> debtorMap = new HashMap<>();// Mapa para los deudores
             //Se arman arrays para poder usarlos en un for. 2 para ids y 2 para montos.
-            JFormattedTextField[] payerIds = {
+            JFormattedTextField[] payerIds = {//Los IDs de los pagadores
                 jFormattedTextField1,
                 jFormattedTextField2,
                 jFormattedTextField3,
@@ -523,7 +545,7 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
                 jFormattedTextField7
             };
 
-            JFormattedTextField[] payerAmounts = {
+            JFormattedTextField[] payerAmounts = {//Los montos de los pagadores
                 jFormattedTextFieldAmount1, 
                 jFormattedTextFieldAmount2, 
                 jFormattedTextFieldAmount3,
@@ -533,7 +555,7 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
                 jFormattedTextFieldAmount7
             };
 
-            JFormattedTextField[] debtorIds = {
+            JFormattedTextField[] debtorIds = {//
                 jFormattedTextField9, 
                 jFormattedTextField10, 
                 jFormattedTextField11,
@@ -542,7 +564,7 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
                 jFormattedTextField14,
                 jFormattedTextField15
             };
-            JFormattedTextField[] debtorAmounts = {
+            JFormattedTextField[] debtorAmounts = {//Los montos de los deudores
                 jFormattedTextFieldAmount9, 
                 jFormattedTextFieldAmount10, 
                 jFormattedTextFieldAmount11,
@@ -553,12 +575,12 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
             };
 
 
-            for (int i = 0; i < payerIds.length; i++) {
+            for (int i = 0; i < payerIds.length; i++) {//Recorro los arrays de IDs y montos de pagadores
                 String idText = payerIds[i].getText().trim();//Recupero los datos de los TextFields
                 String amountText = payerAmounts[i].getText().trim();
                 if (!idText.isEmpty() && !amountText.isEmpty()) {//Si son 0 no los considero
                     int id = Integer.parseInt(idText);//Los parseo
-                    double amount = Double.parseDouble(amountText);
+                    double amount = Double.parseDouble(amountText);//
                     if (id > 0 && amount > 0 && userCache.getById(id) != null) {//Validaciones
                         if (payerMap.containsKey(id)) {
                             jTextFieldError.setText("ID de pagador duplicado: " + id);
@@ -578,6 +600,9 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
                     double amount = Double.parseDouble(amountText);
                     if (id > 0 && amount > 0 && userCache.getById(id) != null) {
                         if (debtorMap.containsKey(id)) {
+                            /* Si el ID ya existe en el mapa, mostramos un mensaje de error. No coloco un SET
+                            porque no lo hubiera agregado y yo necesito que salte el error.
+                             */
                             jTextFieldError.setText("ID de deudor duplicado: " + id);
                             return;
                         }
@@ -590,6 +615,15 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
             // Asigno los Maps al DTO
             dto.setPayers(payerMap);
             dto.setDebtors(debtorMap);
+
+            double totalPagado = payerMap.values().stream().mapToDouble(Double::doubleValue).sum();//Sumo los valores de los pagadores
+            double totalDeudor = debtorMap.values().stream().mapToDouble(Double::doubleValue).sum();//Sumo los valores de los deudores
+
+            if (Math.abs(totalPagado - totalDeudor) > 0.01) {//Si la diferencia entre ambos es mayor a 0.01 tira error. Se deja 0.01 por errores de redondeo.
+                jTextFieldError.setText("Los montos totales de pagadores y deudores no coinciden.");
+                return;
+            }
+
 
             if (payerMap.isEmpty() || debtorMap.isEmpty()) {
                 jTextFieldError.setText("Debe ingresar al menos un pagador y un deudor.");
@@ -613,6 +647,10 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
         
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTextFieldErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldErrorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldErrorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -654,6 +692,8 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JTextArea jTextAreaUsuarios;
+    private javax.swing.JTextField jTextFieldAmount;
+    private javax.swing.JTextField jTextFieldDescription;
     private javax.swing.JTextField jTextFieldError;
     // End of variables declaration//GEN-END:variables
 }

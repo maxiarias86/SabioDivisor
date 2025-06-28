@@ -31,11 +31,8 @@ public class IndexJFrame extends javax.swing.JFrame {
         jLabelBienvenidoUsuario.setText("Bienvenido "+user.getName());
 
         jPanelMain.setLayout(new CardLayout());
-        CardLayout layout = (CardLayout) jPanelMain.getLayout();
-        jPanelMain.removeAll();
         BalancesJPanel balances = new BalancesJPanel(user);
-        jPanelMain.setLayout(new CardLayout());
-        jPanelMain.add(balances, BorderLayout.CENTER);
+        jPanelMain.add(balances, "Balances");
         
     }
 

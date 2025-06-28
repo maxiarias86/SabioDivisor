@@ -6,7 +6,9 @@ package org.example;
 
 import java.time.LocalDate;
 
+import org.example.cache.PaymentCache;
 import org.example.dto.UserDTO;
+import org.example.model.Payment;
 import org.example.model.User;
 
 /**
@@ -24,6 +26,15 @@ public class BalancesJPanel extends javax.swing.JPanel {
         initComponents();
         this.user = user;
         this.date = LocalDate.now();
+        PaymentCache paymentCache = PaymentCache.getInstance(user);
+        jTextAreaUsersBalance.setText("Pagos de " + user.getEmail() + ":\n\n");
+        for (Payment payment : paymentCache.getPayments()) {
+            if (payment.getPayer().getId() == user.getId()) {
+                jTextAreaUsersBalance.append("Pagó: " + payment.getAmount() + " a " + payment.getRecipient().getEmail() + " el " + payment.getDate() + "\n");
+            } else if (payment.getRecipient().getId() == user.getId()) {
+                jTextAreaUsersBalance.append("Recibió: " + payment.getAmount() + " de " + payment.getPayer().getEmail() + " el " + payment.getDate() + "\n");
+            }
+        }
 
         jLabelBalanceToDate.setText("Balance al " + date.toString());
     }
