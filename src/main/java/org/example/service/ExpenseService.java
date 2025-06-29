@@ -150,5 +150,25 @@ public class ExpenseService {
             return new Response<>(false, "500", "Error al cargar las deudas al cache.");
         }
     }
+    public Response getUserExpenses(UserDTO userDTO) {
+        HashSet<Integer> userExpenses = new HashSet();
+        try {
+            //Llamo al DebtCache.
+            DebtCache debtCache = DebtCache.getInstance(userDTO);
+            for (Debt debt : debtCache.getDebts()) {
+                if (debt.getDebtor().getId() == userDTO.getId() || debt.getCreditor().getId() == userDTO.getId()) {
+                    //Si el usuario es deudor o acreedor, lo agrego al set.
+                    userExpenses.add(debt.getExpenseId());
+                }
+            }
+            //Llamo al ExpenseDAO y obtengo los gastos por los IDs del set.
+            Response responseDAO = ExpenseDAO.getInstance().readAllInSet(userExpenses);
+            return new Response(true, "200", "Gastos obtenidos correctamente.", responseDAO.getData());
+
+
+        } catch (Exception e) {
+            return new Response<>(false, "500", "Error al obtener los gastos del usuario.");
+        }
+    }
 
 }

@@ -13,8 +13,7 @@ public class Expense extends Transaction {
     public Expense() {
     }
 
-    public Expense(int id, double amount, LocalDate date, int installments,
-                   List<Debt> debts, String description) {
+    public Expense(int id, double amount, LocalDate date, int installments, List<Debt> debts, String description) {
         super(id, amount, date);
         setInstallments(installments);
         setDebts(debts);

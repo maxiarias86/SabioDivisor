@@ -10,6 +10,7 @@ import org.example.repository.ExpenseRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -153,7 +154,7 @@ public class ExpenseDAO extends BaseDAO<Expense> {
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-
+//SACAR EXPENSE REPOSITORY PORQUE NO LO ESTOY USANDO MAS
             ExpenseRepository repository = new ExpenseRepository(conn);
             List<Expense> expenses = repository.loadAllExpenses(rs);
 
@@ -221,5 +222,50 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                 return new Response<>(false, "500", e.getMessage());
             }
         }
+    }
+
+    public Response<Expense> readAllInSet(HashSet<Integer> expensesIDs) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM " + tableName + " WHERE id IN (");//
+        for (Integer id : expensesIDs) {// Recorre el Set de IDs y los agrega a la query
+            sql.append(id).append(",");// Agrega cada ID seguido de una coma
+        }
+        sql.deleteCharAt(sql.length() - 1); // Elimina la última coma
+        sql.append(")");// Cierra el paréntesis del IN
+
+        try {
+            Statement stmt = conn.createStatement();//Crea un Statement para ejecutar la query
+            ResultSet rs = stmt.executeQuery(sql.toString());// Ejecuta la query y obtiene el ResultSet
+
+            List<Expense> expenses = new ArrayList<>();// Crea una lista para almacenar los gastos
+            while (rs.next()) {
+                UserDAO userDAO = UserDAO.getInstance();
+                DebtDAO debtDAO = DebtDAO.getInstance();
+
+                Expense expense = new Expense(
+                        rs.getInt("id"),
+                        rs.getDouble("amount"),
+                        rs.getDate("date").toLocalDate(),
+                        rs.getInt("installments"),
+                        null,
+                        rs.getString("description")
+                );
+
+                Response<Debt> allDebts = debtDAO.readAll();
+                if (allDebts.isSuccess()) {
+                    List<Debt> relatedDebts = allDebts.getData().stream()
+                            .filter(d -> d.getExpenseId() == expense.getId())
+                            .toList();
+                    expense.setDebts(relatedDebts);
+                }
+
+                expenses.add(expense);
+            }
+
+            return new Response<>(true, "200", "Gastos encontrados", expenses);
+
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+
     }
 }

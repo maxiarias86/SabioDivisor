@@ -18,3 +18,5 @@
 * Ver si vale la pena tener un PaymentDTO o lo cambio directamente por Payment en las views dado que no pasa información sensible.
 * Armar un metodo que busque la descripcion del expense que da origen a la deuda. Convendia tenerlas en un cache para no ir a la base de datos.
 * Poner que no se va a permitir borrar usuarios en el readme.
+* Que una persona no pueda cargar gastos en los que no participa de ningun rol: pagador o deudor.
+* Que en los editar los TextField vengan con los datos del original.
