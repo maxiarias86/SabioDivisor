@@ -19,7 +19,7 @@
           <Group type="102" attributes="0">
               <Component id="jLabelEditExpenseId" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTextFieldPaymentId" min="-2" max="-2" attributes="0"/>
+              <Component id="jTextFieldExpenseId" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jButtonEdit" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -36,7 +36,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabelEditExpenseId" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextFieldPaymentId" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldExpenseId" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                       <Component id="jButtonEdit" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jTextFieldError" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -52,7 +52,7 @@
         <Property name="text" type="java.lang.String" value="Editar gasto ID: "/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextFieldPaymentId">
+    <Component class="javax.swing.JTextField" name="jTextFieldExpenseId">
       <Properties>
         <Property name="columns" type="int" value="3"/>
       </Properties>

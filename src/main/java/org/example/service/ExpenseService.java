@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.cache.DebtCache;
+import org.example.cache.ExpenseCache;
 import org.example.cache.UserCache;
 import org.example.dao.DebtDAO;
 import org.example.dao.ExpenseDAO;
@@ -8,6 +9,7 @@ import org.example.dao.UserDAO;
 import org.example.dto.ExpenseDTO;
 import org.example.dto.UserDTO;
 import org.example.model.Debt;
+import org.example.model.Expense;
 import org.example.model.User;
 import org.example.model.Response;
 
@@ -173,4 +175,20 @@ public class ExpenseService {
         }
     }
 
+    public Response<Expense> deleteExpense(int id, UserDTO userDTO) {
+        try {
+            //Llamo al ExpenseDAO para eliminar el gasto por su ID.
+            Response<Expense> response = ExpenseDAO.getInstance().delete(id);
+            if (!response.isSuccess()) {
+                return new Response<>(false, response.getCode(), response.getMessage());
+            }
+            //Si se eliminó correctamente, actualizo el cache de gastos.
+            ExpenseCache expenseCache = ExpenseCache.getInstance(userDTO);
+            expenseCache.deleteExpense(id);
+
+            return new Response<>(true, "200", "Gasto eliminado correctamente.", response.getObj());
+        } catch (Exception e) {
+            return new Response<>(false, "500", "Error al eliminar el gasto.");
+        }
+    }
 }

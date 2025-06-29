@@ -101,16 +101,15 @@ public class ExpenseDAO extends BaseDAO<Expense> {
 
 
     @Override
-    public Response<Expense> update(Expense entity) {
-        String sql = "UPDATE " + tableName + " SET amount = ?, date = ?, installments = ?, description = ? WHERE id = ?";
-
+    public Response<Expense> update(Expense expenseToUpdate) {
+        String sql = "UPDATE " + tableName + " SET amount = ?, date = ?, installments = ?, description = ? WHERE id = ?";// Prepara la consulta SQL para actualizar un gasto
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setDouble(1, entity.getAmount());
-            ps.setDate(2, Date.valueOf(entity.getDate()));
-            ps.setInt(3, entity.getInstallments());
-            ps.setString(4, entity.getDescription());
-            ps.setInt(5, entity.getId());
+            ps.setDouble(1, expenseToUpdate.getAmount());
+            ps.setDate(2, Date.valueOf(expenseToUpdate.getDate()));
+            ps.setInt(3, expenseToUpdate.getInstallments());
+            ps.setString(4, expenseToUpdate.getDescription());
+            ps.setInt(5, expenseToUpdate.getId());
 
             int rows = ps.executeUpdate();
 
@@ -118,7 +117,7 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                 return new Response<>(false, "404", "No se encontró el gasto para actualizar");
             }
 
-            return new Response<>(true, "200", "Gasto actualizado con éxito", entity);
+            return new Response<>(true, "200", "Gasto actualizado con éxito", expenseToUpdate);
 
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());

@@ -4,12 +4,15 @@
  */
 package org.example;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import javax.swing.JOptionPane;
 import org.example.dto.ExpenseDTO;
 import org.example.dto.UserDTO;
-import org.example.model.User;
+import org.example.model.Expense;
+import org.example.model.Response;
+import org.example.service.ExpenseService;
+
+import javax.swing.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -19,13 +22,27 @@ public class EditExpenseJFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EditExpenseJFrame.class.getName());
     private UserDTO user;
+    private Expense expense;
 
     /**
      * Creates new form NewExpenseJFrame
      */
-    public EditExpenseJFrame(UserDTO user) {
+    public EditExpenseJFrame(UserDTO user, Expense expense) {
         initComponents();
         this.user = user;
+        this.expense = expense;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+
+        try{
+            jTextFieldDescription.setText(this.expense.getDescription());
+            jFormattedTextFieldDate.setText(this.expense.getDate().format(formatter));
+            jFormattedTextFieldAmount.setText(String.format("%.2f", this.expense.getAmount()));
+            jFormattedTextFieldInstallments.setText(String.valueOf(this.expense.getInstallments()));
+
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
 
     }
 
@@ -84,7 +101,7 @@ public class EditExpenseJFrame extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(255, 51, 51));
         jButton1.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Eliminar\\nGasto");
+        jButton1.setText("Eliminar Gasto");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -158,7 +175,8 @@ public class EditExpenseJFrame extends javax.swing.JFrame {
 
     private void jButtonAddExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddExpenseActionPerformed
         // TODO add your handling code here:
-       /* ExpenseDTO expenseDTO = new ExpenseDTO(); //Creo un nuevo DTO para el gasto
+        ExpenseDTO expenseDTO = new ExpenseDTO(); //Creo un nuevo DTO para el gasto
+        expenseDTO.setId(expense.getId());//Asigno el ID del gasto original al nuevo DTO
         String description = jTextFieldDescription.getText().trim();//Obtengo la descripción del gasto
         expenseDTO.setDescription(description);//Se la asigno
         try {
@@ -196,21 +214,45 @@ public class EditExpenseJFrame extends javax.swing.JFrame {
         expenseDTO.setPayers(null);//Inicializo la lista de pagadores como nula
         expenseDTO.setDebtors(null);//Inicializo la lista de deudores como nula
         
-        if (user != null && expenseDTO != null) {//Verifico que el usuario esté logueado y que el DTO no sea nulo
-            PayersDebtorsJFrame newPayers = new PayersDebtorsJFrame(expenseDTO,this,user);//Creo un nuevo JFrame para agregar pagadores y deudores
+        if (user != null && expenseDTO != null && expense!=null) {//Verifico que el usuario esté logueado, que el DTO no sea nulo, y que el gasto original no sea nulo
+            EditExpensePayersDebtorsJFrame newPayers = new EditExpensePayersDebtorsJFrame(expenseDTO,this,user);//Creo un nuevo JFrame para agregar pagadores y deudores
             newPayers.setVisible(true);//Lo hago visible
             this.dispose();//Destruyo el JFrame actual
         } else {
             JOptionPane.showMessageDialog(this, "No estas logueado, cierra el programa y vuelve a loguearte", "Edición fallida", JOptionPane.ERROR_MESSAGE);
         }
-        */
+
         
     }//GEN-LAST:event_jButtonAddExpenseActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
         // TODO add your handling code here:
-        
-        //CODIGO ELIMINAR GASTO
+        int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que querés eliminar este gasto?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                // Lógica para eliminar el gasto
+                if (expense != null && user != null) {
+                    ExpenseService expenseService = new ExpenseService();
+                    Response<Expense> response = expenseService.deleteExpense(expense.getId(),user);
+                    if (response.isSuccess()) {
+                        JOptionPane.showMessageDialog(this, "Gasto eliminado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                        // AGREGAR METODO PARA ELIMINAR EL GASTO DEL CACHE
+
+                        IndexJFrame index = new IndexJFrame(user);//Abre un nuevo indexJFrame y cierra el actual
+                        index.setVisible(true);
+                        this.dispose(); // Cierra el JFrame actual
+                    } else {
+                        JOptionPane.showMessageDialog(this, response.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se pudo eliminar el gasto. Verifique que esté logueado.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception e) {
+                logger.severe("Error al eliminar el gasto: " + e.getMessage());
+                JOptionPane.showMessageDialog(this, "Ocurrió un error al eliminar el gasto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

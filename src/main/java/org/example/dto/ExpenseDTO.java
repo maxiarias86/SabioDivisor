@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public class ExpenseDTO {
+    private Integer id;
     private double amount;
     private LocalDate date;
     private int installments;
@@ -23,9 +24,28 @@ public class ExpenseDTO {
         this.description = description;
         this.payers = payers;
         this.debtors = debtors;
+        this.id = null;
+    }
+    public ExpenseDTO(int id, double amount, LocalDate date, int installments, String description,
+                      Map<Integer, Double> payers, Map<Integer, Double> debtors) {
+        this.amount = amount;
+        this.date = date;
+        this.installments = installments;
+        this.description = description;
+        this.payers = payers;
+        this.debtors = debtors;
+        this.id = id;
     }
 
     // Getters y setters
+
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public double getAmount() {
         return amount;
     }

@@ -62,18 +62,30 @@ public class ExpenseCache {// Cache para almacenar los gastos de un usuario
         }
     }
 
+    public Response deleteExpense(int id) {// Metodo para eliminar un gasto por su ID
+        try {
+            for (Expense expense : expenses) {// Itero sobre la lista de gastos
+                if (expense.getId() == id) {// Si el ID del gasto coincide con el ID a eliminar
+                    expenses.remove(expense);// Elimino el gasto de la lista
+                    return new Response<>(true,"200","Gasto eliminado correctamente",null);// Retorno un Response exitoso
+                }
+            }
+            return new Response<>(false,"404","Gasto no encontrado",null);// Si no se encuentra el gasto, retorno un Response con error 404
+        } catch (Exception e) {
+            return new Response<>(false,"500","Error al eliminar el gasto",e.getMessage());// Si ocurre un error, retorno un Response con error 500
+        }
+    }
+
     public void clear() {
         this.expenses.clear();
     }
 
-    public static void reset() {
-        instance = null;
+    public static void reset() {// Metodo para resetear la instancia del cache al hacer logout
+        if(instance != null) {
+            instance.clear();// Limpia la lista de gastos
+            instance = null;// Resetea la instancia para que se pueda volver a crear
+        }
     }
 
-    public List<Expense> getExpenses() {
-    if (instance != null) {
-            return instance.expenses;
-        }
-    return new ArrayList<>(); // Retorna una lista vacía si no hay instancia
-    }
+    public List<Expense> getExpenses() {return expenses;}
 }

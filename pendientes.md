@@ -20,3 +20,4 @@
 * Poner que no se va a permitir borrar usuarios en el readme.
 * Que una persona no pueda cargar gastos en los que no participa de ningun rol: pagador o deudor.
 * Que en los editar los TextField vengan con los datos del original.
+* Armar los patrones con patron singleton para que no pueda haber mas de uno.
