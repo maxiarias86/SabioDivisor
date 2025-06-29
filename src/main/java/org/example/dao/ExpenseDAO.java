@@ -9,10 +9,8 @@ import org.example.model.User;
 import org.example.repository.ExpenseRepository;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.sql.Date;
+import java.util.*;
 
 public class ExpenseDAO extends BaseDAO<Expense> {
     private final String tableName = "expenses";
@@ -225,7 +223,10 @@ public class ExpenseDAO extends BaseDAO<Expense> {
     }
 
     public Response<Expense> readAllInSet(HashSet<Integer> expensesIDs) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM " + tableName + " WHERE id IN (");//
+        if(expensesIDs == null || expensesIDs.isEmpty()) {// Verifica si el Set de IDs está vacío o es nulo
+            return new Response<>(false, "400", "El conjunto de IDs está vacío");
+        }
+        StringBuilder sql = new StringBuilder("SELECT * FROM " + tableName + " WHERE id IN (");// Inicia la query con un IN
         for (Integer id : expensesIDs) {// Recorre el Set de IDs y los agrega a la query
             sql.append(id).append(",");// Agrega cada ID seguido de una coma
         }
@@ -237,35 +238,45 @@ public class ExpenseDAO extends BaseDAO<Expense> {
             ResultSet rs = stmt.executeQuery(sql.toString());// Ejecuta la query y obtiene el ResultSet
 
             List<Expense> expenses = new ArrayList<>();// Crea una lista para almacenar los gastos
+
+            //Para no tener que hacer un readAll de deudas en cada iteración creo un cache que se elimina después de usar este metodo.
+            Map<Integer, List<Debt>> debtMap = new HashMap<>();//Map para almacenar las deudas por expenseId (Clave: expenseId, Valor: Lista de deudas).
+            Response<Debt> allDebts = DebtDAO.getInstance().readAll();// Obtiene todas las deudas
+
+            if (allDebts.isSuccess()) {// Si la respuesta es exitosa, procesa las deudas
+                List<Debt> allDebtList = allDebts.getData();// Obtiene la lista de deudas
+                for (Debt d: allDebtList) {// Recorre la lista de deudas con un foreach
+                    int expenseId = d.getExpenseId();// Obtiene el ID del gasto asociado a la deuda
+                    if (!debtMap.containsKey(expenseId)) {//Si el Map no contiene el expenseId, lo agrega
+                        debtMap.put(expenseId, new ArrayList<Debt>());// Crea una nueva lista de deudas para ese expenseId
+                    }
+                    debtMap.get(expenseId).add(d);// Agrega la deuda a la lista correspondiente en el Map
+                }
+            } else {
+                return new Response<>(false, "500", "Error al obtener las deudas: " + allDebts.getMessage());
+            }
+
             while (rs.next()) {
-                UserDAO userDAO = UserDAO.getInstance();
-                DebtDAO debtDAO = DebtDAO.getInstance();
+                // Crea un nuevo objeto Expense a partir del ResultSet
+
+                // y asigna las deudas relacionadas desde el Map
+                List<Debt> relatedDebts = debtMap.getOrDefault(rs.getInt("id"), new ArrayList<>());
 
                 Expense expense = new Expense(
                         rs.getInt("id"),
                         rs.getDouble("amount"),
                         rs.getDate("date").toLocalDate(),
                         rs.getInt("installments"),
-                        null,
+                        relatedDebts, // Asigna las deudas relacionadas
                         rs.getString("description")
                 );
-
-                Response<Debt> allDebts = debtDAO.readAll();
-                if (allDebts.isSuccess()) {
-                    List<Debt> relatedDebts = allDebts.getData().stream()
-                            .filter(d -> d.getExpenseId() == expense.getId())
-                            .toList();
-                    expense.setDebts(relatedDebts);
-                }
-
+                // Agrega el gasto a la lista
                 expenses.add(expense);
             }
-
-            return new Response<>(true, "200", "Gastos encontrados", expenses);
+            return new Response<>(true, "200", "Gastos encontrados", expenses);// Devuelve una lista de gastos
 
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
-
     }
 }

@@ -4,8 +4,11 @@
  */
 package org.example;
 
+import org.example.cache.ExpenseCache;
 import org.example.cache.PaymentCache;
 import org.example.dto.UserDTO;
+import org.example.model.Debt;
+import org.example.model.Expense;
 import org.example.model.Payment;
 import org.example.model.Response;
 
@@ -27,15 +30,30 @@ public class EditExpenseJPanel extends javax.swing.JPanel {
         this.user = user;
         this.parentFrame = parentFrame;
 
-        String paymentsText = "Tus pagos: \n\n";
-        for (Payment payment : PaymentCache.getInstance(user).getPayments()) {
-            if (payment.getPayer().getId() == user.getId()) {
-                paymentsText += payment.getId()+" - Pagaste $" + String.format("%.2f", payment.getAmount()) + " a " + payment.getRecipient().getName() + " (ID " + payment.getRecipient().getId() + ") el " + payment.getDate() + "\n";
-            } else if (payment.getRecipient().getId() == user.getId()) {
-                paymentsText += payment.getId()+" - Recibiste $" + String.format("%.2f", payment.getAmount()) + " de " + payment.getPayer().getName() + " (ID " + payment.getPayer().getId() + ") el " + payment.getDate() + "\n";
+        String expensesText = "Tus gastos: \n\n";// Inicializa el texto de gastos
+        for (Expense expense : ExpenseCache.getInstance(user).getExpenses()) {// Recorre los gastos del usuario
+            if (expense.getDescription() != null && !expense.getDescription().isBlank()) {// Verifica que la descripción no sea nula o vacía
+                expensesText += "ID: " + expense.getId() + "\n";// Agrega el ID del gasto
+                String descripcion = expense.getDescription();// Obtiene la descripción del gasto
+                if (descripcion.length() > 30) {// Si la descripción es mayor a 30 caracteres, la acorta
+                    descripcion = descripcion.substring(0, 30) + "...";// Acorta la descripción a 30 caracteres y agrega "..." al final
+                }
+                expensesText += "Descripción: " + descripcion + "\n";// Agrega la descripción del gasto acortada
+                expensesText += "Monto: $" + expense.getAmount() + "\n";// Agrega el monto del gasto
+                expensesText += "Fecha: " + expense.getDate() + "\n";// Agrega la fecha del gasto
+                expensesText += "Cuotas: " + expense.getInstallments() + "\n";// Agrega la cantidad de cuotas del gasto
+                expensesText += "Deudas: \n";// Agrega el encabezado de deudas
+                for (Debt debt : expense.getDebts()) {// Recorre las deudas asociadas al gasto
+                    expensesText += "- " + debt.getDebtor().getName() +// Agrega el nombre del deudor
+                            " debe a " + debt.getCreditor().getName() +// Agrega el nombre del acreedor
+                            " $" + debt.getAmount() + // Agrega el monto de la deuda
+                            " (cuota " + debt.getInstallmentNumber() + ")" +// Agrega el número de cuota de la deuda
+                            "\n";
+                }
+                expensesText += "\n";
             }
         }
-        jTextAreaExpenses.setText(paymentsText);
+        jTextAreaExpenses.setText(expensesText);
         jTextAreaExpenses.setEditable(false);
 
         jTextFieldError.setText("");

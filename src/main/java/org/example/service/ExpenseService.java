@@ -163,8 +163,10 @@ public class ExpenseService {
             }
             //Llamo al ExpenseDAO y obtengo los gastos por los IDs del set.
             Response responseDAO = ExpenseDAO.getInstance().readAllInSet(userExpenses);
+            if (!responseDAO.isSuccess()) {
+                return new Response<>(false, responseDAO.getCode(), responseDAO.getMessage());
+            }
             return new Response(true, "200", "Gastos obtenidos correctamente.", responseDAO.getData());
-
 
         } catch (Exception e) {
             return new Response<>(false, "500", "Error al obtener los gastos del usuario.");

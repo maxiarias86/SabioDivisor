@@ -35,10 +35,12 @@ public class IndexJFrame extends javax.swing.JFrame {
         BalancesJPanel balances = new BalancesJPanel(user);
         UserJPanel userPanel = new UserJPanel(user);
         EditPaymentJPanel editPaymentPanel = new EditPaymentJPanel(user, this);
+        EditExpenseJPanel editExpensePanel = new EditExpenseJPanel(user, this);
 
         jPanelMain.add(balances, "Balances");
         jPanelMain.add(userPanel, "UserPanel");
         jPanelMain.add(editPaymentPanel, "EditPaymentPanel");
+        jPanelMain.add(editExpensePanel, "EditExpensePanel");
         
     }
 
@@ -246,14 +248,13 @@ public class IndexJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonOtherUsersActionPerformed
 
     private void jButtonEditPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditPaymentActionPerformed
-        // TODO add your handling code here:
-        // Aquí deberías abrir un EditPaymentJPanel para editar los pagos.
         CardLayout layout = (CardLayout) jPanelMain.getLayout();
         layout.show(jPanelMain,"EditPaymentPanel");
     }//GEN-LAST:event_jButtonEditPaymentActionPerformed
 
     private void jButtonEditExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditExpenseActionPerformed
-        // TODO add your handling code here:
+        CardLayout layout = (CardLayout) jPanelMain.getLayout();
+        layout.show(jPanelMain,"EditExpensePanel");
     }//GEN-LAST:event_jButtonEditExpenseActionPerformed
 
     /**

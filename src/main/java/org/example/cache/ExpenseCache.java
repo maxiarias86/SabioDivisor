@@ -69,4 +69,11 @@ public class ExpenseCache {// Cache para almacenar los gastos de un usuario
     public static void reset() {
         instance = null;
     }
+
+    public List<Expense> getExpenses() {
+    if (instance != null) {
+            return instance.expenses;
+        }
+    return new ArrayList<>(); // Retorna una lista vacía si no hay instancia
+    }
 }
