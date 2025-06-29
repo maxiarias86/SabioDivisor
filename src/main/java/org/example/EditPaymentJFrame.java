@@ -36,7 +36,10 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
         initComponents();
         this.user = user;
         this.payment = payment;
-        jLabelPaymentEdit.setText("Editar Pago: ID " + payment.getId() + " - " + payment.getPayer().getName() + " -> " + payment.getRecipient().getName() + payment.getAmount() + " (" + payment.getDate() + ")");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy");
+
+        jLabelPaymentEdit.setText("Editar Pago ID" + payment.getId() + ": " + payment.getPayer().getName() + " -> " + payment.getRecipient().getName() +" $" + payment.getAmount() + " (" + payment.getDate().format(formatter) + ")");
+        jLabelYourId.setText("Tu ID de usuario es el "+ user.getId());
 
         UserService userService = new UserService();
         Response response = userService.getAllUsersButOne(user.getId());
@@ -63,9 +66,6 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
 
         jLabelAmount = new javax.swing.JLabel();
         jButtonEdit = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextAreaUsuarios = new javax.swing.JTextArea();
         jLabelPaymentEdit = new javax.swing.JLabel();
         jLabelDate = new javax.swing.JLabel();
         jLabelRecipientId = new javax.swing.JLabel();
@@ -75,6 +75,10 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
         jButtonDelete = new javax.swing.JButton();
         jLabelPayerId = new javax.swing.JLabel();
         jFormattedTextFieldPayerId = new javax.swing.JFormattedTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextAreaUsuarios = new javax.swing.JTextArea();
+        jLabelYourId = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -86,14 +90,6 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
                 jButtonEditActionPerformed(evt);
             }
         });
-
-        jScrollPane1.setSize(new java.awt.Dimension(380, 0));
-
-        jTextAreaUsuarios.setColumns(20);
-        jTextAreaUsuarios.setRows(5);
-        jScrollPane2.setViewportView(jTextAreaUsuarios);
-
-        jScrollPane1.setViewportView(jScrollPane2);
 
         jLabelPaymentEdit.setText("Editar Pago");
 
@@ -124,48 +120,57 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
         jFormattedTextFieldPayerId.setColumns(6);
         jFormattedTextFieldPayerId.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
+        jTextAreaUsuarios.setColumns(20);
+        jTextAreaUsuarios.setRows(5);
+        jScrollPane2.setViewportView(jTextAreaUsuarios);
+
+        jScrollPane3.setViewportView(jScrollPane2);
+
+        jLabelYourId.setText("Tu ID");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelPaymentEdit)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(33, 33, 33)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButtonEdit)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabelAmount)
-                                            .addComponent(jLabelDate))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jFormattedTextFieldDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jFormattedTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(48, 48, 48)
-                                .addComponent(jButtonDelete))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelRecipientId)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jFormattedTextFieldRecipientId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabelPayerId)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jFormattedTextFieldPayerId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 55, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabelPaymentEdit)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(33, 33, 33)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jButtonEdit)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabelAmount)
+                                        .addComponent(jLabelDate))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jFormattedTextFieldDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jFormattedTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGap(48, 48, 48)
+                            .addComponent(jButtonDelete))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabelRecipientId)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jFormattedTextFieldRecipientId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabelPayerId)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jFormattedTextFieldPayerId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane3))
+                    .addComponent(jLabelYourId))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabelPaymentEdit)
-                .addGap(8, 8, 8)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabelYourId)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabelPayerId)
@@ -185,7 +190,7 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonEdit)
                     .addComponent(jButtonDelete))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -240,12 +245,11 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
         PaymentService paymentService = new PaymentService();
         Response response = paymentService.editPayment(dto);
         if (response.isSuccess()){
-            JOptionPane.showMessageDialog(this, "Pago editado correctamente.");
-            // Actualizar el pago en el cache del usuario
             Payment paymentToUpload = (Payment) response.getObj();
+            System.out.println("Objeto recibido desde PaymentService: " + response.getObj());
             Response cacheResponse = paymentCache.editPayment(paymentToUpload);
             if(cacheResponse.isSuccess()) {
-                JOptionPane.showMessageDialog(this, "Pago cargado en el cache del usuario correctamente.");
+                JOptionPane.showMessageDialog(this, "Pago editado correctamente.");
                 IndexJFrame in = new IndexJFrame(user);
                 in.setVisible(true);
             } else {
@@ -260,6 +264,24 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
 
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
         // TODO add your handling code here:
+        
+//        Eliminar pago
+        PaymentService paymentService = new PaymentService();
+        Response response = paymentService.deletePayment(payment.getId());
+        if (response.isSuccess()) {
+            PaymentCache paymentCache = PaymentCache.getInstance(user);
+            Response cacheResponse = paymentCache.deletePaymentFromCache(payment.getId());
+            if (cacheResponse.isSuccess()) {
+                JOptionPane.showMessageDialog(this, "Pago eliminado correctamente.");
+                IndexJFrame in = new IndexJFrame(user);
+                in.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el pago del cache: " + cacheResponse.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al eliminar el pago: " + response.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.dispose();
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
     /**
@@ -279,8 +301,9 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelPayerId;
     private javax.swing.JLabel jLabelPaymentEdit;
     private javax.swing.JLabel jLabelRecipientId;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel jLabelYourId;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextAreaUsuarios;
     // End of variables declaration//GEN-END:variables
 }

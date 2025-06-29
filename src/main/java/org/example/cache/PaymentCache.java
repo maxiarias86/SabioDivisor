@@ -62,6 +62,16 @@ public class PaymentCache {
         return new Response<>(false, "404", "Pago no encontrado");
     }
 
+    public Response deletePaymentFromCache(int paymentId) {
+        for (Payment payment : payments) {
+            if (payment.getId() == paymentId) {
+                payments.remove(payment);
+                return new Response<>(true, "200", "Pago eliminado exitosamente del cache");
+            }
+        }
+        return new Response(false, "404", "Pago no encontrado en cache");
+    }
+
     // Metodo para borrar cache al hacer el logout.
     public static void reset() {
         instance = null;
