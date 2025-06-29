@@ -7,6 +7,7 @@ package org.example;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import org.example.cache.PaymentCache;
 import org.example.dto.PaymentDTO;
 import org.example.dto.UserDTO;
 import org.example.model.Payment;
@@ -34,6 +35,8 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
     public EditPaymentJFrame(UserDTO user, Payment payment) {
         initComponents();
         this.user = user;
+        this.payment = payment;
+        jLabelPaymentEdit.setText("Editar Pago: ID " + payment.getId() + " - " + payment.getPayer().getName() + " -> " + payment.getRecipient().getName() + payment.getAmount() + " (" + payment.getDate() + ")");
 
         UserService userService = new UserService();
         Response response = userService.getAllUsersButOne(user.getId());
@@ -47,9 +50,6 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
             jTextAreaUsuarios.setEditable(false); // Solo lectura
         }
 
-
-
-
     }
 
     /**
@@ -61,27 +61,29 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jLabelAmount = new javax.swing.JLabel();
+        jButtonEdit = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaUsuarios = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabelUserId = new javax.swing.JLabel();
+        jLabelPaymentEdit = new javax.swing.JLabel();
+        jLabelDate = new javax.swing.JLabel();
+        jLabelRecipientId = new javax.swing.JLabel();
         jFormattedTextFieldDate = new javax.swing.JFormattedTextField();
         jFormattedTextFieldAmount = new javax.swing.JFormattedTextField();
-        jFormattedTextFieldUserId = new javax.swing.JFormattedTextField();
-        jButton2 = new javax.swing.JButton();
+        jFormattedTextFieldRecipientId = new javax.swing.JFormattedTextField();
+        jButtonDelete = new javax.swing.JButton();
+        jLabelPayerId = new javax.swing.JLabel();
+        jFormattedTextFieldPayerId = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel3.setText("Monto");
+        jLabelAmount.setText("Monto");
 
-        jButton1.setText("Editar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonEdit.setText("Editar");
+        jButtonEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonEditActionPerformed(evt);
             }
         });
 
@@ -93,11 +95,11 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(jScrollPane2);
 
-        jLabel1.setText("Editar Pago");
+        jLabelPaymentEdit.setText("Editar Pago");
 
-        jLabel2.setText("Día");
+        jLabelDate.setText("Día");
 
-        jLabelUserId.setText("Destinatario");
+        jLabelRecipientId.setText("Destinatario");
 
         jFormattedTextFieldDate.setColumns(6);
         jFormattedTextFieldDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("d/M/yy"))));
@@ -105,18 +107,22 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
         jFormattedTextFieldAmount.setColumns(6);
         jFormattedTextFieldAmount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
-        jFormattedTextFieldUserId.setColumns(6);
-        jFormattedTextFieldUserId.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        jFormattedTextFieldRecipientId.setColumns(6);
+        jFormattedTextFieldRecipientId.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
-        jButton2.setBackground(new java.awt.Color(255, 51, 51));
-        jButton2.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Eliminar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonDelete.setBackground(new java.awt.Color(255, 51, 51));
+        jButtonDelete.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
+        jButtonDelete.setText("Eliminar");
+        jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButtonDeleteActionPerformed(evt);
             }
         });
+
+        jLabelPayerId.setText("Pagador");
+
+        jFormattedTextFieldPayerId.setColumns(6);
+        jFormattedTextFieldPayerId.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -127,60 +133,70 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelUserId)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jFormattedTextFieldUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabelPaymentEdit)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(33, 33, 33)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton1)
+                                    .addComponent(jButtonEdit)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel2))
+                                            .addComponent(jLabelAmount)
+                                            .addComponent(jLabelDate))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jFormattedTextFieldDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jFormattedTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(48, 48, 48)
+                                .addComponent(jButtonDelete))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelRecipientId)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jFormattedTextFieldRecipientId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton2)))
-                        .addGap(0, 116, Short.MAX_VALUE)))
+                                .addComponent(jLabelPayerId)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jFormattedTextFieldPayerId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 55, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
+                .addComponent(jLabelPaymentEdit)
                 .addGap(8, 8, 8)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelUserId)
-                    .addComponent(jFormattedTextFieldUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabelPayerId)
+                        .addComponent(jFormattedTextFieldPayerId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabelRecipientId)
+                        .addComponent(jFormattedTextFieldRecipientId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(jLabelDate)
                     .addComponent(jFormattedTextFieldDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(jLabelAmount)
                     .addComponent(jFormattedTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButtonEdit)
+                    .addComponent(jButtonDelete))
                 .addContainerGap(11, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+    private void jButtonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditActionPerformed
+        //TODO el usuario tiene que ser el pagador o receptor. No puede hacer un pago que no lo involucre.
         PaymentDTO dto = new PaymentDTO();
-        dto.setPayerId(user.getId());
+        PaymentCache paymentCache = PaymentCache.getInstance(user);
+
+        dto.setId(payment.getId());
         try {
             String dateInput = jFormattedTextFieldDate.getText().trim();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yy");
@@ -192,13 +208,22 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
             return;
         }
         try{
-            Object value = jFormattedTextFieldUserId.getValue();
+            Object value = jFormattedTextFieldRecipientId.getValue();
             if (value == null) throw new NullPointerException();
-            int userIdInput = ((Number) value).intValue();
-            dto.setRecipientId(userIdInput);
+            int recipientIdInput = ((Number) value).intValue();
+            dto.setRecipientId(recipientIdInput);
         }catch(Exception e){
-                JOptionPane.showMessageDialog(this, "Ingrese un ID válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ingrese un ID válido para el destinatario.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
+        }
+        try{
+            Object value = jFormattedTextFieldPayerId.getValue();
+            if (value == null) throw new NullPointerException();
+            int payerIdInput = ((Number) value).intValue();
+            dto.setPayerId(payerIdInput);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Ingrese un ID válido para el pagador.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
         try {
         Object amountValue = jFormattedTextFieldAmount.getValue();
@@ -213,31 +238,29 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
         }
 
         PaymentService paymentService = new PaymentService();
-        Response response = paymentService.registerPayment(dto);
+        Response response = paymentService.editPayment(dto);
         if (response.isSuccess()){
-            JOptionPane.showMessageDialog(this, "Pago registrado correctamente en base de datos.");
-            // Cargar el pago en el cache del usuario
-            Response<PaymentDTO> paymentResponse = paymentService.loadToCache((Payment) response.getObj(), user);
-            if(paymentResponse.isSuccess()) {
+            JOptionPane.showMessageDialog(this, "Pago editado correctamente.");
+            // Actualizar el pago en el cache del usuario
+            Payment paymentToUpload = (Payment) response.getObj();
+            Response cacheResponse = paymentCache.editPayment(paymentToUpload);
+            if(cacheResponse.isSuccess()) {
                 JOptionPane.showMessageDialog(this, "Pago cargado en el cache del usuario correctamente.");
                 IndexJFrame in = new IndexJFrame(user);
                 in.setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(this, "Error al cargar el pago en el cache: " + paymentResponse.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al cargar el pago en el cache: " + cacheResponse.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(this, "Error al registrar el pago: " + response.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.dispose();
 
+    }//GEN-LAST:event_jButtonEditActionPerformed
 
-
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButtonDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -245,15 +268,17 @@ public class EditPaymentJFrame extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonEdit;
     private javax.swing.JFormattedTextField jFormattedTextFieldAmount;
     private javax.swing.JFormattedTextField jFormattedTextFieldDate;
-    private javax.swing.JFormattedTextField jFormattedTextFieldUserId;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabelUserId;
+    private javax.swing.JFormattedTextField jFormattedTextFieldPayerId;
+    private javax.swing.JFormattedTextField jFormattedTextFieldRecipientId;
+    private javax.swing.JLabel jLabelAmount;
+    private javax.swing.JLabel jLabelDate;
+    private javax.swing.JLabel jLabelPayerId;
+    private javax.swing.JLabel jLabelPaymentEdit;
+    private javax.swing.JLabel jLabelRecipientId;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextAreaUsuarios;

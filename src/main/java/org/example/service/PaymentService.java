@@ -67,7 +67,7 @@ public class PaymentService {
 
     }
 
-    public Response<Void> editPayment(PaymentDTO dto) {
+    public Response editPayment(PaymentDTO dto) {
         if (dto.getId() <= 0) {
             return new Response<>(false, "400", "El ID del pago no es válido.");
         }
@@ -107,11 +107,11 @@ public class PaymentService {
             );
 
             // Ejecutar la actualización en la base de datos con el DAO
-            Response<Payment> updateResponse = PaymentDAO.getInstance().update(updated);//Le paso el actualizado
-            return new Response<>(updateResponse.isSuccess(), updateResponse.getCode(), updateResponse.getMessage());//Sube las burbujas del DAO. Me devuelve el mismo response que su metodo update.
+            Response<Payment> updateResponse = PaymentDAO.getInstance().update(updated);//Le paso el actualizado. Devuelve un Payment, NO un PaymentDTO.
+            return new Response (updateResponse.isSuccess(), updateResponse.getCode(), updateResponse.getMessage());//Me devuelve el mismo response que su metodo update.
 
         } catch (Exception e) {
-            return new Response<>(false, "500", "Error inesperado al editar el pago: " + e.getMessage());
+            return new Response (false, "500", "Error inesperado al editar el pago: " + e.getMessage());
         }
     }
 
