@@ -3,6 +3,7 @@ package org.example.cache;
 import org.example.dao.PaymentDAO;
 import org.example.dto.UserDTO;
 import org.example.model.Payment;
+import org.example.model.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,15 @@ public class PaymentCache {
 
     public void addPayment(Payment payment) {
         this.payments.add(payment);
+    }
+
+    public Response<Payment> getPaymentById(int paymentId) {
+        for (Payment payment : payments) {
+            if (payment.getId() == paymentId) {
+                return new Response(true,"200", "Pago encontrado", payment);
+            }
+        }
+        return new Response(false, "404", "Pago no encontrado");
     }
 
     // Metodo para borrar cache al hacer el logout.

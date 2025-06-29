@@ -246,13 +246,12 @@ public class DebtDAO extends BaseDAO<Debt> {
                 Debt d = new Debt(
                         rs.getInt("id"),
                         rs.getDouble("amount"),
-                        debtorResponse.getObj(),
                         creditorResponse.getObj(),
+                        debtorResponse.getObj(),
                         rs.getInt("expense_id"),
                         rs.getDate("due_date").toLocalDate(),
                         rs.getInt("installment_number")
                 );
-
                 lista.add(d);
             }
 

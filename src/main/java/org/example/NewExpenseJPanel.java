@@ -8,12 +8,12 @@ package org.example;
  *
  * @author maxi
  */
-public class ExpenseJPanel extends javax.swing.JPanel {
+public class NewExpenseJPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form GastoJPanel
      */
-    public ExpenseJPanel() {
+    public NewExpenseJPanel() {
         initComponents();
     }
 

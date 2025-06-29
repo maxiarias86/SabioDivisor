@@ -27,15 +27,18 @@ public class IndexJFrame extends javax.swing.JFrame {
     public IndexJFrame(UserDTO user) {
         initComponents();
         this.user = user;
-        ExpenseJPanel expense = new ExpenseJPanel();
+        NewExpenseJPanel expense = new NewExpenseJPanel();
         jLabelBienvenidoUsuario.setText("Bienvenido "+user.getName());
 
         jPanelMain.setLayout(new CardLayout());
+        // Se inicializan los paneles que se van a mostrar en el jPanelMain
         BalancesJPanel balances = new BalancesJPanel(user);
         UserJPanel userPanel = new UserJPanel(user);
-        
+        EditPaymentJPanel editPaymentPanel = new EditPaymentJPanel(user, this);
+
         jPanelMain.add(balances, "Balances");
         jPanelMain.add(userPanel, "UserPanel");
+        jPanelMain.add(editPaymentPanel, "EditPaymentPanel");
         
     }
 
@@ -57,16 +60,19 @@ public class IndexJFrame extends javax.swing.JFrame {
         JButtonNewExpense = new javax.swing.JButton();
         jPanelMain = new javax.swing.JPanel();
         jButtonOtherUsers = new javax.swing.JButton();
+        jButtonEditPayment = new javax.swing.JButton();
+        jButtonEditExpense = new javax.swing.JButton();
 
         jScrollPane.setViewportView(jTextPane);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 204, 204));
-        setMinimumSize(new java.awt.Dimension(1100, 600));
+        setMinimumSize(new java.awt.Dimension(1000, 600));
         setPreferredSize(new java.awt.Dimension(900, 600));
 
         jLabelBienvenidoUsuario.setText("Mensaje de bienvenida");
 
+        jButtonEditUser.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
         jButtonEditUser.setText("Editar Mi Usuario");
         jButtonEditUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -74,6 +80,7 @@ public class IndexJFrame extends javax.swing.JFrame {
             }
         });
 
+        jButtonNewPayment.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
         jButtonNewPayment.setText("Nuevo Pago");
         jButtonNewPayment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -81,6 +88,7 @@ public class IndexJFrame extends javax.swing.JFrame {
             }
         });
 
+        jButtonBalances.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
         jButtonBalances.setText("Mi Estado");
         jButtonBalances.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,6 +96,7 @@ public class IndexJFrame extends javax.swing.JFrame {
             }
         });
 
+        JButtonNewExpense.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
         JButtonNewExpense.setText("Nuevo Gasto");
         JButtonNewExpense.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,14 +114,33 @@ public class IndexJFrame extends javax.swing.JFrame {
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGap(0, 601, Short.MAX_VALUE)
         );
 
+        jButtonOtherUsers.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
         jButtonOtherUsers.setText("Amigos");
         jButtonOtherUsers.setToolTipText("");
         jButtonOtherUsers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOtherUsersActionPerformed(evt);
+            }
+        });
+
+        jButtonEditPayment.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
+        jButtonEditPayment.setText("Editar Pagos");
+        jButtonEditPayment.setToolTipText("");
+        jButtonEditPayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditPaymentActionPerformed(evt);
+            }
+        });
+
+        jButtonEditExpense.setFont(new java.awt.Font("Helvetica Neue", 1, 12)); // NOI18N
+        jButtonEditExpense.setText("Editar Gastos");
+        jButtonEditExpense.setToolTipText("");
+        jButtonEditExpense.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditExpenseActionPerformed(evt);
             }
         });
 
@@ -122,22 +150,28 @@ public class IndexJFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanelMain, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(JButtonNewExpense)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonNewPayment)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonBalances, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonOtherUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 252, Short.MAX_VALUE))
+                    .addComponent(jPanelMain, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 860, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabelBienvenidoUsuario)
-                        .addGap(401, 401, 401)
-                        .addComponent(jButtonEditUser, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 19, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(JButtonNewExpense)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonEditExpense, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonNewPayment)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonEditPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonOtherUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonBalances, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabelBienvenidoUsuario)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonEditUser, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,17 +179,19 @@ public class IndexJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelBienvenidoUsuario)
                     .addComponent(jButtonEditUser))
-                .addGap(7, 7, 7)
+                .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(JButtonNewExpense, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonBalances, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonOtherUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonEditPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButtonNewPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButtonBalances, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonOtherUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, 0)
+                        .addComponent(JButtonNewExpense, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonEditExpense, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(1, 1, 1)
                 .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 2, Short.MAX_VALUE))
         );
 
         pack();
@@ -209,6 +245,17 @@ public class IndexJFrame extends javax.swing.JFrame {
         layout.show(jPanelMain,"UserPanel");
     }//GEN-LAST:event_jButtonOtherUsersActionPerformed
 
+    private void jButtonEditPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditPaymentActionPerformed
+        // TODO add your handling code here:
+        // Aquí deberías abrir un EditPaymentJPanel para editar los pagos.
+        CardLayout layout = (CardLayout) jPanelMain.getLayout();
+        layout.show(jPanelMain,"EditPaymentPanel");
+    }//GEN-LAST:event_jButtonEditPaymentActionPerformed
+
+    private void jButtonEditExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditExpenseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonEditExpenseActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -236,6 +283,8 @@ public class IndexJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JButtonNewExpense;
     private javax.swing.JButton jButtonBalances;
+    private javax.swing.JButton jButtonEditExpense;
+    private javax.swing.JButton jButtonEditPayment;
     private javax.swing.JButton jButtonEditUser;
     private javax.swing.JButton jButtonNewPayment;
     private javax.swing.JButton jButtonOtherUsers;
