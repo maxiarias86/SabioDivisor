@@ -2,8 +2,12 @@
   <dictionary name="project">
     <words>
       <w>bbdd</w>
+      <w>defaultstate</w>
+      <w>descripcion</w>
       <w>instancie</w>
       <w>metodo</w>
+      <w>nbfs</w>
+      <w>nbhost</w>
     </words>
   </dictionary>
 </component>

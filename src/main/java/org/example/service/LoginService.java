@@ -14,8 +14,11 @@ public class LoginService {
 
 
     public UserDTO validateCredentials(List<User> usuarios, String email, String password) {
+        //String hashedPassword = BCrypt.withDefaults().hashToString(10, password.toCharArray());
+
         for (User u : usuarios) {
             if (u.getEmail().equalsIgnoreCase(email) && u.getPassword().equals(password)) {
+// Cambiarlo para el final: if (u.getEmail().equalsIgnoreCase(email) && u.getPassword().equals(hashedPassword)) {
                 // Si las credenciales son correctas, retornamos el dto del usuario. Para evitar pasar el objeto User completo.
                 UserService userService = new UserService();
                 UserDTO userDTO = userService.convertToDTO(u);

@@ -30,6 +30,10 @@ public class UserService {
             if (UserDAO.getInstance().readByEmail(user.getEmail()).isSuccess()) {//Busca el mail en la base de datos
                 return new Response<>(false, "409", "El correo electrónico ya está registrado.");
             }
+            /*
+            String hashedPassword = BCrypt.withDefaults().hashToString(10, user.getPassword().toCharArray());
+            user.setPassword(hashedPassword);
+            */// Para agregar BCrypt al final
 
 
             Response<User> response = UserDAO.getInstance().create(user);//Guarda la instancia en BBDD

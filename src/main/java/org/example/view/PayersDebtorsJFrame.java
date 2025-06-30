@@ -658,7 +658,7 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
             if(response.isSuccess()){
                 JOptionPane.showMessageDialog(this, "Gasto registrado correctamente.");
                 //Agrego las deudas al cache
-                expenseService.loadDebt((Integer) response.getObj(), user);//Le paso el ID del gasto y el usuario que esta logueado para que agregue sus deudas al cache.
+                expenseService.loadDebt((Integer) response.getObj(), user);//Le paso el ID del gasto y el usuario que está logueado para que agregue sus deudas al cache.
 
                 IndexJFrame index = new IndexJFrame(user);
                 index.setVisible(true);
