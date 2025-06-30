@@ -62,7 +62,7 @@ La aplicación sigue una **arquitectura en capas**, con separación clara de res
 1. **Clonar el repositorio:**
 
    ```bash
-   git clone https://github.com/usuario/sabiodivisor.git
+   git clone https://github.com/maxiarias86/SabioDivisor.git
    ```
 
 2. **Instalar XAMPP y configurar la base de datos:**
