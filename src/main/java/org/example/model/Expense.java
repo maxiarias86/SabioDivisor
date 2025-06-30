@@ -2,8 +2,6 @@ package org.example.model;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public class Expense extends Transaction {
     private int installments;
@@ -21,7 +19,6 @@ public class Expense extends Transaction {
         setDescription(description);
     }
 
-    // Getters públicos
     public int getInstallments() {
         return installments;
     }
@@ -34,16 +31,11 @@ public class Expense extends Transaction {
         return description;
     }
 
-    // Setters públicos con validación
     public void setInstallments(int installments) {
-        try {
-            if (installments < 1) {
-                throw new IllegalArgumentException("La cantidad de cuotas debe ser al menos 1");
-            }
-            this.installments = installments;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error en 'installments': " + e.getMessage());
+        if (installments < 1) {
+            throw new IllegalArgumentException("La cantidad de cuotas debe ser al menos 1");
         }
+        this.installments = installments;
     }
 
 
@@ -52,16 +44,14 @@ public class Expense extends Transaction {
     }
 
     public void setDescription(String description) {
-        try {
-            if (description == null || description.isBlank()) {
-                throw new IllegalArgumentException("La descripción no puede estar vacía");
-            }
-            this.description = description;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error en 'description': " + e.getMessage());
+        if (description == null || description.isBlank()) {
+            throw new IllegalArgumentException("La descripción no puede estar vacía");
         }
+        this.description = description;
     }
 
+
+    /*
     // equals y hashCode basados en id
     @Override
     public boolean equals(Object o) {
@@ -86,4 +76,6 @@ public class Expense extends Transaction {
                 ", description='" + description + '\'' +
                 '}';
     }
+
+     */
 }

@@ -74,6 +74,9 @@ public class PaymentCache {
 
     // Metodo para borrar cache al hacer el logout.
     public static void reset() {
+        if (instance != null) {
+            instance.payments.clear(); // Limpia la lista de pagos
+        }
         instance = null;
     }
 }

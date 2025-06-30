@@ -76,13 +76,9 @@ public class ExpenseCache {// Cache para almacenar los gastos de un usuario
         }
     }
 
-    public void clear() {
-        this.expenses.clear();
-    }
-
-    public static void reset() {// Metodo para resetear la instancia del cache al hacer logout
+    public void reset() {// Metodo para resetear la instancia del cache al hacer logout
         if(instance != null) {
-            instance.clear();// Limpia la lista de gastos
+            this.expenses.clear();// Limpia la lista de gastos
             instance = null;// Resetea la instancia para que se pueda volver a crear
         }
     }

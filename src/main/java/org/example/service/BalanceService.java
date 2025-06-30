@@ -16,14 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BalanceService {
+    private UserCache userCache;
     private DebtCache debtCache;
     private ExpenseCache expenseCache;
     private PaymentCache paymentCache;
-    private UserCache userCache;
     private UserDTO user;
     private LocalDate date;
 
     public BalanceService(UserDTO user, LocalDate date) {
+        this.userCache = UserCache.getInstance();
         this.user = user;
         if(date != null) {
             this.date = date; // Si no
@@ -74,21 +75,4 @@ public class BalanceService {
 
     }
 
-
-
-
-    // Aquí puedes implementar la lógica relacionada con el balance de los usuarios
-    // Por ejemplo, métodos para obtener el balance, actualizarlo, etc.
-
-    // Ejemplo de método para obtener el balance de un usuario
-    public double getBalance(int userId) {
-        // Lógica para obtener el balance del usuario por su ID
-        return 0.0; // Retorna un valor de ejemplo
-    }
-
-    // Ejemplo de método para actualizar el balance de un usuario
-    public boolean updateBalance(int userId, double newBalance) {
-        // Lógica para actualizar el balance del usuario por su ID
-        return true; // Retorna true si la actualización fue exitosa
-    }
 }

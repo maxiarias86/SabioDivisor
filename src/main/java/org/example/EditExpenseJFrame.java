@@ -100,7 +100,6 @@ public class EditExpenseJFrame extends javax.swing.JFrame {
 
         jButton1.setBackground(new java.awt.Color(255, 51, 51));
         jButton1.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Eliminar Gasto");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,7 +216,7 @@ public class EditExpenseJFrame extends javax.swing.JFrame {
         if (user != null && expenseDTO != null && expense!=null) {//Verifico que el usuario esté logueado, que el DTO no sea nulo, y que el gasto original no sea nulo
             EditExpensePayersDebtorsJFrame newPayers = new EditExpensePayersDebtorsJFrame(expenseDTO,this,user);//Creo un nuevo JFrame para agregar pagadores y deudores
             newPayers.setVisible(true);//Lo hago visible
-            this.dispose();//Destruyo el JFrame actual
+            this.setVisible(false);//Destruyo el JFrame actual
         } else {
             JOptionPane.showMessageDialog(this, "No estas logueado, cierra el programa y vuelve a loguearte", "Edición fallida", JOptionPane.ERROR_MESSAGE);
         }
@@ -231,14 +230,11 @@ public class EditExpenseJFrame extends javax.swing.JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que querés eliminar este gasto?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                // Lógica para eliminar el gasto
                 if (expense != null && user != null) {
                     ExpenseService expenseService = new ExpenseService();
                     Response<Expense> response = expenseService.deleteExpense(expense.getId(),user);
                     if (response.isSuccess()) {
                         JOptionPane.showMessageDialog(this, "Gasto eliminado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                        // AGREGAR METODO PARA ELIMINAR EL GASTO DEL CACHE
-
                         IndexJFrame index = new IndexJFrame(user);//Abre un nuevo indexJFrame y cierra el actual
                         index.setVisible(true);
                         this.dispose(); // Cierra el JFrame actual

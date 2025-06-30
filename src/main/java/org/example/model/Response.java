@@ -34,10 +34,6 @@ public class Response<T> {
         return success;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
     public String getCode() {
         return code;
     }
@@ -50,23 +46,30 @@ public class Response<T> {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public List<T> getData() {
         return data;
-    }
-
-    public void setData(List<T> data) {
-        this.data = data;
     }
 
     public T getObj() {
         return obj;
     }
 
+    /*
     public void setObj(T obj) {
         this.obj = obj;
     }
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+    public void setData(List<T> data) {
+        this.data = data;
+    }
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+     */
+
+
+
 }

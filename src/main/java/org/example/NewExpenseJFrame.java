@@ -157,8 +157,9 @@ public class NewExpenseJFrame extends javax.swing.JFrame {
 
         try {
             Object amountValue = jFormattedTextFieldAmount.getValue();//Obtengo el valor del campo de texto del monto
-            if (amountValue == null) throw new NullPointerException();//Verifico que no sea nulo
-
+            if (amountValue == null) {
+                JOptionPane.showMessageDialog(this,"Ingrese un monto correcto", "Error",       JOptionPane.ERROR_MESSAGE);
+            }
             double amount = ((Number) amountValue).doubleValue();//Convierto el valor a double
             expenseDTO.setAmount(amount);//Asigno el monto al DTO
 
@@ -169,7 +170,9 @@ public class NewExpenseJFrame extends javax.swing.JFrame {
 
         try{
             Object value = jFormattedTextFieldInstallments.getValue();//Obtengo el valor del campo de texto de cuotas
-            if (value == null) throw new NullPointerException();//Verifico que no sea nulo
+            if (value == null) {
+                JOptionPane.showMessageDialog(this, "Ingrese un número de cuotas válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
             int installments = ((Number) value).intValue();//Convierto el valor a int
             expenseDTO.setInstallments(installments);//Asigno las cuotas al DTO
         }catch(Exception e){
@@ -182,7 +185,7 @@ public class NewExpenseJFrame extends javax.swing.JFrame {
         if (user != null && expenseDTO != null) {//Verifico que el usuario esté logueado y que el DTO no sea nulo
             PayersDebtorsJFrame newPayers = new PayersDebtorsJFrame(expenseDTO,this,user);//Creo un nuevo JFrame para agregar pagadores y deudores
             newPayers.setVisible(true);//Lo hago visible
-            this.dispose();//Destruyo el JFrame actual
+            this.setVisible(false);//Oculto el JFrame actual. Lo elimino cuando se cierre el de pagadores y deudores
         } else {
             JOptionPane.showMessageDialog(this, "No estas logueado, cierra el programa y vuelve a loguearte", "Edición fallida", JOptionPane.ERROR_MESSAGE);
         }

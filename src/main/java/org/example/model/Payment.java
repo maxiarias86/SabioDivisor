@@ -60,7 +60,7 @@ public class Payment extends Transaction {
         }
     }
 
-
+/*
 
     // equals y hashCode por id
     @Override
@@ -87,4 +87,6 @@ public class Payment extends Transaction {
                 ", recipient=" + (recipient != null ? recipient.getName() : "null") +
                 '}';
     }
+    */
+
 }

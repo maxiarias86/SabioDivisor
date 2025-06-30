@@ -1,12 +1,9 @@
 package org.example.dao;
 
 import org.example.dto.ExpenseDTO;
-import org.example.dto.UserDTO;
 import org.example.model.Debt;
 import org.example.model.Expense;
 import org.example.model.Response;
-import org.example.model.User;
-import org.example.repository.ExpenseRepository;
 
 import java.sql.*;
 import java.sql.Date;
@@ -151,9 +148,40 @@ public class ExpenseDAO extends BaseDAO<Expense> {
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-//SACAR EXPENSE REPOSITORY PORQUE NO LO ESTOY USANDO MAS
-            ExpenseRepository repository = new ExpenseRepository(conn);
-            List<Expense> expenses = repository.loadAllExpenses(rs);
+
+            List<Expense> expenses = new ArrayList<>();
+            //Para no tener que hacer un readAll de deudas en cada iteración creo un cache que se elimina después de usar este metodo.
+            Map<Integer, List<Debt>> debtMap = new HashMap<>();//Map para almacenar las deudas por expenseId (Clave: expenseId, Valor: Lista de deudas).
+            Response<Debt> allDebts = DebtDAO.getInstance().readAll();// Obtiene todas las deudas
+
+            if (allDebts.isSuccess()) {// Si la respuesta es exitosa, procesa las deudas
+                List<Debt> allDebtList = allDebts.getData();// Obtiene la lista de deudas
+                for (Debt d: allDebtList) {// Recorre la lista de deudas con un foreach
+                    int expenseId = d.getExpenseId();// Obtiene el ID del gasto asociado a la deuda
+                    if (!debtMap.containsKey(expenseId)) {//Si el Map no contiene el expenseId, lo agrega
+                        debtMap.put(expenseId, new ArrayList<Debt>());// Crea una nueva lista de deudas para ese expenseId
+                    }
+                    debtMap.get(expenseId).add(d);// Agrega la deuda a la lista correspondiente en el Map
+                }
+            } else {
+                return new Response<>(false, "500", "Error al obtener las deudas: " + allDebts.getMessage());
+            }
+            while (rs.next()) {
+                // Crea un nuevo objeto Expense a partir del ResultSet
+                // y asigna las deudas relacionadas desde el Map
+                List<Debt> relatedDebts = debtMap.getOrDefault(rs.getInt("id"), new ArrayList<>());
+
+                Expense expense = new Expense(
+                        rs.getInt("id"),
+                        rs.getDouble("amount"),
+                        rs.getDate("date").toLocalDate(),
+                        rs.getInt("installments"),
+                        relatedDebts, // Asigna las deudas relacionadas
+                        rs.getString("description")
+                );
+                // Agrega el gasto a la lista
+                expenses.add(expense);
+            }
 
             return new Response<>(true, "200", "Listado de gastos obtenido", expenses);
 

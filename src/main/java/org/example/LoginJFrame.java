@@ -141,7 +141,7 @@ public class LoginJFrame extends javax.swing.JFrame {
 
         LoginService loginService = new LoginService();
 
-        UserDTO usuarioLogueado = loginService.validarCredenciales(listaUsuarios, email, password);
+        UserDTO usuarioLogueado = loginService.validateCredentials(listaUsuarios, email, password);
 
         
         if (usuarioLogueado != null) {

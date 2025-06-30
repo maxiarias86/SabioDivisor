@@ -106,6 +106,7 @@ public class Debt {
         this.installmentNumber = installmentNumber;
     }
 
+    /*
     // equals y hashCode basados en id
     @Override
     public boolean equals(Object o) {
@@ -133,4 +134,6 @@ public class Debt {
                 ", installment=" + installmentNumber +
                 '}';
     }
+
+     */
 }

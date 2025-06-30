@@ -14,7 +14,7 @@ public class DebtCache {
 
     private DebtCache(UserDTO userDTO) {
         // Constructor privado para evitar instanciación externa
-        this.debts = new ArrayList<>(DebtDAO.getInstance().readAllByUser(userDTO).getData());
+        this.updateDebtCache(userDTO);
     }
 
     public static DebtCache getInstance(UserDTO userDTO) {
@@ -43,6 +43,13 @@ public class DebtCache {
 
     // Metodo para borrar el cache al hacer logout
     public static void reset() {
-        instance = null;
+        if (instance != null) {
+            instance.debts.clear(); // Limpia la lista de deudas
+            instance = null; // Resetea la instancia del cache
+        }
+    }
+
+    public void updateDebtCache(UserDTO user) {
+        this.debts = new ArrayList<>(DebtDAO.getInstance().readAllByUser(user).getData());
     }
 }
