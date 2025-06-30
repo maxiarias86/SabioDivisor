@@ -8,7 +8,7 @@ Aplicación de escritorio en Java que permite registrar gastos entre múltiples 
 
 ### Funcionalidades Principales:
 
-* Gestión de usuarios: registro, edición, login y logout.
+* Gestión de usuarios: registro, edición, login y logout. No se permite eliminar usuarios.
 * Registro de gastos: monto, fecha, descripción y número de cuotas.
 * División de gastos: entre uno o más pagadores y deudores.
 * Registro de pagos entre usuarios.

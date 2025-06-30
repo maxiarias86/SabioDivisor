@@ -294,44 +294,4 @@ public class DebtDAO extends BaseDAO<Debt> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
-    /*
-        public List<Debt> getByExpenseId(int expenseId) {
-        List<Debt> debts = new ArrayList<>();
-        String sql = "SELECT * FROM debts WHERE expense_id = ?";
-
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, expenseId);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Debt d = new Debt();
-                d.setId(rs.getInt("id"));
-                d.setAmount(rs.getDouble("amount"));
-                d.setDueDate(rs.getDate("due_date").toLocalDate());
-                d.setInstallmentNumber(rs.getInt("installment_number"));
-
-                // Cargar creditor, debtor y expense ID
-                int debtorId = rs.getInt("debtor_id");
-                int creditorId = rs.getInt("creditor_id");
-                int expenseIdFromDb = rs.getInt("expense_id");
-
-                d.setDebtor(UserDAO.getInstance().read(debtorId).getObj());
-                d.setCreditor(UserDAO.getInstance().read(creditorId).getObj());
-
-                d.setExpenseId(rs.getInt("expense_id")); // Podés cargarlo más completo si lo necesitás
-
-                debts.add(d);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return debts;
-    }
-     */
-
-
-
-
 }

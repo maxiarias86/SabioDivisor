@@ -59,34 +59,4 @@ public class Payment extends Transaction {
             System.out.println("Error en 'recipient': " + e.getMessage());
         }
     }
-
-/*
-
-    // equals y hashCode por id
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Payment)) return false;
-        Payment payment = (Payment) o;
-        return getId() == payment.getId();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
-
-    // toString
-    @Override
-    public String toString() {
-        return "Payment{" +
-                "id=" + getId() +
-                ", amount=" + getAmount() +
-                ", date=" + getDate() +
-                ", payer=" + (payer != null ? payer.getName() : "null") +
-                ", recipient=" + (recipient != null ? recipient.getName() : "null") +
-                '}';
-    }
-    */
-
 }

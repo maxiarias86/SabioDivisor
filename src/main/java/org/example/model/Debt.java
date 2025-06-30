@@ -105,35 +105,4 @@ public class Debt {
         }
         this.installmentNumber = installmentNumber;
     }
-
-    /*
-    // equals y hashCode basados en id
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Debt)) return false;
-        Debt debt = (Debt) o;
-        return id == debt.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    // toString para depuración
-    @Override
-    public String toString() {
-        return "Debt{" +
-                "id=" + id +
-                ", amount=" + amount +
-                ", creditor=" + (creditor != null ? creditor.getName() : "null") +
-                ", debtor=" + (debtor != null ? debtor.getName() : "null") +
-                ", expenseId=" + expenseId +
-                ", dueDate=" + dueDate +
-                ", installment=" + installmentNumber +
-                '}';
-    }
-
-     */
 }

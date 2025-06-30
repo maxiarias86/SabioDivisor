@@ -49,33 +49,4 @@ public class Expense extends Transaction {
         }
         this.description = description;
     }
-
-
-    /*
-    // equals y hashCode basados en id
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Expense)) return false;
-        Expense expense = (Expense) o;
-        return this.getId() == expense.getId();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
-
-    @Override
-    public String toString() {
-        return "Expense{" +
-                "id=" + getId() +
-                ", amount=" + super.getAmount() +
-                ", date=" + super.getDate() +
-                ", installments=" + installments +
-                ", description='" + description + '\'' +
-                '}';
-    }
-
-     */
 }
