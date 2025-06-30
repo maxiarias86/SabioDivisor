@@ -2,73 +2,103 @@
 
 ### Segundo Parcial - Programación Avanzada 2025
 
-## Descripción del Proyecto: Sistema de Gestión de Gastos Compartidos
+## Descripción del Proyecto
 
-Aplicación de escritorio en Java que permite registrar gastos entre múltiples usuarios, dividirlos en cuotas, calcular automáticamente las deudas resultantes y registrar pagos directos entre personas. El sistema mantiene un estado de cuenta actualizado para cada usuario.
+**SabioDivisor** es una aplicación de escritorio desarrollada en Java para gestionar gastos compartidos entre múltiples usuarios. Está pensada para situaciones como compartir una casa, un viaje, o una cena entre amigos.
 
-### Funcionalidades Principales:
+Cada usuario puede registrar lo que pagó, repartirlo entre quienes corresponda, ver quién le debe a quién y también registrar pagos directos entre usuarios. El sistema mantiene un estado de cuenta actualizado que muestra saldos y deudas entre personas.
 
-* Gestión de usuarios: registro, edición, login y logout. No se permite eliminar usuarios.
-* Registro de gastos: monto, fecha, descripción y número de cuotas.
-* División de gastos: entre uno o más pagadores y deudores.
-* Registro de pagos entre usuarios.
-* Visualización de deudas y estado de cuenta.
+### Funcionalidades Principales
 
-## Diseño Orientado a Objetos:
-
-* **User**: id, name, email, password
-* **Expense**: id, amount, date, description, installments
-* **Debt**: representa lo que un usuario le debe a otro por un gasto
-* **Payment**: transferencia directa entre usuarios
-* **Response<T>**: clase genérica para retornar objetos y mensajes entre capas
-
-## Validaciones y Excepciones:
-
-En este proyecto, las validaciones y el manejo de excepciones se realizan principalmente en las clases de Service, que son la capa intermedia entre las Views (JFrame/JPanel) y los DAOs.
-Antes de llamar al DAO, cada método valida que los datos obligatorios no estén vacíos o nulos, que los valores numéricos sean válidos (por ejemplo, montos positivos, fechas correctas, etc.), y que no haya duplicados cuando el caso lo requiere.
-Si alguna validación falla, se devuelve un objeto `Response` con `success = false` y un mensaje que explica el motivo del error.
-Además, todos los accesos a la base de datos están contenidos en bloques `try-catch`. Si ocurre una excepción, se captura y se devuelve un `Response` con `success = false` y el mensaje de la excepción.
+* Registro, edición, login y logout de usuarios (no se permite eliminar usuarios).
+* Registro de gastos con: fecha, monto, descripción, número de cuotas, pagadores y deudores.
+* División de gastos: uno o más pagadores, uno o más deudores.
+* Cálculo automático de deudas a partir de los gastos ingresados.
+* Registro de pagos directos entre dos usuarios.
+* Visualización de deudas personales y estado de cuenta.
+* Consulta de estado de cuenta proyectado a una fecha futura (considerando cuotas pendientes).
 
 ---
 
-# Instalación y Ejecución
+## Diseño y Arquitectura
 
-1. Clonar el repositorio:
-   `git clone https://github.com/usuario/sabiodivisor.git`
+La aplicación sigue una **arquitectura en capas**, con separación clara de responsabilidades:
 
-2. Instalar XAMPP y configurar la base de datos:
+* **Vista (View)**: contiene los formularios y pantallas (`JFrame`, `JPanel`).
+* **Controlador (Controller)**: recibe acciones del usuario y llama a los servicios. Su aplicación no está implementada aún; se hará para la versión web.
+* **Servicios (Service)**: contiene la lógica del sistema, como calcular balances, validar datos o generar deudas.
+* **DAO**: maneja el acceso a la base de datos (lectura y escritura).
+* **Modelo (Model)**: clases que representan entidades del sistema (`User`, `Expense`, etc.).
+* **DTO (Data Transfer Objects)**: objetos para comunicar capas, útiles cuando no se quiere usar directamente el modelo.
+* **Caché**: almacenamiento temporal en memoria que actúa como repositorio local para mejorar el rendimiento.
 
-    * Descargar e instalar XAMPP desde [Apache Friends](https://www.apachefriends.org/index.html).
-    * Iniciar el servidor Apache y MySQL desde el panel de control de XAMPP.
-    * Importar el archivo `DDL_sabio_divisor.sql` en **phpMyAdmin** para crear las tablas necesarias.
-    * Asegurarse de que la versión de MySQL sea **8.0.16 o superior**, ya que el script utiliza validaciones `CHECK`.
-    * Configurar la conexión a la base de datos en el archivo `config.properties`, especificando:
+### Clases Principales
 
-      ```
-      db.url=jdbc:mysql://localhost:3306/sabio_divisor
-      db.user=tu_usuario
-      db.password=tu_contraseña
-      ```
-    * Asegurarse de que `config.properties` esté en la ruta correcta dentro del proyecto.
+* **User**: representa al usuario (id, nombre, email, contraseña). Se relaciona con todas las demás clases.
+* **Transaction** *(abstracta)*: representa cualquier transacción monetaria.
 
-3. Compilar el proyecto en un IDE como IntelliJ IDEA o Eclipse.
-
-4. Ejecutar la aplicación:
-   Abrir el archivo `Main.java` y correr la clase principal.
-
-5. Iniciar sesión con un usuario existente o crear uno nuevo.
-
-6. Utilizar las funcionalidades de la aplicación para registrar gastos, dividirlos, registrar pagos y consultar deudas.
-
-7. Para cerrar la aplicación, utilizar el botón de salir en la interfaz gráfica.
-
-8. Para realizar pruebas, se pueden crear varios usuarios y registrar diferentes gastos y pagos entre ellos.
-
-9. Para ver el estado de cuenta de cada usuario, acceder a la sección correspondiente en la interfaz gráfica.
+   * **Expense**: hereda de `Transaction`, representa un gasto compartido. Incluye una o más **Debts**, cada una indicando quién le debe a quién, cuánto y cuándo.
+   * **Payment**: hereda de `Transaction`, representa un pago directo entre dos usuarios.
+* **Debt**: indica lo que un usuario le debe a otro por un gasto compartido. Está asociada a un `Expense` y contiene fecha de vencimiento.
+* **Response**: clase genérica para retornar objetos, estados y mensajes entre capas.
 
 ---
 
-# Requisitos
+## Validaciones y Manejo de Errores
+
+* Las **validaciones** y el manejo de **excepciones** se realizan en la capa de servicios (`Service`).
+* Se verifica que:
+
+   * Los campos obligatorios no estén vacíos o nulos.
+   * Los valores numéricos sean válidos (montos positivos, fechas correctas, etc.).
+   * No haya duplicados cuando corresponda.
+* Si una validación falla, se devuelve un objeto `Response` con `success = false` y un mensaje de error.
+* Todas las operaciones con la base de datos están contenidas en bloques `try-catch` que capturan errores y devuelven un mensaje comprensible al usuario.
+
+---
+
+## Instalación y Ejecución
+
+1. **Clonar el repositorio:**
+
+   ```bash
+   git clone https://github.com/usuario/sabiodivisor.git
+   ```
+
+2. **Instalar XAMPP y configurar la base de datos:**
+
+   * Descargar e instalar XAMPP desde [Apache Friends](https://www.apachefriends.org/index.html).
+   * Iniciar Apache y MySQL desde el panel de control de XAMPP.
+   * Importar el archivo `DDL_sabio_divisor.sql` en **phpMyAdmin** para crear las tablas.
+   * Requisitos:
+
+      * MySQL versión **8.0.16 o superior** (usa `CHECK` constraints).
+   * Configurar `config.properties` con los datos de conexión:
+
+     ```properties
+     db.url=jdbc:mysql://localhost:3306/sabio_divisor
+     db.user=tu_usuario
+     db.password=tu_contraseña
+     ```
+   * Verificar que `config.properties` esté en la ruta correcta del proyecto.
+
+3. **Compilar el proyecto** en IntelliJ IDEA o Eclipse.
+
+4. **Ejecutar la aplicación:**
+
+   * Correr `Main.java` como clase principal.
+
+5. **Uso general:**
+
+   * Iniciar sesión o crear un nuevo usuario.
+   * Registrar gastos, dividirlos entre usuarios, registrar pagos y consultar deudas.
+   * Utilizar el botón de salida para cerrar la aplicación.
+   * Para pruebas, crear varios usuarios y registrar distintos gastos/pagos.
+   * Acceder al estado de cuenta desde la interfaz gráfica.
+
+---
+
+## Requisitos del Sistema
 
 * Java 17 o superior
 * MySQL 8.0.16 o superior
