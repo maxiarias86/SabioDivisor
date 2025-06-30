@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 
-import org.example.cache.DebtCache;
 import org.example.cache.UserCache;
 import org.example.dto.ExpenseDTO;
 import org.example.dto.UserDTO;
@@ -28,7 +27,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EditExpensePayersDebtorsJFrame.class.getName());
 
     private ExpenseDTO dto;
-    private NewExpenseJFrame newExpenseJFrame;
+    private EditExpenseJFrame editExpenseJFrame;
     private UserDTO user;
         
     /**
@@ -37,17 +36,18 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
     public EditExpensePayersDebtorsJFrame(ExpenseDTO dto, EditExpenseJFrame editExpenseJFrame, UserDTO user) {
         initComponents();
         this.dto = dto;
-        this.newExpenseJFrame = newExpenseJFrame;
+        this.editExpenseJFrame = editExpenseJFrame;
         this.user = user;
+
         UserService userService = new UserService();
-        Response response = userService.getAllUsersButOne(0);
+        Response response = userService.getAllUsersButOne(0);// Obtiene todos los usuarios. Porque no puede haber usuarios con id cero.
         if (response.isSuccess()) {
             String responseString = "Usuarios Registrados:";
             List<User> list = response.getData();
-            for (User u : list) {
+            for (User u : list) {// Recorre la lista de usuarios y los agrega al jTextAreaUsuarios
                 responseString = responseString + "\nID: " + u.getId() +" -> "+ u.getName()+" -> "+u.getEmail();
             }
-            jTextAreaUsuarios.setText(responseString);
+            jTextAreaUsuarios.setText(responseString);// Carga los usuarios en el jTextAreaUsuarios.
             jTextAreaUsuarios.setEditable(false); // El jText que carga los usuarios se vuelve solo lectura.
             jTextFieldError.setText("");
             jTextFieldDescription.setText(dto.getDescription());
@@ -57,8 +57,8 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
         }
     }
     
-    private void volverAlNewExpense(){
-        newExpenseJFrame.setVisible(true);
+    private void volverAlNewExpense(){// Vuelve al NewExpenseJFrame por si el usuario quiere volver a cambiar algo.
+        editExpenseJFrame.setVisible(true);
         this.dispose();
     }
     
@@ -113,6 +113,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(1000, 900));
 
         jTextAreaUsuarios.setColumns(20);
         jTextAreaUsuarios.setRows(5);
@@ -129,7 +130,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount1.setColumns(6);
+        jFormattedTextFieldAmount1.setColumns(5);
         jFormattedTextFieldAmount1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
         jFormattedTextField2.setColumns(3);
@@ -140,7 +141,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount2.setColumns(6);
+        jFormattedTextFieldAmount2.setColumns(5);
         jFormattedTextFieldAmount2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
         jFormattedTextField3.setColumns(3);
@@ -151,10 +152,10 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount3.setColumns(6);
+        jFormattedTextFieldAmount3.setColumns(5);
         jFormattedTextFieldAmount3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
-        jFormattedTextFieldAmount4.setColumns(6);
+        jFormattedTextFieldAmount4.setColumns(5);
         jFormattedTextFieldAmount4.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
         jFormattedTextField4.setColumns(3);
@@ -173,10 +174,10 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount5.setColumns(6);
+        jFormattedTextFieldAmount5.setColumns(5);
         jFormattedTextFieldAmount5.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
-        jFormattedTextFieldAmount6.setColumns(6);
+        jFormattedTextFieldAmount6.setColumns(5);
         jFormattedTextFieldAmount6.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         jFormattedTextFieldAmount6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -200,7 +201,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount7.setColumns(6);
+        jFormattedTextFieldAmount7.setColumns(5);
         jFormattedTextFieldAmount7.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         jFormattedTextFieldAmount7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -208,7 +209,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Cargar Gasto");
+        jButton2.setText("Modificar Gasto");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -234,7 +235,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount9.setColumns(6);
+        jFormattedTextFieldAmount9.setColumns(5);
         jFormattedTextFieldAmount9.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
         jFormattedTextField10.setColumns(3);
@@ -245,7 +246,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount10.setColumns(6);
+        jFormattedTextFieldAmount10.setColumns(5);
         jFormattedTextFieldAmount10.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
         jFormattedTextField11.setColumns(3);
@@ -256,7 +257,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount11.setColumns(6);
+        jFormattedTextFieldAmount11.setColumns(5);
         jFormattedTextFieldAmount11.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
         jFormattedTextField12.setColumns(3);
@@ -267,7 +268,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount12.setColumns(6);
+        jFormattedTextFieldAmount12.setColumns(5);
         jFormattedTextFieldAmount12.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
         jFormattedTextField13.setColumns(3);
@@ -278,7 +279,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount13.setColumns(6);
+        jFormattedTextFieldAmount13.setColumns(5);
         jFormattedTextFieldAmount13.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
         jFormattedTextField14.setColumns(3);
@@ -289,7 +290,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount14.setColumns(6);
+        jFormattedTextFieldAmount14.setColumns(5);
         jFormattedTextFieldAmount14.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         jFormattedTextFieldAmount14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -305,7 +306,7 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
         });
 
-        jFormattedTextFieldAmount15.setColumns(6);
+        jFormattedTextFieldAmount15.setColumns(5);
         jFormattedTextFieldAmount15.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         jFormattedTextFieldAmount15.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -328,70 +329,69 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jTextFieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jFormattedTextFieldAmount2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount4, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount5, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount6, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount7, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel1)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGap(41, 41, 41)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jFormattedTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jFormattedTextFieldAmount10, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount11, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount9, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount12, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount13, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount14, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jFormattedTextFieldAmount15, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jButton2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldError, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextFieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jFormattedTextFieldAmount2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount4, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount5, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount6, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount7, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(41, 41, 41)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jFormattedTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jFormattedTextFieldAmount10, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount11, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount9, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount12, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount13, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount14, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jFormattedTextFieldAmount15, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldError, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(49, 49, 49)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel6)
                         .addGap(65, 65, 65)))
-                .addComponent(jTextAreaUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))
+                .addComponent(jTextAreaUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -405,7 +405,6 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -557,7 +556,6 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
 
         try{
             UserCache userCache = UserCache.getInstance();//Obtengo el cache de usuarios
-
             Map<Integer, Double> payerMap = new HashMap<>();// Mapa para los pagadores
             Map<Integer, Double> debtorMap = new HashMap<>();// Mapa para los deudores
             //Se arman arrays para poder usarlos en un for. 2 para ids y 2 para montos.
@@ -600,7 +598,6 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
                 jFormattedTextFieldAmount15
             };
 
-
             for (int i = 0; i < payerIds.length; i++) {//Recorro los arrays de IDs y montos de pagadores
                 String idText = payerIds[i].getText().trim();//Recupero los datos de los TextFields
                 String amountText = payerAmounts[i].getText().trim();
@@ -637,19 +634,15 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
                 }
             }
 
-
             // Asigno los Maps al DTO
             dto.setPayers(payerMap);
             dto.setDebtors(debtorMap);
-
             double totalPagado = payerMap.values().stream().mapToDouble(Double::doubleValue).sum();//Sumo los valores de los pagadores
             double totalDeudor = debtorMap.values().stream().mapToDouble(Double::doubleValue).sum();//Sumo los valores de los deudores
-
             if (Math.abs(totalPagado - totalDeudor) > 0.01) {//Si la diferencia entre ambos es mayor a 0.01 tira error. Se deja 0.01 por errores de redondeo.
                 jTextFieldError.setText("Los montos totales de pagadores y deudores no coinciden.");
                 return;
             }
-
 
             if (payerMap.isEmpty() || debtorMap.isEmpty()) {
                 jTextFieldError.setText("Debe ingresar al menos un pagador y un deudor.");
@@ -657,14 +650,14 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
             }
 
             ExpenseService expenseService = new ExpenseService();
-            Response response = expenseService.registerExpense(dto);
+
+            Response response = expenseService.updateExpense(dto, user);//Actualizo el gasto con el DTO y el usuario logueado para también actualizar cache.
             if(response.isSuccess()){
                 JOptionPane.showMessageDialog(this, "Gasto registrado correctamente.");
-                //Agrego las deudas al cache
-                expenseService.loadDebt((Integer) response.getObj(), user);//Le paso el ID del gasto y el usuario que esta logueado para que agregue sus deudas al cache.
 
                 IndexJFrame index = new IndexJFrame(user);
                 index.setVisible(true);
+                editExpenseJFrame.dispose();
                 this.dispose();
 
             } else {
@@ -674,7 +667,6 @@ public class EditExpensePayersDebtorsJFrame extends javax.swing.JFrame {
                     jTextFieldError.setText("Error inesperado: " + e.getMessage());
         }
         
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTextFieldErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldErrorActionPerformed

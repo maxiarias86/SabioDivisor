@@ -664,6 +664,7 @@ public class PayersDebtorsJFrame extends javax.swing.JFrame {
 
                 IndexJFrame index = new IndexJFrame(user);
                 index.setVisible(true);
+                newExpenseJFrame.dispose();
                 this.dispose();
 
             } else {

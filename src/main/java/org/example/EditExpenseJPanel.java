@@ -140,10 +140,10 @@ public class EditExpenseJPanel extends javax.swing.JPanel {
         int expenseId;// Variable para almacenar el ID del gasto
         try {
             expenseId = Integer.parseInt(jTextFieldExpenseId.getText());// Intenta convertir el texto del TextField en un entero
-            Response expenseResponse = ExpenseCache.getInstance(user).getExpenseById(expenseId);
+            Response expenseResponse = ExpenseCache.getInstance(user).getExpenseById(expenseId);//
             if (!expenseResponse.isSuccess()) {
                 jTextFieldError.setEditable(true);
-                jTextFieldError.setText("El ID del pago debe ser un número válido.");
+                jTextFieldError.setText("El pago no se relaciona al usuario logueado.");
                 jTextFieldError.setEditable(false);
 
                 return; // Si no se encuentra el gasto, no hace nada

@@ -1,6 +1,11 @@
 package org.example.service;
 
+import org.example.cache.DebtCache;
+import org.example.cache.ExpenseCache;
+import org.example.cache.PaymentCache;
+import org.example.cache.UserCache;
 import org.example.dto.UserDTO;
+import org.example.model.Response;
 import org.example.model.User;
 
 import java.util.List;
@@ -45,6 +50,21 @@ public class LoginService {
             }
         }
         return null;
+    }
+
+    public Response logout(UserDTO user) {
+        if (user == null) {
+            return new Response(false, "400","No hay usuario logueado.");
+        }
+        UserCache userCache = UserCache.getInstance();
+        userCache.reset();
+        PaymentCache paymentCache = PaymentCache.getInstance(user);
+        paymentCache.reset();
+        DebtCache debtCache = DebtCache.getInstance(user);
+        debtCache.reset();
+        ExpenseCache expenseCache = ExpenseCache.getInstance(user);
+        expenseCache.reset();
+        return new Response(true, "200","Sesión cerrada correctamente.");
     }
 
 }

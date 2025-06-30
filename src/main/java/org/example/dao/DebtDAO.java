@@ -309,6 +309,24 @@ public class DebtDAO extends BaseDAO<Debt> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
+    public Response deleteByExpenseId(int id) {
+        String sql = "DELETE FROM " + tableName + " WHERE expense_id = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                return new Response<>(true, "200", "Deuda eliminada correctamente");
+            } else {
+                //Como id es unique en la tabla no puede encontrar más de uno. Lo encuentra o no.
+                return new Response<>(false, "404", "No se encontró la deuda");
+            }
+        } catch (SQLException e) {
+            return new Response<>(false, "500", e.getMessage());
+        }
+    }
 
 
 

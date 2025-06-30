@@ -16,14 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BalanceService {
+    private UserCache userCache;
     private DebtCache debtCache;
     private ExpenseCache expenseCache;
     private PaymentCache paymentCache;
-    private UserCache userCache;
     private UserDTO user;
     private LocalDate date;
 
     public BalanceService(UserDTO user, LocalDate date) {
+        this.userCache = UserCache.getInstance();
         this.user = user;
         if(date != null) {
             this.date = date; // Si no

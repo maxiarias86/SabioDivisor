@@ -182,7 +182,7 @@ public class NewExpenseJFrame extends javax.swing.JFrame {
         if (user != null && expenseDTO != null) {//Verifico que el usuario esté logueado y que el DTO no sea nulo
             PayersDebtorsJFrame newPayers = new PayersDebtorsJFrame(expenseDTO,this,user);//Creo un nuevo JFrame para agregar pagadores y deudores
             newPayers.setVisible(true);//Lo hago visible
-            this.dispose();//Destruyo el JFrame actual
+            this.setVisible(false);//Oculto el JFrame actual. Lo elimino cuando se cierre el de pagadores y deudores
         } else {
             JOptionPane.showMessageDialog(this, "No estas logueado, cierra el programa y vuelve a loguearte", "Edición fallida", JOptionPane.ERROR_MESSAGE);
         }

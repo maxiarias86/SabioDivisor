@@ -16,7 +16,7 @@ Para no tener que rearmar de la BBDD cada vez que utilice un usuario,
 
 public class UserCache {
 
-    private final static UserCache instance = new UserCache();
+    private static UserCache instance = new UserCache();
 
     private final UserDAO userDAO;
     private final UserService userService = new UserService();
@@ -24,6 +24,9 @@ public class UserCache {
     private final Map<Integer, UserDTO> userCache = new HashMap<>();
 
     public static UserCache getInstance() {
+        if (instance == null) {
+            instance = new UserCache();
+        }
         return instance;
     }
 
@@ -64,5 +67,11 @@ public class UserCache {
         } else {
             return new Response<>(false, "404", "El usuario no está en el cache");
         }
+    }
+    public static void reset() {
+        if (instance != null) {
+            instance.userCache.clear(); // Limpia la lista de pagos
+        }
+        instance = null;
     }
 }

@@ -3,6 +3,9 @@
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[1000, 900]"/>
+    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -26,76 +29,74 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="jTextFieldDescription" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextFieldAmount" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="jFormattedTextField1" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField2" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField3" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField4" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField5" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField6" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField7" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="jFormattedTextFieldAmount2" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount3" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount1" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount4" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount5" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount6" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount7" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="jTextFieldDescription" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="jTextFieldAmount" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="jFormattedTextField1" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField2" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField3" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField4" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField5" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField6" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField7" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel2" min="-2" pref="97" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="jFormattedTextFieldAmount2" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount3" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount1" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount4" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount5" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount6" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount7" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel4" min="-2" pref="97" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabel2" min="-2" pref="97" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabel4" min="-2" pref="97" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="jFormattedTextField9" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField10" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField11" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField12" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField13" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField14" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextField15" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="jFormattedTextField9" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField10" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField11" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField12" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField13" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField14" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextField15" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="jFormattedTextFieldAmount10" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount11" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount9" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount12" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount13" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount14" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                      <Component id="jFormattedTextFieldAmount15" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
-                                  </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="jFormattedTextFieldAmount10" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount11" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount9" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount12" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount13" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount14" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
+                                  <Component id="jFormattedTextFieldAmount15" alignment="1" min="-2" pref="127" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jButton2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldError" min="-2" pref="198" max="-2" attributes="0"/>
-                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jTextFieldError" min="-2" pref="198" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
@@ -105,7 +106,7 @@
                       <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <Component id="jTextAreaUsuarios" pref="208" max="32767" attributes="0"/>
+              <Component id="jTextAreaUsuarios" pref="422" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -123,7 +124,6 @@
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -249,7 +249,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount1">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -268,7 +268,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount2">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -287,7 +287,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount3">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -295,7 +295,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount4">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -325,7 +325,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount5">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -333,7 +333,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount6">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -366,7 +366,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount7">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -377,7 +377,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="jButton2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Cargar Gasto"/>
+        <Property name="text" type="java.lang.String" value="Modificar Gasto"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
@@ -414,7 +414,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount9">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -433,7 +433,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount10">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -452,7 +452,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount11">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -471,7 +471,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount12">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -490,7 +490,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount13">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -509,7 +509,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount14">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
@@ -531,7 +531,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldAmount15">
       <Properties>
-        <Property name="columns" type="int" value="6"/>
+        <Property name="columns" type="int" value="5"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0.00" subtype="-1" type="0"/>
         </Property>
