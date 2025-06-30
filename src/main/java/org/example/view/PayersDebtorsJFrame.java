@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package org.example;
+package org.example.view;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 
-import org.example.cache.DebtCache;
 import org.example.cache.UserCache;
 import org.example.dto.ExpenseDTO;
 import org.example.dto.UserDTO;

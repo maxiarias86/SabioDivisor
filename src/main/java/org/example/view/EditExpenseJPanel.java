@@ -2,14 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package org.example;
+package org.example.view;
 
 import org.example.cache.ExpenseCache;
-import org.example.cache.PaymentCache;
 import org.example.dto.UserDTO;
 import org.example.model.Debt;
 import org.example.model.Expense;
-import org.example.model.Payment;
 import org.example.model.Response;
 
 import javax.swing.*;

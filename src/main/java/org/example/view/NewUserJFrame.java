@@ -2,33 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package org.example;
+package org.example.view;
 
-import org.example.dto.UserDTO;
 import org.example.model.Response;
+import org.example.model.User;
 import org.example.service.UserService;
 
 import javax.swing.*;
-import org.example.model.User;
 
 /**
  *
  * @author maxi
  */
-public class EditUserJFrame extends javax.swing.JFrame {
+public class NewUserJFrame extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EditUserJFrame.class.getName());
-    private UserDTO user;
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NewUserJFrame.class.getName());
 
     /**
      * Creates new form RegisterJFrame
      */
-    public EditUserJFrame(UserDTO user) {
+    public NewUserJFrame() {
         initComponents();
-        usernameJTextField.setText(user.getName());
-        emailJTextField.setText(user.getEmail());
-        this.user = user;
-
     }
 
     /**
@@ -53,7 +47,7 @@ public class EditUserJFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Editar Usuario");
+        jLabel1.setText("Registro de Nuevo Usuario");
 
         usernameJLabel.setText("Nombre de Usuario");
 
@@ -137,19 +131,25 @@ public class EditUserJFrame extends javax.swing.JFrame {
 
     private void confirmarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmarJButtonActionPerformed
 
-        int userId = user.getId();
+        
         String username = usernameJTextField.getText().trim();
         String email = emailJTextField.getText().trim();
         String password = new String(passwordJPasswordField.getPassword()).trim();
-        String repeatPassword = new String(repeatPasswordJPasswordField.getPassword()).trim();
-
+        String repeatPassword = new String(repeatPasswordJPasswordField.getPassword()).trim();    
+ 
         if(!password.equalsIgnoreCase(repeatPassword)) {
             JOptionPane.showMessageDialog(this, "Contraseñas diferentes", "Login Fallido", JOptionPane.ERROR_MESSAGE);
+            LoginJFrame login = new LoginJFrame(); // vuelvo al Login
+            login.setVisible(true);
+            this.dispose();
+            return;
+          
+            
         }
 
-        User editUser = new User(userId, username, email, password);
+        User newUser = new User(username, email, password);
         UserService userService = new UserService();
-        Response response = userService.editUser(editUser);
+        Response response = userService.registerUser(newUser);
 
         if (response.isSuccess()) {
             LoginJFrame login = new LoginJFrame(); // vuelvo al Login
@@ -165,6 +165,27 @@ public class EditUserJFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new NewUserJFrame().setVisible(true));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton confirmarJButton;

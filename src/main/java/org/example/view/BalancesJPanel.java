@@ -2,12 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package org.example;
+package org.example.view;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.example.cache.DebtCache;
 import org.example.cache.ExpenseCache;
@@ -24,18 +22,16 @@ import javax.swing.*;
  *
  * @author maxi
  */
-public class UserBalanceJPanel extends javax.swing.JPanel {
-    UserDTO user;// Usuario actual
-    UserDTO friend;// Usuario amigo con el que se quiere ver el balance
+public class BalancesJPanel extends javax.swing.JPanel {
+    UserDTO user;
     LocalDate date;
 
     /**
      * Creates new form BalancesJPanel
      */
-    public UserBalanceJPanel(UserDTO user, UserDTO friend) {
+    public BalancesJPanel(UserDTO user) {
         initComponents();
         this.user = user;
-        this.friend = friend;
         this.date = LocalDate.now();
         this.updateView();
     }
@@ -46,27 +42,25 @@ public class UserBalanceJPanel extends javax.swing.JPanel {
         PaymentCache paymentCache = PaymentCache.getInstance(user);
         DebtCache debtCache = DebtCache.getInstance(user);
         expenseCache.updateExpenseCache(user);
-        List<Payment> paymentsBetween = paymentCache.getOtherUserPayments(friend);
-        List<Debt> debtsBetween = debtCache.getOtherUserDebts(friend);
-        double balance = 0.0;// Calcular el balance total a la fecha
+        // Calcular el balance total a la fecha
+        double balance = 0.0;
 
 
-        jTextAreaPayments.setText("Pagos: \n\n");
-        for (Payment payment : paymentsBetween) {
+        jTextAreaPayments.setText("Tus pagos: \n\n");
+        for (Payment payment : paymentCache.getPayments()) {
             if(payment.getDate().isAfter(date)) {
                 continue; // Ignorar pagos futuros. Serviría en caso de querer ver un balance pasado.
             }
-            if (payment.getPayer().getId() == user.getId()) {//Comprueba que el usuario actual es el pagador
+            if (payment.getPayer().getId() == user.getId()) {
                 jTextAreaPayments.append("Pagaste $" + String.format("%.2f",payment.getAmount()) + " a " + payment.getRecipient().getName() + " (ID "+payment.getRecipient().getId() +") el " + payment.getDate().format(formatter) + "\n");
                 balance += payment.getAmount(); // Sumar el pago del balance
-            } else if (payment.getRecipient().getId() == user.getId()) {// Comprueba que el usuario actual es el receptor
+            } else if (payment.getRecipient().getId() == user.getId()) {
                 jTextAreaPayments.append("Recibiste $" + String.format("%.2f",payment.getAmount()) + " de " + payment.getPayer().getName() + " (ID "+payment.getPayer().getId() + ") el " + payment.getDate().format(formatter) + "\n");
                 balance -= payment.getAmount();// Restar el pago al balance
-            }// Si el pago es entre otro usuario y el amigo, no se muestra. Igualmente no debería pasar.
+            }
         }
-
-        jTextAreaDebts.setText("Deudas generadas: \n\n");
-        for (Debt debt : debtsBetween) {
+        jTextAreaDebts.setText("Tus deudas generadas: \n\n");
+        for (Debt debt : debtCache.getDebts()) {
             if(debt.getDueDate().isAfter(date)) {
                 continue; // Ignorar deudas futuras a la fecha.
             }
@@ -86,8 +80,9 @@ public class UserBalanceJPanel extends javax.swing.JPanel {
             }
         }
 
-        jLabelBalanceToDate.setText("Balance al " + date.format(formatter) + " con "+ friend.getName() + ": $" + String.format("%.2f", balance));// Mostrar el balance total a la fecha
+        jLabelBalanceToDate.setText("Balance al " + date.format(formatter) + ": $" + String.format("%.2f", balance));// Mostrar el balance total a la fecha
 
+        //PARA PROBAR
         System.out.println("Deudas encontradas: " + debtCache.getDebts().size());
         for (Debt d : debtCache.getDebts()) {
             System.out.println("→ Deuda: " + d.getAmount() + ", Cuota: " + d.getInstallmentNumber() + ", Fecha: " + d.getDueDate() + ", Acreedor: " + d.getCreditor().getEmail() + ", Deudor: " + d.getDebtor().getEmail());
