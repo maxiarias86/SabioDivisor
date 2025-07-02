@@ -44,7 +44,7 @@ public class PaymentService {
                     recipientResp.getObj()
             );
 
-            Response<Payment> response = PaymentDAO.getInstance().create(payment);
+            Response<Payment> response = PaymentDAO.getInstance().create(payment);//Le paso el Payment sin ID, porque aún no lo tiene asignado.
             if (response.isSuccess()) {
                 return new Response<>(true, "201", "Pago registrado exitosamente.", response.getObj());//Devuelve el objeto Payment creado con su ID asignado.
             } else {

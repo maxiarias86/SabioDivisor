@@ -190,40 +190,40 @@ public class ExpenseService {
         }
     }
 
-    public Response<Expense> updateExpense(ExpenseDTO expenseDTO, UserDTO userDTO) {    // Este metodo se puede usar para actualizar un gasto. No usa el expenseDAO.save() porque no se actualizan las deudas. Esto se hace por separado. Utiliza el .update().
+    public Response<Expense> updateExpense(ExpenseDTO expenseDTO, UserDTO userDTO) {// Este metodo se puede usar para actualizar un gasto. No usa el expenseDAO.save() porque no se actualizan las deudas. Esto se hace por separado. Utiliza el .update().
 
         try {
             // Verifica que el ID del gasto sea válido
             if (expenseDTO.getId() == null || expenseDTO.getId() <= 0) {
                 return new Response<>(false, "400", "El ID del gasto no es válido.");
             }
-            Response debtsGenerationResponse = this.generateDebtsFromDTO(expenseDTO);
+            Response debtsGenerationResponse = this.generateDebtsFromDTO(expenseDTO);// Llama al metodo para generar las deudas a partir del DTO del gasto.
             if(!debtsGenerationResponse.isSuccess()) {
                 return new Response<>(false, debtsGenerationResponse.getCode(), debtsGenerationResponse.getMessage());
             }
 
-            List<Debt> debts = debtsGenerationResponse.getData();
+            List<Debt> debts = debtsGenerationResponse.getData();// Obtiene las deudas generadas por el metodo anterior.
 
-            Expense expense = new Expense();
-            expense.setAmount(expenseDTO.getAmount());
+            Expense expense = new Expense();// Crea un nuevo objeto Expense para actualizarlo.
+            expense.setAmount(expenseDTO.getAmount());// Asigna el monto, día, número de cuotas, id, deudas y descripción del DTO al Expense.
             expense.setDate(expenseDTO.getDate());
             expense.setInstallments(expenseDTO.getInstallments());
             expense.setDescription(expenseDTO.getDescription());
             expense.setId(expenseDTO.getId());
             expense.setDebts(debts);
 
-            Response<Expense> response = ExpenseDAO.getInstance().update(expense);
+            Response<Expense> response = ExpenseDAO.getInstance().update(expense);// Llama al DAO para actualizar el gasto con el nuevo objeto Expense.
             if (!response.isSuccess()) {
                 return new Response<>(false, response.getCode(), response.getMessage());
             }
             // Ahora hay que actualizar las debts asociadas al gasto.
             // Primero borro las deudas asociadas al gasto
-            Response deleteResponse = DebtDAO.getInstance().deleteByExpenseId(expense.getId());
-            if(!deleteResponse.isSuccess()){
+            Response deleteResponse = DebtDAO.getInstance().deleteByExpenseId(expense.getId());// Llama al DAO para eliminar las deudas asociadas al gasto por su ID.
+            if(!deleteResponse.isSuccess()){// Si no se pudo eliminar las deudas, devuelve un error.
                 return new Response<>(false, deleteResponse.getCode(), deleteResponse.getMessage());
             }
             // Luego guardo las nuevas deudas generadas
-            for (Debt debt : debts) {
+            for (Debt debt : debts) {// Recorre las deudas generadas y las guarda en la base de datos.
                 debt.setExpenseId(expense.getId()); // Asigna el ID del gasto a cada deuda
                 Response<Debt> debtResponse = DebtDAO.getInstance().create(debt);
                 if (!debtResponse.isSuccess()) {
@@ -231,12 +231,12 @@ public class ExpenseService {
                 }
             }
             // Actualiza el cache de gastos
-            try{
+            try{// Actualiza el cache de gastos y deudas del usuario.
                 ExpenseCache expenseCache = ExpenseCache.getInstance(userDTO);
                 expenseCache.updateExpenseCache(userDTO);
                 DebtCache debtCache = DebtCache.getInstance(userDTO);
                 debtCache.updateDebtCache(userDTO);
-            } catch (Exception e) {
+            } catch (Exception e) {// Si no se pudo actualizar el cache, devuelve un error.
                 return new Response<>(false, "500", "Error al actualizar el cache.");
             }
 

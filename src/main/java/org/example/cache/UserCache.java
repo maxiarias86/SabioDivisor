@@ -9,10 +9,7 @@ import org.example.service.UserService;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-Para no tener que rearmar de la BBDD cada vez que utilice un usuario,
- arme un cache o repository de usuarios
-*/
+//Para no tener que rearmar de la BBDD cada vez que utilice un usuario, arme un cache o repository de usuarios
 
 public class UserCache {
 

@@ -55,7 +55,7 @@ public class PaymentCache {
     public Response<Payment> editPayment(Payment payment) {
         for (int i = 0; i < payments.size(); i++) {
             if (payments.get(i).getId() == payment.getId()) {
-                payments.set(i, payment);
+                payments.set(i, payment);// Actualiza el pago en el cache con el pasado por parámetro
                 return new Response<>(true, "200", "Pago editado exitosamente", payment);
             }
         }
@@ -65,7 +65,7 @@ public class PaymentCache {
     public Response deletePaymentFromCache(int paymentId) {
         for (Payment payment : payments) {
             if (payment.getId() == paymentId) {
-                payments.remove(payment);
+                payments.remove(payment);// Elimina el pago del cache
                 return new Response<>(true, "200", "Pago eliminado exitosamente del cache");
             }
         }

@@ -10,7 +10,7 @@ import java.sql.Date;
 import java.util.*;
 
 public class ExpenseDAO extends BaseDAO<Expense> {
-    private final String tableName = "expenses";
+    private final String tableName = "expenses";// Nombre de la tabla en la base de datos
     private static final ExpenseDAO instance = new ExpenseDAO();
 
     public static ExpenseDAO getInstance() {
@@ -22,53 +22,47 @@ public class ExpenseDAO extends BaseDAO<Expense> {
     }
 
     @Override
-    public Response<Expense> create(Expense entity) {
+    public Response<Expense> create(Expense entity) {// Metodo para crear un nuevo gasto en la base de datos. NO se usa actualmente en la aplicacion, pero lo dejo por si en un futuro se necesita y porque esta en su clase padre.
         String sql = "INSERT INTO " + tableName + " (amount, date, installments, description) VALUES (?, ?, ?, ?)";
 
         try {
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);// Prepara la consulta SQL para insertar un nuevo gasto. Se trae el ID generado que después lo voy a usar.
             ps.setDouble(1, entity.getAmount());
             ps.setDate(2, Date.valueOf(entity.getDate()));
             ps.setInt(3, entity.getInstallments());
             ps.setString(4, entity.getDescription());
-
             int rows = ps.executeUpdate();
 
             if (rows == 0) {
                 return new Response<>(false, "500", "No se pudo crear el gasto");
             }
 
-            ResultSet generatedKeys = ps.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                int expenseId = generatedKeys.getInt(1);
-                entity.setId(expenseId);
+            ResultSet generatedKeys = ps.getGeneratedKeys();// Obtiene las claves generadas por la base de datos
+            if (generatedKeys.next()) {// Si hay una clave generada, significa que se insertó correctamente
+                int expenseId = generatedKeys.getInt(1);// Recupera el ID del gasto insertado
+                entity.setId(expenseId);// Asigna el ID al Expense
             } else {
                 return new Response<>(false, "500", "No se obtuvo el ID del gasto insertado");
             }
-
-            return new Response<>(true, "200", "Gasto creado con éxito", entity);
-
+            return new Response<>(true, "200", "Gasto creado con éxito", entity);// Devuelve una respuesta exitosa con el gasto creado que contiene el ID generado.
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
     }
 
-
     @Override
     public Response<Expense> read(int id) {
         String sql = "SELECT * FROM " + tableName + " WHERE id = ?";
-
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                UserDAO userDAO = UserDAO.getInstance();
+            if (rs.next()) {// Si se encuentra un gasto con el ID pasado por parámetro
+                UserDAO userDAO = UserDAO.getInstance();//SACARLO. ESTABA PORQUE ANTES LA EXPENSE TENIA USUARIOS ASOCIADOS.
                 DebtDAO debtDAO = DebtDAO.getInstance();
 
-                // Crear el gasto sin usuarios ni deudas
-                Expense expense = new Expense(
+                Expense expense = new Expense(// Crear el gasto sin deudas
                         rs.getInt("id"),
                         rs.getDouble("amount"),
                         rs.getDate("date").toLocalDate(),
@@ -78,27 +72,27 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                 );
 
                 // Cargar deudas asociadas
-                Response<Debt> allDebts = debtDAO.readAll();
-                if (allDebts.isSuccess()) {
-                    List<Debt> relatedDebts = allDebts.getData().stream()
-                            .filter(d -> d.getExpenseId() == expense.getId())
-                            .toList();
-                    expense.setDebts(relatedDebts);
+                Response<Debt> allDebts = debtDAO.readAll();// Obtiene todas las deudas de la base de datos
+                if (allDebts.isSuccess()) {// Si la respuesta es exitosa, procesa las deudas
+                    List<Debt> relatedDebts = new ArrayList<>();// Lista para almacenar las deudas relacionadas con el gasto
+                    for (Debt d : allDebts.getData()) {// Recorre la lista de deudas
+                        if (d.getExpenseId() == expense.getId()) {// Si la deuda está asociada al gasto actual, agrega la deuda a la lista de deudas relacionadas
+                            relatedDebts.add(d);
+                        }
+                    }
+                    expense.setDebts(relatedDebts);// Asigna las deudas relacionadas al gasto
                 }
-
-                return new Response<>(true, "200", "Gasto encontrado", expense);
+                return new Response<>(true, "200", "Gasto encontrado", expense);// Devuelve el gasto encontrado con sus deudas asociadas
             } else {
                 return new Response<>(false, "404", "No se encontró el gasto");
             }
-
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
     }
 
-
     @Override
-    public Response<Expense> update(Expense expenseToUpdate) {
+    public Response<Expense> update(Expense expenseToUpdate) {// Metodo para actualizar un gasto en la base de datos
         String sql = "UPDATE " + tableName + " SET amount = ?, date = ?, installments = ?, description = ? WHERE id = ?";// Prepara la consulta SQL para actualizar un gasto
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -109,13 +103,10 @@ public class ExpenseDAO extends BaseDAO<Expense> {
             ps.setInt(5, expenseToUpdate.getId());
 
             int rows = ps.executeUpdate();
-
             if (rows == 0) {
                 return new Response<>(false, "404", "No se encontró el gasto para actualizar");
             }
-
-            return new Response<>(true, "200", "Gasto actualizado con éxito", expenseToUpdate);
-
+            return new Response<>(true, "200", "Gasto actualizado con éxito", expenseToUpdate);// Devuelve una respuesta exitosa con el gasto actualizado
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
@@ -123,19 +114,18 @@ public class ExpenseDAO extends BaseDAO<Expense> {
 
     @Override
     public Response<Expense> delete(int id) {
-        String sql = "DELETE FROM " + tableName + " WHERE id = ?";
+        String sql = "DELETE FROM " + tableName + " WHERE id = ?";// Prepara la consulta SQL para eliminar un gasto por su ID
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            int rows = ps.executeUpdate();
+            ps.setInt(1, id);// Establece el ID del gasto a eliminar
+            int rows = ps.executeUpdate();// Ejecuta la consulta de eliminación y obtiene el número de filas afectadas
 
-            if (rows == 1) {
-                return new Response<>(true, "200", "Gasto eliminado correctamente");
+            if (rows == 1) {// Si se eliminó una fila, significa que el gasto fue eliminado correctamente
+                return new Response<>(true, "200", "Gasto eliminado correctamente");// Devuelve una respuesta exitosa indicando que el gasto fue eliminado
             } else {
                 return new Response<>(false, "404", "No se encontró el gasto");
             }
-
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
@@ -182,33 +172,29 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                 // Agrega el gasto a la lista
                 expenses.add(expense);
             }
-
             return new Response<>(true, "200", "Listado de gastos obtenido", expenses);
-
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
     }
 
-
-    public Response<Integer> save(ExpenseDTO dto, List<Debt> debts) {
-        //En este metodo cuando inserte el Expense tengo que copiarme el id, y luego insertar las deudas con ese expenseId
-        String insertExpenseSQL = "INSERT INTO expenses (amount, date, installments, description) VALUES (?, ?, ?, ?)";
-        String insertDebtSQL = "INSERT INTO debts (amount, due_date, debtor_id, creditor_id, expense_id, installment_number) VALUES (?, ?, ?, ?, ?, ?)";
+    public Response<Integer> save(ExpenseDTO dto, List<Debt> debts) {//En este metodo cuando inserte el Expense tengo que copiarme el id, y luego insertar las deudas con ese expenseId
+        String insertExpenseSQL = "INSERT INTO expenses (amount, date, installments, description) VALUES (?, ?, ?, ?)";// Prepara la consulta SQL para insertar un nuevo gasto
+        String insertDebtSQL = "INSERT INTO debts (amount, due_date, debtor_id, creditor_id, expense_id, installment_number) VALUES (?, ?, ?, ?, ?, ?)";// Prepara la consulta SQL para insertar una nueva deuda
 
         try {
-            conn.setAutoCommit(false);//Hace que no se haga un commir en la base de datos hasta que el codigo lo indique.
+            conn.setAutoCommit(false);//Hace que no se haga un commit en la base de datos hasta que el código lo indique.
 
             // Insertar Expense
-            PreparedStatement expenseStmt = conn.prepareStatement(insertExpenseSQL, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement expenseStmt = conn.prepareStatement(insertExpenseSQL, Statement.RETURN_GENERATED_KEYS);// Prepara la consulta SQL para insertar un nuevo gasto y obtener el ID generado por la base de datos.
             expenseStmt.setDouble(1, dto.getAmount());
             expenseStmt.setDate(2, Date.valueOf(dto.getDate()));
             expenseStmt.setInt(3, dto.getInstallments());
             expenseStmt.setString(4, dto.getDescription());
             expenseStmt.executeUpdate();
 
-            ResultSet generatedKeys = expenseStmt.getGeneratedKeys();
-            if (!generatedKeys.next()) {
+            ResultSet generatedKeys = expenseStmt.getGeneratedKeys();// Obtiene las claves generadas por la base de datos después de insertar el gasto.
+            if (!generatedKeys.next()) {// Si no se obtuvo una clave generada, significa que la inserción falló.
                 conn.rollback();//Hace un rollback y no queda nada guardado.
                 return new Response<>(false, "500", "No se pudo obtener el ID del gasto insertado.");
             }
@@ -216,9 +202,9 @@ public class ExpenseDAO extends BaseDAO<Expense> {
             int expenseId = generatedKeys.getInt(1);//Recupera el expenseId
 
             // Insertar Debts
-            if (debts != null && !debts.isEmpty()) {
+            if (debts != null && !debts.isEmpty()) {// Verifica que la lista de deudas no es nula ni está vacía
                 PreparedStatement debtStmt = conn.prepareStatement(insertDebtSQL);
-                for (Debt debt : debts) {
+                for (Debt debt : debts) {// Recorre la lista de deudas y las inserta en la base de datos
                     debtStmt.setDouble(1, debt.getAmount());
                     debtStmt.setDate(2, Date.valueOf(debt.getDueDate()));
                     debtStmt.setInt(3, debt.getDebtor().getId());
@@ -231,8 +217,7 @@ public class ExpenseDAO extends BaseDAO<Expense> {
                 debtStmt.close();// Es una buena practica cerrar cada PreparedStatement
             }
             conn.commit();//Finalmente hace el commit cuando no fallo nada.
-            return new Response<>(true, "201", "Gasto y deudas insertados correctamente.", expenseId);
-
+            return new Response<>(true, "201", "Gasto y deudas insertados correctamente.", expenseId);// Devuelve una respuesta exitosa con el ID del gasto insertado.
         } catch (SQLException e) {
             try {
                 conn.rollback();
@@ -249,11 +234,11 @@ public class ExpenseDAO extends BaseDAO<Expense> {
         }
     }
 
-    public Response<Expense> readAllInSet(HashSet<Integer> expensesIDs) {
+    public Response<Expense> readAllInSet(HashSet<Integer> expensesIDs) {// Metodo para leer todos los gastos cuyos IDs están en el Set pasado por parámetro. Lo iba a usar en la pantalla de edición, pero al final no lo hice.
         if(expensesIDs == null || expensesIDs.isEmpty()) {// Verifica si el Set de IDs está vacío o es nulo
             return new Response<>(false, "400", "El conjunto de IDs está vacío");
         }
-        StringBuilder sql = new StringBuilder("SELECT * FROM " + tableName + " WHERE id IN (");// Inicia la query con un IN
+        StringBuilder sql = new StringBuilder("SELECT * FROM " + tableName + " WHERE id IN (");// Inicia la query con un IN. Se usa un StringBuilder para ir haciendo appends.
         for (Integer id : expensesIDs) {// Recorre el Set de IDs y los agrega a la query
             sql.append(id).append(",");// Agrega cada ID seguido de una coma
         }

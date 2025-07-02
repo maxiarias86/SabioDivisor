@@ -22,17 +22,17 @@ public class UserDAO extends BaseDAO<User> {
         String sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";//No paso el ID porque es autoincremental
 
         try {
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);// Esto permite obtener el ID generado automáticamente. No lo voy a usar en este caso, solo en Expense me es indispensable.
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
-            ps.executeUpdate();
+            ps.executeUpdate();// Ejecuta la inserción
 
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                int idGenerado = rs.getInt(1);
-                user.setId(idGenerado);
-                return new Response<>(true, "201", "Usuario creado exitosamente.", user);
+            ResultSet rs = ps.getGeneratedKeys();// Obtiene el id generado.
+            if (rs.next()) {// Si se generó un ID, lo asigno al objeto User que le pase como parametro.
+                int idGenerado = rs.getInt(1);// Obtiene el primer (y debería ser el único) ID generado
+                user.setId(idGenerado);// Asigna el ID al objeto User
+                return new Response<>(true, "201", "Usuario creado exitosamente.", user);// Retorna el objeto User con el ID asignado
             } else {
                 return new Response<>(false, "500", "No se pudo obtener el ID del nuevo usuario.");
             }
@@ -48,7 +48,7 @@ public class UserDAO extends BaseDAO<User> {
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setInt(1, id);// Pasa el ID del usuario a buscar
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -58,7 +58,7 @@ public class UserDAO extends BaseDAO<User> {
                         rs.getString("email"),
                         rs.getString("password")
                 );
-                return new Response<>(true, "200", "Usuario encontrado", user);
+                return new Response<>(true, "200", "Usuario encontrado", user);// Retorna el usuario encontrado
             } else {
                 return new Response<>(false, "404", "No se encontró el usuario");
             }
@@ -70,81 +70,68 @@ public class UserDAO extends BaseDAO<User> {
     @Override
     public Response<User> readAll() {
         String sql = "SELECT * FROM " + tableName + " ORDER BY id ASC";//Ordena por ID ascendente
-        List<User> lista = new ArrayList<>();
+        List<User> lista = new ArrayList<>();// Lista para almacenar los usuarios obtenidos
 
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            while (rs.next()) {
+            while (rs.next()) {// Bucle sobre los resultados
                 User user = new User(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("email"),
                         rs.getString("password")
                 );
-                lista.add(user);
+                lista.add(user);// Agrega el usuario a la lista
             }
-
-            return new Response<>(true, "200", "Listado de usuarios obtenido", lista);
-
+            return new Response<>(true, "200", "Listado de usuarios obtenido", lista);// Retorna la lista de usuarios
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
     }
 
     @Override
-    public Response<User> update(User entity) {
-        String sql = "UPDATE " + tableName + " SET name = ?, email = ?, password = ? WHERE id = ?";
-
+    public Response<User> update(User entity) {// Edita un usuario
+        String sql = "UPDATE " + tableName + " SET name = ?, email = ?, password = ? WHERE id = ?";// Actualiza el usuario por ID
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, entity.getName());
             ps.setString(2, entity.getEmail());
             ps.setString(3, entity.getPassword());
             ps.setInt(4, entity.getId());
-
-            int rows = ps.executeUpdate();
-
-            if (rows == 1) {
+            int rows = ps.executeUpdate();// Ejecuta
+            if (rows == 1) {// Si se actualizó un registro, y solo uno, retorna éxito.
                 return new Response<>(true, "200", "Usuario actualizado correctamente");
             } else if (rows == 0) {
                 return new Response<>(false, "404", "No se encontró el usuario");
             } else {
                 return new Response<>(false, "500", "Error: se afectaron múltiples registros");
             }
-
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
     }
 
     @Override
-    public Response<User> delete(int id) {
+    public Response<User> delete(int id) {// Elimina un usuario por ID pero no se va a aplicar en la aplicación, ya que no se va a eliminar un usuario una vez creado.
         String sql = "DELETE FROM " + tableName + " WHERE id = ?";
-
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
             int rows = ps.executeUpdate();
-
             if (rows == 1) {
                 return new Response<>(true, "200", "Usuario eliminado correctamente");
             } else {
                 return new Response<>(false, "404", "No se encontró el usuario");
             }
-
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
     }
 
-    //Hice un metodo para buscarlos por email porque no siempre voy a conocer el ID.
-    //Mapea todos los campos del modelo User.
-
-    public Response<User> readByEmail(String email) {
+    public Response<User> readByEmail(String email) {// Busca un usuario por email
         String sql = "SELECT * FROM users WHERE email = ?";
-
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
@@ -161,7 +148,6 @@ public class UserDAO extends BaseDAO<User> {
             } else {
                 return new Response<>(false, "404", "No se encontró el usuario con ese email");
             }
-
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
@@ -169,7 +155,6 @@ public class UserDAO extends BaseDAO<User> {
 
     public Response<User> readByName(String name) {
         String sql = "SELECT * FROM users WHERE name = ?";
-
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, name);
@@ -191,5 +176,4 @@ public class UserDAO extends BaseDAO<User> {
             return new Response<>(false, "500", e.getMessage());
         }
     }
-
 }

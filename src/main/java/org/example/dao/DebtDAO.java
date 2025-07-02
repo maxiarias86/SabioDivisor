@@ -26,7 +26,6 @@ public class DebtDAO extends BaseDAO<Debt> {
     @Override
     public Response<Debt> create(Debt entity) {
         String sql = "INSERT INTO " + tableName + " (amount, due_date, debtor_id, creditor_id, expense_id, installment_number) VALUES (?, ?, ?, ?, ?, ?)";
-
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setDouble(1, entity.getAmount());
@@ -35,7 +34,6 @@ public class DebtDAO extends BaseDAO<Debt> {
             ps.setInt(4, entity.getCreditor().getId());
             ps.setInt(5, entity.getExpenseId());
             ps.setInt(6, entity.getInstallmentNumber());
-
 
             ps.executeUpdate();
             return new Response<>(true, "200", "Deuda registrada exitosamente");
@@ -51,38 +49,33 @@ public class DebtDAO extends BaseDAO<Debt> {
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
-            //El 1 significa que le pasa al primer "placeholder"->? el id
-            ps.setInt(1, id);
+            ps.setInt(1, id);//El 1 significa que le pasa al primer "placeholder"->? el id
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                UserDAO userDAO = UserDAO.getInstance();
-                ExpenseDAO expenseDAO = ExpenseDAO.getInstance();
+                UserDAO userDAO = UserDAO.getInstance();// Obtengo el DAO de usuarios para poder obtener los datos de los usuarios deudores y acreedores.
+                ExpenseDAO expenseDAO = ExpenseDAO.getInstance();// Obtengo el DAO de gastos para poder obtener los datos del gasto relacionado a la deuda.
 
-                Response<User> debtorResponse = userDAO.read(rs.getInt("debtor_id"));
-                Response<User> creditorResponse = userDAO.read(rs.getInt("creditor_id"));
-                Response<Expense> expenseResponse = expenseDAO.read(rs.getInt("expense_id"));
+                Response<User> debtorResponse = userDAO.read(rs.getInt("debtor_id"));// Obtiene el usuario deudor
+                Response<User> creditorResponse = userDAO.read(rs.getInt("creditor_id"));// Obtiene el usuario acreedor
 
-                if (!debtorResponse.isSuccess() || !creditorResponse.isSuccess() || !expenseResponse.isSuccess()) {
+                if (!debtorResponse.isSuccess() || !creditorResponse.isSuccess()) {
                     return new Response<>(false, "404", "Error al obtener los datos relacionados de la deuda");
                 }
 
-                Debt debt = new Debt(
+                Debt debt = new Debt(// Crea una nueva deuda con los datos obtenidos de la base de datos
                         rs.getInt("id"),
                         rs.getDouble("amount"),
                         debtorResponse.getObj(),
                         creditorResponse.getObj(),
                         rs.getInt("expense_id"),
                         rs.getDate("due_date").toLocalDate(),
-                        rs.getInt("installment_number")
+                        rs.getInt("installment_number"));
 
-                );
-
-                return new Response<>(true, "200", "Deuda encontrada", debt);
+                return new Response<>(true, "200", "Deuda encontrada", debt);// Retorna la deuda encontrada
             } else {
                 return new Response<>(false, "404", "No se encontró la deuda");
             }
-
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
@@ -102,17 +95,14 @@ public class DebtDAO extends BaseDAO<Debt> {
             ps.setInt(6, entity.getInstallmentNumber());
             ps.setInt(7, entity.getId());
 
-
             int rows = ps.executeUpdate();
-
-            if (rows == 1) {
-                return new Response<>(true, "200", "Deuda actualizada correctamente");
+            if (rows == 1) {// Si se actualizó exactamente un registro
+                return new Response<>(true, "200", "Deuda actualizada correctamente");// Retorna una respuesta exitosa
             } else if (rows == 0) {
                 return new Response<>(false, "404", "No se encontró la deuda");
             } else {
                 return new Response<>(false, "500", "Error: se afectaron múltiples registros");
             }
-
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
@@ -129,8 +119,7 @@ public class DebtDAO extends BaseDAO<Debt> {
 
             if (rows == 1) {
                 return new Response<>(true, "200", "Deuda eliminada correctamente");
-            } else {
-                //Como id es unique en la tabla no puede encontrar más de uno. Lo encuentra o no.
+            } else {//Como id es unique en la tabla no puede encontrar más de uno. Lo encuentra o no.
                 return new Response<>(false, "404", "No se encontró la deuda");
             }
 
@@ -141,53 +130,47 @@ public class DebtDAO extends BaseDAO<Debt> {
 
     @Override
     public Response<Debt> readAll() {
-        String sql = "SELECT * FROM debts ORDER BY due_date DESC";
-        List<Debt> lista = new ArrayList<>();
+        String sql = "SELECT * FROM debts ORDER BY due_date DESC";// Consulta para obtener todas las deudas ordenadas por fecha de vencimiento porque así deben mostrarse en la vista.
+        List<Debt> lista = new ArrayList<>();// Armo un arrayList para guardar las deudas.
         UserDAO userDAO = UserDAO.getInstance();
 
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
 
-            while (rs.next()) {
-                int debtorId = rs.getInt("debtor_id");
-                int creditorId = rs.getInt("creditor_id");
+            while (rs.next()) {// Itera sobre el ResultSet para obtener cada deuda
+                int debtorId = rs.getInt("debtor_id");// Obtiene el ID del deudor
+                int creditorId = rs.getInt("creditor_id");// Obtiene el ID del acreedor
 
-                Response<User> debtorResponse = userDAO.read(debtorId);
-                Response<User> creditorResponse = userDAO.read(creditorId);
+                Response<User> debtorResponse = userDAO.read(debtorId);// Obtiene el usuario deudor
+                Response<User> creditorResponse = userDAO.read(creditorId);// Obtiene el usuario acreedor
 
-                if (!debtorResponse.isSuccess() || !creditorResponse.isSuccess()) {
+                if (!debtorResponse.isSuccess() || !creditorResponse.isSuccess()) {// Verifica si se obtuvieron correctamente los usuarios deudor y acreedor
                     System.out.println("Deuda con datos incompletos (ID: " + rs.getInt("id") + ")");
                     System.out.println("Error en 'debtor': " + debtorResponse.getMessage());
                     System.out.println("Error en 'creditor': " + creditorResponse.getMessage());
                     continue; // Saleta la creación de la deuda que le falten datos
                 }
 
-                Debt d = new Debt(
+                Debt d = new Debt(// Crea una nueva deuda con los datos obtenidos de la base de datos
                         rs.getInt("id"),
                         rs.getDouble("amount"),
                         debtorResponse.getObj(),
                         creditorResponse.getObj(),
                         rs.getInt("expense_id"),
                         rs.getDate("due_date").toLocalDate(),
-                        rs.getInt("installment_number")
-                );
-
-                lista.add(d);
+                        rs.getInt("installment_number"));
+                lista.add(d);// Agrega la deuda a la lista
             }
-
-            return new Response<>(true, "200", "Listado de deudas obtenido", lista);
-
+            return new Response<>(true, "200", "Listado de deudas obtenido", lista);// Retorna la lista de deudas obtenidas
         } catch (SQLException e) {
             return new Response<>(false, "500", e.getMessage());
         }
     }
 
-
-
-    public Response<Debt> readAllByUser(UserDTO user) {
+    public Response<Debt> readAllByUser(UserDTO user) {// Consulta para obtener todas las deudas del usuario logueado (como deudor o acreedor)
         String sql = "SELECT * FROM debts WHERE creditor_id = ? OR debtor_id = ? ORDER BY due_date DESC";
-        List<Debt> lista = new ArrayList<>();
+        List<Debt> lista = new ArrayList<>();// Armo un arrayList para guardar las deudas del usuario logueado.
         UserDAO userDAO = UserDAO.getInstance();
 
         try {

@@ -25,7 +25,7 @@ public class AllUsersJPanel extends javax.swing.JPanel {
         
         BalanceService balanceService = new BalanceService(user,date);
         ArrayList<String> balances = (ArrayList) balanceService.getUserBalances(user, date);
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();//Es un String indexado que puede ir haciendo append de strings
         for (String balance : balances) {
             sb.append(balance).append("\n");
         }

@@ -101,26 +101,25 @@ public class UserService {
         return new UserDTO(user.getId(), user.getName(), user.getEmail());
     }
 
-    public Response<List<User>> getAllUsersButOne(int id) {
+    public Response<List<User>> getAllUsersButOne(int id) {// Devuelve una lista de usuarios excepto el que tiene el ID especificado (logueado)
         try {
             Response<User> daoResponse = UserDAO.getInstance().readAll();
-
             if (!daoResponse.isSuccess()) {
                 return new Response<>(false, daoResponse.getCode(), daoResponse.getMessage());
             }
-
-            ArrayList<User> dataDaoResponse = (ArrayList<User>) daoResponse.getData();
-            if (dataDaoResponse == null) dataDaoResponse = new ArrayList<>();
-
-            // Filtrá el usuario por ID
-            List<User> filteredList = new ArrayList<>();
-            for (User user : dataDaoResponse) {
-                if (user.getId() != id) {
-                    filteredList.add(user);
-                }
+            ArrayList<User> dataDaoResponse = (ArrayList<User>) daoResponse.getData();// Obtiene la lista de usuarios desde el DAO
+            if (dataDaoResponse == null){// Si la lista es nula, inicializa una lista vacía
+                dataDaoResponse = new ArrayList<>();
             }
 
-            return new Response(true, "200", "Usuarios obtenidos exitosamente.", filteredList);
+            // Filtrá el usuario por ID
+            List<User> filteredList = new ArrayList<>();// Lista para almacenar los usuarios filtrados
+            for (User user : dataDaoResponse) {// Recorre la lista de usuarios
+                if (user.getId() != id) {//
+                    filteredList.add(user);// Agrega el usuario a la lista filtrada si su ID no coincide con el especificado
+                }
+            }
+            return new Response(true, "200", "Usuarios obtenidos exitosamente.", filteredList);// Devuelve una respuesta exitosa con la lista de usuarios salvo el logueado.
 
         } catch (Exception e) {
             return new Response<>(false, "500", "Error inesperado al obtener usuarios: " + e.getMessage());
